@@ -37,7 +37,8 @@ def do_this_command(message):
         create_task()
     elif "сколько время" in message:
         now = datetime.datetime.now()
-        say_message(f"Сейчас {now.hour}:{now.minute}")
+        formatted_time = now.strftime("%H:%M")
+        say_message(f"Сейчас {formatted_time}")
     elif "пока" in message:
         say_message("Пока друг!")
         exit()
