@@ -10,6 +10,7 @@ import vosk
 import queue
 import pyttsx3
 import sys
+import datetime
 
 # Initialize a queue for storing audio data
 q = queue.Queue()
@@ -34,6 +35,9 @@ def do_this_command(message):
         say_message("Я Голосовой ассистент создан чтобы служить людям!")
     elif "заметка" in message:
         create_task()
+    elif "сколько время" in message:
+        now = datetime.datetime.now()
+        say_message(f"Сейчас {now.hour}:{now.minute}")
     elif "пока" in message:
         say_message("Пока друг!")
         exit()
