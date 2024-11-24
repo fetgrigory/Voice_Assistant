@@ -1,3 +1,9 @@
+'''
+This program make
+Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
+Starting 23/11/2024
+Ending //
+'''
 import os
 import random
 import speech_recognition
