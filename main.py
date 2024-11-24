@@ -4,11 +4,11 @@ Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
 Starting 23/11/2024
 Ending //
 '''
-import os
-import random
+# Installing the necessary libraries
 import speech_recognition
 import webbrowser
 import datetime
+import pyttsx3
 
 sr = speech_recognition.Recognizer()
 sr.pause_threshold = 0.5
@@ -26,6 +26,7 @@ commands_dict = {
 
 
 def listen_command():
+    # Define the function to listen for and recognize user commands
     try:
         with speech_recognition.Microphone() as mic:
             sr.adjust_for_ambient_noise(source=mic, duration=0.5)
@@ -34,15 +35,23 @@ def listen_command():
                                         language='ru-RU').lower()
         return query
     except speech_recognition.UnknownValueError:
-        return 'Damn... Не понял что ты сказал :/'
+        say_message("Прожуй прежде чем разговаривать")
 
 
-def greeting():
-    return 'Привет друг!'
+# Initialize the text-to-speech engine
+engine = pyttsx3.init()
+
+
+def greeting(message):
+    message = message.lower()
+    if "привет" in message:
+        say_message("Привет друг!")
+    else:
+        say_message("Прожуй прежде чем разговаривать")
 
 
 def about():
-    return 'Я Голосовой ассистент создан чтобы служить людям!'
+    return say_message('Я Голосовой ассистент создана чтобы служить людям!')
 
 
 def create_task():
@@ -50,18 +59,26 @@ def create_task():
     query = listen_command()
     with open('todo-list.txt', 'a', encoding='utf-8') as file:
         file.write(f'❗️ {query}\n')
-    return f'Задача {query} добавлена в todo-list!'
+    return say_message(f'Задача {query} добавлена в todo-list!')
 
 
 def time():
     now = datetime.datetime.now()
     formatted_time = now.strftime("%H:%M")
-    return (f"Сейчас {formatted_time}")
+    return say_message(f"Сейчас {formatted_time}")
 
 
 def open_website():
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
     webbrowser.get(chrome_path).open("https://ya.ru/")
+    return say_message('Открываю')
+
+
+# Define the function to speak a message
+def say_message(message):
+    print(f"Saying: {message}")
+    engine.say(message)
+    engine.runAndWait()
 
 
 def main():
