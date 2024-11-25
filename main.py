@@ -82,10 +82,13 @@ def say_message(message):
 
 
 def main():
-    query = listen_command()
-    for k, v in commands_dict['commands'].items():
-        if query in v:
-            print(globals()[k]())
+    # Initial message
+    say_message("Гапуся слушает")
+    while True:
+        query = listen_command()
+        for k, v in commands_dict['commands'].items():
+            if query in v:
+                print(globals()[k]())
 
 
 if __name__ == '__main__':
