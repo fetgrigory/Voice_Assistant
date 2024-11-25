@@ -62,7 +62,7 @@ def create_note():
     print('Что добавим в список дел?')
     query = listen_command()
     with open('todo-list.txt', 'a', encoding='utf-8') as file:
-        file.write(f'❗️ {query}\n')
+        file.write(f' {query}\n')
         now = datetime.datetime.now()
     formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
     return speak(f'Заметка "{query}" создана от {formatted_datetime}.')
