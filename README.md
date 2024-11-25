@@ -28,3 +28,7 @@
    ```bash
    python main.py
    ```
+## Применяемые библиотеки и версия языка <br />
+PyAudio 0.2.14 <br />
+SpeechRecognition 3.11.0 <br />
+pyttsx3 2.98 <br />
