@@ -35,23 +35,23 @@ def listen_command():
                                         language='ru-RU').lower()
         return query
     except speech_recognition.UnknownValueError:
-        say_message("Прожуй прежде чем разговаривать")
+        speak("Прожуй прежде чем разговаривать")
 
 
 # Initialize the text-to-speech engine
-engine = pyttsx3.init()
+speak_engine = pyttsx3.init()
 
 
 def greeting(message):
     message = message.lower()
     if "привет" in message:
-        say_message("Привет друг!")
+        speak("Привет друг!")
     else:
-        say_message("Прожуй прежде чем разговаривать")
+        speak("Прожуй прежде чем разговаривать")
 
 
 def about():
-    return say_message('Я Голосовой ассистент создана чтобы служить людям!')
+    return speak('Я Голосовой ассистент создана чтобы служить людям!')
 
 
 def create_task():
@@ -59,31 +59,31 @@ def create_task():
     query = listen_command()
     with open('todo-list.txt', 'a', encoding='utf-8') as file:
         file.write(f'❗️ {query}\n')
-    return say_message(f'Задача {query} добавлена в todo-list!')
+    return speak(f'Задача {query} добавлена в todo-list!')
 
 
 def time():
     now = datetime.datetime.now()
-    formatted_time = now.strftime("%H:%M")
-    return say_message(f"Сейчас {formatted_time}")
+    speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
 
 
 def open_website():
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
     webbrowser.get(chrome_path).open("https://ya.ru/")
-    return say_message('Открываю')
+    return speak('Открываю')
 
 
 # Define the function to speak a message
-def say_message(message):
-    print(f"Saying: {message}")
-    engine.say(message)
-    engine.runAndWait()
+def speak(message):
+    print(message)
+    speak_engine.say(message)
+    speak_engine.runAndWait()
+    speak_engine.stop()
 
 
 def main():
     # Initial message
-    say_message("Гапуся слушает")
+    speak("Гапуся слушает")
     while True:
         query = listen_command()
         for k, v in commands_dict['commands'].items():
