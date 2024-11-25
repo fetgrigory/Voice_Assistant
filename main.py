@@ -9,6 +9,8 @@ import speech_recognition
 import webbrowser as wb
 import datetime
 import pyttsx3
+import os
+import random
 
 sr = speech_recognition.Recognizer()
 sr.pause_threshold = 0.5
@@ -17,6 +19,7 @@ commands_dict = {
     'commands': {
         'greeting': ['привет', 'приветствую'],
         'create_note': ['добавить задачу', 'создать задачу', 'заметка'],
+        'music_player': ['музыку'],
         'open_website': ['открой браузер', 'запусти браузер', 'открой google chrome', 'google chrome'],
         'search_engine': ['поиск'],
         'about': ['кто ты'],
@@ -69,6 +72,14 @@ def time():
     # Tell the current time
     now = datetime.datetime.now()
     speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
+
+
+def music_player():
+    files = os.listdir('music')
+    # Using os.system to start the sound
+    random_file = f'music/{random.choice(files)}'
+    os.system(f'start {random_file}')
+    return f'Танцуем под {random_file.split("/")[-1]} 🔊🔊🔊'
 
 
 def search_engine():
