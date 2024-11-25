@@ -79,7 +79,7 @@ def music_player():
     # Using os.system to start the sound
     random_file = f'music/{random.choice(files)}'
     os.system(f'start {random_file}')
-    return f'Танцуем под {random_file.split("/")[-1]} 🔊🔊🔊'
+    return speak(f'Танцуем под {random_file.split("/")[-1]}')
 
 
 def search_engine():
