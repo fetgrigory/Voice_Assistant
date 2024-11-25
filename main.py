@@ -16,7 +16,7 @@ sr.pause_threshold = 0.5
 commands_dict = {
     'commands': {
         'greeting': ['привет', 'приветствую'],
-        'create_task': ['добавить задачу', 'создать задачу', 'заметка'],
+        'create_note': ['добавить задачу', 'создать задачу', 'заметка'],
         'open_website': ['открой браузер', 'запусти браузер', 'открой google chrome', 'google chrome'],
         'about': ['кто ты'],
         'time': ['сколько время', 'время', 'текущее время', 'сейчас времени', 'который час']
@@ -54,15 +54,18 @@ def about():
     return speak('Я Голосовой ассистент создана чтобы служить людям!')
 
 
-def create_task():
+def create_note():
     print('Что добавим в список дел?')
     query = listen_command()
     with open('todo-list.txt', 'a', encoding='utf-8') as file:
         file.write(f'❗️ {query}\n')
-    return speak(f'Задача {query} добавлена в todo-list!')
+        now = datetime.datetime.now()
+    formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
+    return speak(f'Заметка "{query}" создана от {formatted_datetime}.')
 
 
 def time():
+    # Tell the current time
     now = datetime.datetime.now()
     speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
 
