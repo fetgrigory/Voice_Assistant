@@ -32,3 +32,4 @@
 PyAudio 0.2.14 <br />
 SpeechRecognition 3.11.0 <br />
 pyttsx3 2.98 <br />
+python 3.11.9 <br />
