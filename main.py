@@ -6,7 +6,7 @@ Ending //
 '''
 # Installing the necessary libraries
 import speech_recognition
-import webbrowser
+import webbrowser as wb
 import datetime
 import pyttsx3
 
@@ -18,6 +18,7 @@ commands_dict = {
         'greeting': ['привет', 'приветствую'],
         'create_note': ['добавить задачу', 'создать задачу', 'заметка'],
         'open_website': ['открой браузер', 'запусти браузер', 'открой google chrome', 'google chrome'],
+        'search_engine': ['поиск'],
         'about': ['кто ты'],
         'time': ['сколько время', 'время', 'текущее время', 'сейчас времени', 'который час']
 
@@ -70,9 +71,16 @@ def time():
     speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
 
 
+def search_engine():
+    speak('Что искать?')
+    query = listen_command()
+    wb.open('https://www.google.ru/search?q=' + query)
+    return speak('Сейчас найду')
+
+
 def open_website():
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
-    webbrowser.get(chrome_path).open("https://ya.ru/")
+    wb.get(chrome_path).open("https://ya.ru/")
     return speak('Открываю')
 
 
