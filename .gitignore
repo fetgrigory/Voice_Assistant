@@ -1,2 +1,3 @@
 /.mypy_cache
 /venv
+__pycache__/commands.cpython-311.pyc
