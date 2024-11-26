@@ -37,9 +37,12 @@ def listen_command():
             audio = sr.listen(source=mic)
             query = sr.recognize_google(audio_data=audio,
                                         language='ru-RU').lower()
+            print("Распознано: " + query)
         return query
     except speech_recognition.UnknownValueError:
-        speak("Прожуй прежде чем разговаривать")
+        speak("Команда не распознана, повторите!")
+    except speech_recognition.RequestError:
+        print("Неизвестная ошибка, проверьте интернет!")
 
 
 # Initialize the text-to-speech engine
@@ -51,7 +54,7 @@ def greeting(message):
     if "привет" in message:
         speak("Привет друг!")
     else:
-        speak("Прожуй прежде чем разговаривать")
+        speak("Команда не распознана, повторите!")
 
 
 def about():
