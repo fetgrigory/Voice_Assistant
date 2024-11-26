@@ -70,16 +70,26 @@ def music_player():
     return speak(f'Танцуем под {random_file.split("/")[-1]}')
 
 
-def search_engine():
-    speak('Что искать?')
-    query = listen_command()
+def web_search(query):
     wb.open('https://www.google.ru/search?q=' + query)
     speak('Ищу информацию по запросу ' + query)
 
 
+def check_seardhing(query):
+    if "найди" in query:
+        query = query.replace("найди", "").strip()
+        web_search(query)
+    elif "найти" in query:
+        query = query.replace("найти", "").strip()
+        web_search(query)
+    else:
+        return False
+    return True
+
+
 def open_website():
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
-    wb.get(chrome_path).open("https://ya.ru/")
+    wb.get(chrome_path).open("https://www.google.ru/")
     return speak('Открываю')
 
 
@@ -101,9 +111,10 @@ def main():
     speak("Гапуся слушает")
     while True:
         query = listen_command()
-        for k, v in commands_dict['commands'].items():
-            if query in v:
-                print(globals()[k]())
+        if not check_seardhing(query):
+            for k, v in commands_dict['commands'].items():
+                if query in v:
+                    print(globals()[k]())
 
 
 if __name__ == '__main__':
