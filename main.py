@@ -71,11 +71,6 @@ def music_player():
     return speak(f'Танцуем под {random_file.split("/")[-1]}')
 
 
-def open_website():
-    os.system('C:/Program Files/Google/Chrome/Application/chrome.exe')
-    return speak('Открываю')
-
-
 def open_telegram():
     os.system('C:/Users/Admin/AppData/Roaming/"Telegram Desktop"/Telegram.exe')
     return speak('Открываю')
