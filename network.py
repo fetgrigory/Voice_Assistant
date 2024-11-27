@@ -1,3 +1,9 @@
+'''
+This module make
+Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
+Starting 27/11/2024
+Ending //
+'''
 import webbrowser as wb
 import wikipedia
 
