@@ -1,3 +1,4 @@
 /.mypy_cache
 /venv
 __pycache__/commands.cpython-311.pyc
+__pycache__/network.cpython-311.pyc
