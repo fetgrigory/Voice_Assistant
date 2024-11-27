@@ -90,7 +90,11 @@ def main():
     while True:
         query = listen_command()
         # Checking if you need to search the internet
-        if not check_seardhing(query):
+        wiki_result = check_seardhing(query)
+        # If the result is from Wikipedia
+        if wiki_result:
+            speak(wiki_result)
+        else:
             for k, v in commands_dict['commands'].items():
                 if query in v:
                     print(globals()[k]())
