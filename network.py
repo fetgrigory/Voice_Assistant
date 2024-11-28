@@ -27,7 +27,7 @@ def wikipedia_search(query):
         query = query.replace("википедия", "").strip()
         # We use the Wikipedia API to get information
         wiki_result = wikipedia.summary(query, sentences=2)
-        print(f"Информация из Википедии: {wiki_result}")
+        print(f"По данным русской википедии: {wiki_result}")
         # Returning the text for voice-over
         return wiki_result
     except wikipedia.exceptions.PageError:
