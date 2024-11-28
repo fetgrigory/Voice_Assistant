@@ -4,14 +4,19 @@ Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
 Starting 27/11/2024
 Ending //
 '''
+# Installing the necessary libraries
 import webbrowser as wb
 import wikipedia
 
 
 def web_search(query):
-    wb.open('https://www.google.ru/search?q=' + query)
-    # Returning the text for voice-over
-    return 'Ищу информацию по запросу ' + query
+    # Checking if the query string is empty
+    if query:
+        wb.open("https://www.google.ru/search?q=" + query)
+        return "Ищу информацию по запросу " + query
+    else:
+        # Returning the text for voice-over
+        return "Я не поняла, что надо искать."
 
 
 def wikipedia_search(query):
@@ -29,6 +34,8 @@ def wikipedia_search(query):
         return "Информация по запросу не найдена в Википедии."
     except wikipedia.exceptions.DisambiguationError:
         return "Найдено несколько вариантов, уточните запрос."
+    except Exception as e:
+        return "Я не поняла, что надо искать в Википедии."
 
 
 def check_seardhing(query):
@@ -42,4 +49,3 @@ def check_seardhing(query):
         return wikipedia_search(query)
     else:
         return False
-    return True
