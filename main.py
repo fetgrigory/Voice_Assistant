@@ -93,8 +93,12 @@ class Assistant:
         except Exception as e:
             self.speak(f"Ошибка при открытии Telegram: {e}")
 
+    def finish(self):
+        self.speak(" Пока, друг!")
+        exit()
+
     def main(self):
-        self.speak("Гапуся слушает")
+        self.speak("Привет, друг! Гапуся слушает.")
         while True:
             query = self.listen_command()
             if query:

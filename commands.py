@@ -7,6 +7,7 @@ commands_dict = {
         'open_website': ['открой браузер', 'запусти браузер', 'открой google chrome', 'google chrome'],
         'open_telegram': ['открой telegram'],
         'search_engine': ['поиск'],
+        'finish': ['пока'],
         'about': ['кто ты'],
         'time': ['сколько время', 'время', 'текущее время', 'сейчас времени', 'который час']
 
