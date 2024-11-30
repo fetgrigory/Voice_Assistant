@@ -21,7 +21,7 @@ The program implements the functionality of a simple voice assistant capable of 
 * **Information Retrieval (`NetworkActions` Class):**
     * `web_search()`: Searches Google using `webbrowser` to open the link in a browser. The query is formed by concatenating the search query with the base Google URL. Example: `https://www.google.com/search?q={search_query}`.
     * `wikipedia_search()`: Searches Wikipedia (handling `wikipedia.exceptions.PageError` exceptions when information is missing).
-    * `check_searching()`: heck_searching(): Determines the search type based on keywords in the query. It should specify which keywords are used to determine the search type. Currently, the voice assistant supports only Russian.  The complete list of commands is in the file `commands.py`.
+    * `check_searching()`: heck_searching(): Determines the search type based on keywords in the query. It should specify which keywords are used to determine the search type. Currently, the voice assistant supports only Russian language.  The complete list of commands is in the file `commands.py`.
 * **Speech Synthesis:** `pyttsx3` converts text responses into speech.
 
 
