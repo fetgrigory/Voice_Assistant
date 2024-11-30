@@ -1,64 +1,68 @@
-# 🌐 Голосовой ассистент на Python
-Проект представляет собой голосового помощника, написанного на Python с использованием объектно-ориентированного программирования (ООП) и принципа композиции.  Выбор композиции вместо наследования является критическим для обеспечения гибкости, поддерживаемости и масштабируемости проекта.
+# 🌐 Voice Assistant in Python
 
-**Описание программы:**
+This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle.  The choice of composition over inheritance is crucial for ensuring flexibility, maintainability, and scalability of the project.
 
-Программа реализует функциональность простого голосового помощника, способного распознавать голосовые команды, выполнять различные действия и отвечать голосом.  Используемые библиотеки: `speech_recognition` (распознавание речи), `pyttsx3` (синтез речи), `wikipedia` (поиск информации в Википедии), `webbrowser` (открытие ссылок в браузере).  Функциональность расширяема через словарь команд `commands_dict` в файле `commands.py`.
+**Program Description:**
 
-**Основные функции программы:**
+The program implements the functionality of a simple voice assistant capable of recognizing voice commands, performing various actions, and responding vocally.  The libraries used are: `speech_recognition` (speech recognition), `pyttsx3` (speech synthesis), `wikipedia` (Wikipedia information retrieval), and `webbrowser` (opening links in a browser).  Functionality is extensible through the `commands_dict` dictionary in the `commands.py` file.
 
-* **Распознавание речи:**  `speech_recognition` преобразует аудиоввод в текстовый запрос.
-* **Обработка команд:**  Функция `process_command` в `main.py` анализирует запрос, сопоставляя его со словарем команд (`commands_dict`) и вызывая соответствующий метод класса `Assistant`.
-* **Выполнение команд (Класс `Assistant`):**
-    * `greeting()`: приветственное сообщение.
-    * `about()`: информация о возможностях помощника.
-    * `create_note()`: создание текстовой заметки (с возможностью сохранения в файл, например, в формате `.txt`).  Следует указать, как именно хранятся заметки (путь к файлу, имя файла, механизм именования для предотвращения перезаписи).
-    * `time()`: вывод текущего времени и даты.
-    * `music_player()`: воспроизведение случайного музыкального файла из указанной директории.  Необходимо указать обработку ошибок (файлы не найдены, неверный формат и т.д.).
-    * `open_telegram()`: запуск Telegram.  Необходимо учесть, что это может потребовать дополнительных библиотек или взаимодействия с операционной системой.
-    * `finish()`: корректное завершение работы программы.
-* **Поиск информации (Класс `NetworkActions`):**
-    * `web_search()`: поиск в Google с использованием webbrowser для открытия ссылки в браузере. Запрос формируется путем конкатенации поискового запроса с базовым URL Google. Пример: `https://www.google.com/search?q={search_query}`.
-    * `wikipedia_search()`: поиск в Википедии (обработка исключений wikipedia.exceptions.PageError при отсутствии информации).
-    * `check_searching()`:  определяет тип поиска по ключевым словам запроса. Необходимо указать, какие ключевые слова используются для определения типа поиска (например, "найди в интернете", "найди в Википедии").
-* **Синтез речи:** `pyttsx3` преобразует текстовые ответы в речь.
+**Main Program Functions:**
+
+* **Speech Recognition:** `speech_recognition` converts audio input into a text query.
+* **Command Processing:** The `process_command` function in `main.py` analyzes the query, matching it with the `commands_dict` and calling the corresponding method of the `Assistant` class.
+* **Command Execution (`Assistant` Class):**
+    * `greeting()`: A welcome message.
+    * `about()`: Information about the assistant's capabilities.
+    * `create_note()`: Creates a text note (with the ability to save it to a file, for example, in `.txt` format).  It should specify how notes are stored (file path, file name, naming mechanism to prevent overwriting).
+    * `time()`: Displays the current time and date.
+    * `music_player()`: Plays a random music file from a specified directory.  Error handling (files not found, incorrect format, etc.) should be implemented.
+    * `open_telegram()`: Launches Telegram.  It should be noted that this may require additional libraries or interaction with the operating system.
+    * `finish()`: Gracefully terminates the program.
+* **Information Retrieval (`NetworkActions` Class):**
+    * `web_search()`: Searches Google using `webbrowser` to open the link in a browser. The query is formed by concatenating the search query with the base Google URL. Example: `https://www.google.com/search?q={search_query}`.
+    * `wikipedia_search()`: Searches Wikipedia (handling `wikipedia.exceptions.PageError` exceptions when information is missing).
+    * `check_searching()`: Determines the search type based on keywords in the query.  It should specify which keywords are used to determine the search type (e.g., "search the internet", "search Wikipedia").
+* **Speech Synthesis:** `pyttsx3` converts text responses into speech.
 
 
-**ООП и композиция:**
+**OOP and Composition:**
 
-Проект  использует **композицию** вместо наследования. Класс `Assistant` содержит объекты `sr.Recognizer`, `pyttsx3.init()`, и `NetworkActions` в качестве атрибутов. Это обеспечивает:
+The project uses **composition** instead of inheritance. The `Assistant` class contains `sr.Recognizer`, `pyttsx3.init()`, and `NetworkActions` objects as attributes. This provides:
 
-* **Гибкость:** Возможность замены или добавления компонентов без изменения основного класса `Assistant`.
-* **Модульность:**  Каждый компонент имеет свою область ответственности, что улучшает читаемость и поддерживаемость кода.
-* **Избегание проблемы "хрупкого базового класса":** Изменения в одном компоненте не влияют на другие.
-* **Лучшая инкапсуляция:** Внутренняя реализация компонентов скрыта от `Assistant`.
-* **Повторное использование кода:** Компоненты могут использоваться в других частях проекта или в других проектах.
-* **Упрощённое тестирование:**  Компоненты тестируются независимо.
-# Использование
-### Подготовка виртуального окружения и запуск программы
+* **Flexibility:** The ability to replace or add components without modifying the main `Assistant` class.
+* **Modularity:** Each component has its own area of responsibility, which improves code readability and maintainability.
+* **Avoids the "fragile base class" problem:** Changes in one component do not affect others.
+* **Better Encapsulation:** The internal implementation of the components is hidden from `Assistant`.
+* **Code Reusability:** Components can be used in other parts of the project or in other projects.
+* **Simplified Testing:** Components are tested independently.
 
-1. Создайте виртуальное окружение для изоляции зависимостей проекта. 
-   Используйте команду:
+# Usage
+### Setting up a virtual environment and running the program
+
+1. Create a virtual environment to isolate project dependencies.
+   Use the command:
    ```bash
    python -m venv venv
    ```
 
-2. Активируйте виртуальное окружение:
-   - На Windows:
+2. Activate the virtual environment:
+   - On Windows:
      ```bash
      venv\Scripts\activate
      ```
-   - На macOS и Linux:
+   - On macOS and Linux:
      ```bash
      source venv/bin/activate
      ```
-3. Запустите программу командой:
+
+3. Run the program with the command:
    ```bash
    python main.py
    ```
-## Применяемые библиотеки и версия языка <br />
-PyAudio 0.2.14 <br />
-SpeechRecognition 3.11.0 <br />
-pyttsx3 2.98 <br />
-wikipedia 1.4.0 <br />
-python 3.11.9 <br />
+
+## Libraries Used and Language Version
+PyAudio 0.2.14
+SpeechRecognition 3.11.0
+pyttsx3 2.98
+wikipedia 1.4.0
+python 3.11.9
