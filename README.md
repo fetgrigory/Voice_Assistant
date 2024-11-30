@@ -61,8 +61,8 @@ The project uses **composition** instead of inheritance. The `Assistant` class c
    ```
 
 ## Libraries Used and Language Version
-PyAudio 0.2.14
-SpeechRecognition 3.11.0
-pyttsx3 2.98
-wikipedia 1.4.0
-python 3.11.9
+PyAudio 0.2.14  <br />
+SpeechRecognition 3.11.0  <br />
+pyttsx3 2.98  <br />
+wikipedia 1.4.0  <br />
+python 3.11.9  <br />
