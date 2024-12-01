@@ -1,6 +1,6 @@
 # 🌐 Voice Assistant in Python
 
-This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle.  The choice of composition over inheritance is crucial for ensuring flexibility, maintainability, and scalability of the project.
+This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle. The code is designed in accordance with the requirements of flake8, which ensures its readability and quality. The choice of composition over inheritance is crucial for ensuring flexibility, maintainability, and scalability of the project.
 
 **Program Description:**
 
