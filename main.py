@@ -140,6 +140,16 @@ class Assistant:
         except Exception as e:
             self.speak(f"Ошибка при открытии Telegram: {e}")
 
+# Gets the weather for the specified city
+    def get_city_weather(self):
+        """AI is creating summary for get_weather
+        """
+        self.speak("Укажите город.")
+        city = self.listen_command()
+        if city:
+            result = self.network_actions.get_weather(city)
+            self.speak(result)
+
     # Ends the assistant's operation
     def finish(self):
         """AI is creating summary for finish

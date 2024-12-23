@@ -7,6 +7,10 @@ Ending //
 # Installing the necessary libraries
 import wikipedia
 import webbrowser as wb
+import os
+import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class NetworkActions:
@@ -82,3 +86,32 @@ class NetworkActions:
             return self.wikipedia_search(query)
         else:
             return False
+
+# Getting weather information
+    def get_weather(self, city):
+        """AI is creating summary for get_weather
+
+        Args:
+            city ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        open_weather_token = os.getenv("OPEN_WEATHER_TOKEN")
+        if not open_weather_token:
+            return "Ошибка: не задан токен для OpenWeather."
+
+        try:
+            r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric")
+            data = r.json()
+
+            if data.get("cod") != 200:
+                return f"Ошибка: {data.get('message', 'не удалось получить данные о погоде')}."
+
+            temp = data["main"]["temp"]
+            feels_like = data["main"]["feels_like"]
+            weather = data["weather"][0]["description"]
+
+            return f"Сейчас в городе {city}: {weather}, температура {temp}°C, ощущается как {feels_like}°C."
+        except Exception as e:
+            return f"Ошибка при получении данных о погоде: {e}"
