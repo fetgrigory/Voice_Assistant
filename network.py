@@ -102,7 +102,7 @@ class NetworkActions:
             return "Ошибка: не задан токен для OpenWeather."
 
         try:
-            r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric")
+            r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric&lang=ru")
 
             data = r.json()
 

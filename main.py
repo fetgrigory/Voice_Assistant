@@ -144,7 +144,7 @@ class Assistant:
     def get_city_weather(self):
         """AI is creating summary for get_weather
         """
-        self.speak("Укажите город.")
+        self.speak("Укажите город:")
         city = self.listen_command()
         if city:
             result = self.network_actions.get_weather(city)
