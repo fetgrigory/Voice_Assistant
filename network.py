@@ -103,6 +103,7 @@ class NetworkActions:
 
         try:
             r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric")
+
             data = r.json()
 
             if data.get("cod") != 200:
