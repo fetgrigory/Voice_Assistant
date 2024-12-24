@@ -136,7 +136,7 @@ class Assistant:
         """AI is creating summary for time
         """
         now = datetime.datetime.now()
-        self.speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
+        self.speak("Сейчас " + now.strftime("%H:%M"))
 
     # Plays a random music file from a specified directory
     def music_player(self):
