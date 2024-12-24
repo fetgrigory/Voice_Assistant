@@ -41,21 +41,31 @@ class Assistant:
         Returns:
             [type]: [description]
         """
-        with sr.Microphone() as source:
-            # Listens for audio input from the microphone
-            print("Слушаю...")
-            audio = self.r.listen(source)
-            try:
-                # Transcribes the audio using Google Speech Recognition
-                query = self.r.recognize_google(audio_data=audio, language='ru-RU').lower()
-                print("Распознано: " + query)
-                return query
-            except sr.UnknownValueError:
-                self.speak("Команда не распознана, повторите!")
-                return None
-            except sr.RequestError:
-                self.speak("Неизвестная ошибка, проверьте интернет!")
-                return None
+        # Listens for audio input from the microphone
+        print("Слушаю...")
+
+        # Define parameters for recording
+        fs = 16000  # Sampling frequency
+        duration = 5  # Seconds to record
+
+        try:
+            # Record audio
+            audio = sd.rec(int(duration * fs), samplerate=fs, channels=1, dtype='int16')
+            sd.wait()  # Wait until recording is finished
+
+            # Convert to AudioData for speech recognition
+            audio_data = sr.AudioData(audio.tobytes(), fs, 2)
+
+            # Recognize speech using Google Web Speech API
+            query = self.r.recognize_google(audio_data, language='ru-RU').lower()
+            print("Распознано: " + query)
+            return query
+        except sr.UnknownValueError:
+            self.speak("Команда не распознана, повторите!")
+            return None
+        except sr.RequestError:
+            self.speak("Неизвестная ошибка, проверьте интернет!")
+            return None
 
     def speak(self, message):
         """AI is creating summary for speak
