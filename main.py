@@ -7,9 +7,10 @@ Ending //
 # Installing the necessary libraries
 import speech_recognition as sr
 import datetime
-import pyttsx3
 import os
 import random
+import sounddevice as sd
+import torch
 from commands import commands_dict
 from network import NetworkActions
 
@@ -24,8 +25,15 @@ class Assistant:
     def __init__(self):
         self.r = sr.Recognizer()
         self.r.pause_threshold = 0.5
-        self.speak_engine = pyttsx3.init()
         self.network_actions = NetworkActions()
+
+        # Load Silero TTS model
+        self.model, self.example_text = torch.hub.load(
+            repo_or_dir='snakers4/silero-models',
+            model='silero_tts',
+            language='ru',
+            speaker='v3_1_ru'
+        )
 
     def listen_command(self):
         """AI is creating summary for listen_command
@@ -46,7 +54,7 @@ class Assistant:
                 self.speak("Команда не распознана, повторите!")
                 return None
             except sr.RequestError:
-                print("Неизвестная ошибка, проверьте интернет!")
+                self.speak("Неизвестная ошибка, проверьте интернет!")
                 return None
 
     def speak(self, message):
@@ -55,12 +63,14 @@ class Assistant:
         Args:
             message ([type]): [description]
         """
-        # Speaks the given message using the text-to-speech engine
         print(message)
-        # Sends the message to the text-to-speech engine
-        self.speak_engine.say(message)
-        self.speak_engine.runAndWait()
-        self.speak_engine.stop()
+        audio = self.model.apply_tts(
+            text=message,
+            speaker='baya',
+            sample_rate=48000
+        )
+        sd.play(audio, samplerate=48000)
+        sd.wait()
 
     def process_command(self, query):
         """AI is creating summary for process_command
@@ -142,7 +152,7 @@ class Assistant:
 
 # Gets the weather for the specified city
     def get_city_weather(self):
-        """AI is creating summary for get_weather
+        """AI is creating summary for get_city_weather
         """
         self.speak("Укажите город:")
         city = self.listen_command()
