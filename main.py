@@ -5,7 +5,8 @@ Starting 23/11/2024
 Ending //
 '''
 # Installing the necessary libraries
-import speech_recognition as sr
+import vosk
+import json
 import datetime
 import os
 import random
@@ -23,8 +24,7 @@ class Assistant:
     """
     # Class representing a voice assistant that can listen to commands, process them, and respond accordingly
     def __init__(self):
-        self.r = sr.Recognizer()
-        self.r.pause_threshold = 0.5
+        self.model = vosk.Model("vosk-model-small-ru-0.22")  # Replace with the path to your Vosk model
         self.network_actions = NetworkActions()
 
         # Initialize pyttsx3 TTS engine
@@ -36,7 +36,6 @@ class Assistant:
         Returns:
             [type]: [description]
         """
-        # Listens for audio input from the microphone
         print("Слушаю...")
 
         # Define parameters for recording
@@ -48,18 +47,18 @@ class Assistant:
             audio = sd.rec(int(duration * fs), samplerate=fs, channels=1, dtype='int16')
             sd.wait()  # Wait until recording is finished
 
-            # Convert to AudioData for speech recognition
-            audio_data = sr.AudioData(audio.tobytes(), fs, 2)
-
-            # Recognize speech using Google Web Speech API
-            query = self.r.recognize_google(audio_data, language='ru-RU').lower()
-            print("Распознано: " + query)
-            return query
-        except sr.UnknownValueError:
-            self.speak("Команда не распознана, повторите!")
-            return None
-        except sr.RequestError:
-            self.speak("Неизвестная ошибка, проверьте интернет!")
+            # Convert audio to Vosk-compatible format
+            rec = vosk.KaldiRecognizer(self.model, fs)
+            if rec.AcceptWaveform(audio.tobytes()):
+                result = json.loads(rec.Result())
+                query = result.get("text", "").lower()
+                print("Распознано: " + query)
+                return query
+            else:
+                print("Не удалось распознать речь.")
+                return None
+        except Exception as e:
+            self.speak(f"Ошибка записи звука: {e}")
             return None
 
     def speak(self, message):
