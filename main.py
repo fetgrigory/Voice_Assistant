@@ -10,7 +10,7 @@ import datetime
 import os
 import random
 import sounddevice as sd
-import torch
+import pyttsx3
 from commands import commands_dict
 from network import NetworkActions
 
@@ -27,13 +27,8 @@ class Assistant:
         self.r.pause_threshold = 0.5
         self.network_actions = NetworkActions()
 
-        # Load Silero TTS model
-        self.model, self.example_text = torch.hub.load(
-            repo_or_dir='snakers4/silero-models',
-            model='silero_tts',
-            language='ru',
-            speaker='v3_1_ru'
-        )
+        # Initialize pyttsx3 TTS engine
+        self.engine = pyttsx3.init()
 
     def listen_command(self):
         """AI is creating summary for listen_command
@@ -49,7 +44,7 @@ class Assistant:
         duration = 5  # Seconds to record
 
         try:
-            # Record audio
+            # Record audio using sounddevice
             audio = sd.rec(int(duration * fs), samplerate=fs, channels=1, dtype='int16')
             sd.wait()  # Wait until recording is finished
 
@@ -74,13 +69,13 @@ class Assistant:
             message ([type]): [description]
         """
         print(message)
-        audio = self.model.apply_tts(
-            text=message,
-            speaker='baya',
-            sample_rate=48000
-        )
-        sd.play(audio, samplerate=48000)
-        sd.wait()
+        # Set properties for voice (optional)
+        self.engine.setProperty('rate', 200)  # Speed of speech
+        self.engine.setProperty('volume', 1)  # Volume (0.0 to 1.0)
+
+        # Speak the message
+        self.engine.say(message)
+        self.engine.runAndWait()
 
     def process_command(self, query):
         """AI is creating summary for process_command
