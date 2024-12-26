@@ -28,12 +28,12 @@ The program implements a functional voice assistant capable of recognizing voice
 
 **OOP and Composition:**
 
-The project uses composition, where the Assistant class includes objects such as pyttsx3.init() and NetworkActions. This approach offers:
+The project uses composition, where the Assistant class includes objects such as pyttsx3.init() and NetworkActions. This approach offers: <br />
 
-**Flexibility:** Components can be replaced or expanded without altering the Assistant class.
-**Modularity:** Each component has a distinct responsibility, improving maintainability and readability.
-**Reusability:** Components can be reused in other projects or features.
-**Simplified Testing:** Each component can be tested independently.
+**Flexibility:** Components can be replaced or expanded without altering the Assistant class.<br />
+**Modularity:** Each component has a distinct responsibility, improving maintainability and readability.<br />
+**Reusability:** Components can be reused in other projects or features.<br />
+**Simplified Testing:** Each component can be tested independently.<br />
 
 # Usage
 ### Setting up a virtual environment and running the program
