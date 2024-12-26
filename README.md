@@ -1,10 +1,11 @@
 # 🌐 Voice Assistant in Python
 
-This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle. The code is designed in accordance with the requirements of flake8, which ensures its readability and quality. The choice of composition over inheritance is crucial for ensuring flexibility, maintainability, and scalability of the project.
+This project implements a voice assistant in Python using object-oriented programming (OOP) principles and composition. The program is designed to meet flake8 coding standards, ensuring readability and quality.
 
 **Program Description:**
 
-The program implements the functionality of a simple voice assistant capable of recognizing voice commands, performing various actions, and responding vocally.  The libraries used are: `speech_recognition` (speech recognition), `pyttsx3` (speech synthesis), `wikipedia` (Wikipedia information retrieval), and `webbrowser` (opening links in a browser).  Functionality is extensible through the `commands_dict` dictionary in the `commands.py` file.
+The program implements a simple voice assistant capable of recognizing voice commands, performing various tasks, and responding vocally. It uses the following libraries:
+
 
 **Main Program Functions:**
 
@@ -21,20 +22,20 @@ The program implements the functionality of a simple voice assistant capable of 
 * **Information Retrieval (`NetworkActions` Class):**
     * `web_search()`: Searches Google using `webbrowser` to open the link in a browser. The query is formed by concatenating the search query with the base Google URL. Example: `https://www.google.com/search?q={search_query}`.
     * `wikipedia_search()`: Searches Wikipedia (handling `wikipedia.exceptions.PageError` exceptions when information is missing).
-    * `check_searching()`: heck_searching(): Determines the search type based on keywords in the query. It should specify which keywords are used to determine the search type. Currently, the voice assistant supports only Russian language.  The complete list of commands is in the file `commands.py`.
+    * `check_searching()`: heck_searching(): Determines the search type based on keywords in the query. It should specify which keywords are used to determine the search type. 
+    * `get_city_weather():` Retrieves weather information for a specified city using OpenWeather's API and an API key from the .env file.
+    Currently, the voice assistant supports only Russian language.  The complete list of commands is in the file `commands.py`.
 * **Speech Synthesis:** `pyttsx3` converts text responses into speech.
 
 
 **OOP and Composition:**
 
-The project uses **composition** instead of inheritance. The `Assistant` class contains `sr.Recognizer`, `pyttsx3.init()`, and `NetworkActions` objects as attributes. This provides:
+The project uses composition, where the Assistant class includes objects such as pyttsx3.init() and NetworkActions. This approach offers:
 
-* **Flexibility:** The ability to replace or add components without modifying the main `Assistant` class.
-* **Modularity:** Each component has its own area of responsibility, which improves code readability and maintainability.
-* **Avoids the "fragile base class" problem:** Changes in one component do not affect others.
-* **Better Encapsulation:** The internal implementation of the components is hidden from `Assistant`.
-* **Code Reusability:** Components can be used in other parts of the project or in other projects.
-* **Simplified Testing:** Components are tested independently.
+**Flexibility:** Components can be replaced or expanded without altering the Assistant class.
+**Modularity:** Each component has a distinct responsibility, improving maintainability and readability.
+**Reusability:** Components can be reused in other projects or features.
+**Simplified Testing:** Each component can be tested independently.
 
 # Usage
 ### Setting up a virtual environment and running the program
@@ -54,16 +55,22 @@ The project uses **composition** instead of inheritance. The `Assistant` class c
      ```bash
      source venv/bin/activate
      ```
+3. Set up your OpenWeather API key in a .env file:
+  ```bash
+   OPENWEATHER_API_KEY=your_api_key_here
+```
 
-3. Run the program with the command:
+
+4. Run the program with the command:
    ```bash
    python main.py
    ```
 
 ## Libraries Used and Language Version
-Sounddevice          0.5.1<br />
+Sounddevice 0.5.1<br />
+numpy 2.2.1  <br />
+python-dotenv 1.0.1 <br />
 pyttsx3 2.98  <br />
-SpeechRecognition 3.11.0  <br />
-Torch 2.5.1 <br />
+vosk 0.3.45  <br />
 Wikipedia 1.4.0  <br />
 python 3.11.9  <br />
