@@ -7,7 +7,7 @@ This project implements a voice assistant in Python using object-oriented progra
 The program implements a functional voice assistant capable of recognizing voice commands, performing various tasks, and responding vocally. The assistant leverages several Python libraries for speech recognition, text processing, and voice synthesis, including the following:
 **Main Program Functions:**
 
-* **Speech Recognition:** `speech_recognition` converts audio input into a text query.
+* **Speech Recognition:** The `vosk` library converts audio input into text.
 * **Command Processing:** The `process_command` function in `main.py` analyzes the query, matching it with the `commands_dict` and calling the corresponding method of the `Assistant` class.
 * **Command Execution (`Assistant` Class):**
     * `greeting()`: A welcome message.
