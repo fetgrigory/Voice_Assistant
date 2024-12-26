@@ -12,7 +12,7 @@ The program implements a functional voice assistant capable of recognizing voice
 * **Command Execution (`Assistant` Class):**
     * `greeting()`: A welcome message.
     * `about()`: Information about the assistant's capabilities.
-    * `create_note()`: Creates a text note (with the ability to save it to a file, for example, in `.txt` format).  It should specify how notes are stored (file path, file name, naming mechanism to prevent overwriting).
+    * `create_note()`: Creates a text note (with the ability to save it to a file, for example, in `.txt` format).  "This method specifies how notes are stored (file path, file name, naming mechanism to prevent overwriting).
     * `time()`: Displays the current time and date.
     * `music_player()`: Plays a random music file from a specified directory.  Error handling (files not found, incorrect format, etc.) should be implemented.
     * `open_telegram()`: Launches Telegram.  It should be noted that this may require additional libraries or interaction with the operating system.
