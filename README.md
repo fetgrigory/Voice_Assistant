@@ -1,12 +1,10 @@
 # 🌐 Voice Assistant in Python
 
-This project implements a voice assistant in Python using object-oriented programming (OOP) principles and composition. The program is designed to meet flake8 coding standards, ensuring readability and quality.
+This project implements a voice assistant in Python using object-oriented programming (OOP) principles and composition. The program adheres to flake8 coding standards, which ensures high readability, consistent style, and code quality.
 
 **Program Description:**
 
-The program implements a simple voice assistant capable of recognizing voice commands, performing various tasks, and responding vocally. It uses the following libraries:
-
-
+The program implements a functional voice assistant capable of recognizing voice commands, performing various tasks, and responding vocally. The assistant leverages several Python libraries for speech recognition, text processing, and voice synthesis, including the following:
 **Main Program Functions:**
 
 * **Speech Recognition:** `speech_recognition` converts audio input into a text query.
