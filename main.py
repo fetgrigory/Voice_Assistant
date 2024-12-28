@@ -149,8 +149,8 @@ class Assistant:
         """AI is creating summary for open_telegram
         """
         try:
-            os.system('C:/Users/Admin/AppData/Roaming/"Telegram Desktop"/Telegram.exe')
             self.speak('Открываю Telegram')
+            os.system('C:/Users/Admin/AppData/Roaming/"Telegram Desktop"/Telegram.exe')
         except Exception as e:
             self.speak(f"Ошибка при открытии Telegram: {e}")
 
