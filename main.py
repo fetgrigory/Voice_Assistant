@@ -6,7 +6,6 @@ Ending //
 '''
 # Installing the necessary libraries
 import vosk
-import json
 import datetime
 import os
 import random
@@ -50,8 +49,8 @@ class Assistant:
             # Convert audio to Vosk-compatible format
             rec = vosk.KaldiRecognizer(self.model, fs)
             if rec.AcceptWaveform(audio.tobytes()):
-                result = json.loads(rec.Result())
-                query = result.get("text", "").lower()
+                result = rec.Result()  # Get the raw result
+                query = result.split('"')[3].lower()  # Extract the recognized text
                 print("Распознано: " + query)
                 return query
             else:
