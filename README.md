@@ -1,40 +1,40 @@
-# 🌐 Voice Assistant in Python
+# Gapuсya Voice Assistant
+Gapusya is a voice assistant designed to execute various commands using STT (Speech-to-Text) and TTS (Text-to-Speech) technologies. It operates offline and does not require connection to cloud services.<br />
+The goal of the project is to create a local voice assistant capable of performing various tasks, such as creating notes, playing music, checking the weather, and much more, relying solely on local resources.<br />
+# Key Features of the Project:
+**Works Offline:** However, an internet connection is required for executing commands related to Wikipedia searches and weather data retrieval.<br />
+**No Data Collection:** All data remains on your device without being sent to the cloud.
+The project is written in Python using various libraries for speech recognition, speech synthesis, and working with internet resources.
+# Technology Stack
+**Speech Recognition:**  Vosk (a local speech recognition engine)<br />
+**Speech Synthesis (TTS):** pyttsx3 (a local speech synthesizer)<br />
+**Command Processing**: A command dictionary based on keywords using Python. <br />
+**Wikipedia Information Search**: wikipedia library for searching Wikipedia. <br />
+**Weather Retrieval via OpenWeather API**: for obtaining weather information.<br /> 
 
-This project implements a voice assistant in Python using object-oriented programming (OOP) principles and composition. The program adheres to flake8 coding standards, which ensures high readability, consistent style, and code quality.
+# Architecture and Code Description
+**main.py** — the main program file. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
+**commands.py** — a file with command settings, where keywords for various commands are defined.<br />
+**network.py** — a file for interacting with external services, such as Wikipedia search, weather retrieval, and web search <br />
 
-**Program Description:**
-
-The program implements a functional voice assistant capable of recognizing voice commands, performing various tasks, and responding vocally. The assistant leverages several Python libraries for speech recognition, text processing, and voice synthesis, including the following:
-
-**Main Program Functions:**
-* **Speech Recognition:** The `vosk` library converts audio input into text.
-* **Command Processing:** The `process_command` function in `main.py` analyzes the query, matching it with the `commands_dict` and calling the corresponding method of the `Assistant` class.
-* **Command Execution (`Assistant` Class):**
-    * `greeting()`: A welcome message.
-    * `about()`: Information about the assistant's capabilities.
-    * `create_note()`: Creates a text note (with the ability to save it to a file, for example, in `.txt` format).  "This method specifies how notes are stored (file path, file name, naming mechanism to prevent overwriting).
-    * `time()`: Displays the current time and date.
-    * `music_player()`: Plays a random music file from a specified directory.  Error handling (files not found, incorrect format, etc.) should be implemented.
-    * `open_telegram()`: Launches Telegram.  It should be noted that this may require additional libraries or interaction with the operating system.
-    * `finish()`: Gracefully terminates the program.
-* **Information Retrieval (`NetworkActions` Class):**
-    * `web_search()`: Searches Google using `webbrowser` to open the link in a browser. The query is formed by concatenating the search query with the base Google URL. Example: `https://www.google.com/search?q={search_query}`.
-    * `wikipedia_search()`: Searches Wikipedia (handling `wikipedia.exceptions.PageError` exceptions when information is missing).
-    * `check_searching()`: heck_searching(): Determines the search type based on keywords in the query. It should specify which keywords are used to determine the search type. 
-    * `get_city_weather():` Retrieves weather information for a specified city using OpenWeather's API and an API key from the .env file.
-    Currently, the voice assistant supports only Russian language.  The complete list of commands is in the file `commands.py`.
-* **Speech Synthesis:** `pyttsx3` converts text responses into speech.
-
-
-**OOP and Composition:**
-
-The project uses composition, where the Assistant class includes objects such as pyttsx3.init() and NetworkActions. This approach offers: <br />
-
-**Flexibility:** Components can be replaced or expanded without altering the Assistant class.<br />
-**Modularity:** Each component has a distinct responsibility, improving maintainability and readability.<br />
-**Reusability:** Components can be reused in other projects or features.<br />
-**Simplified Testing:** Each component can be tested independently.<br />
-
+**Code Example:**
+```
+def get_weather(self, city):
+    open_weather_token = os.getenv("OPEN_WEATHER_TOKEN")
+    if not open_weather_token:
+        return "Ошибка: не задан токен для OpenWeather."
+    try:
+        r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric&lang=ru")
+        data = r.json()
+        if data.get("cod") != 200:
+            return f"Ошибка: {data.get('message', 'не удалось получить данные о погоде')}."
+        temp = data["main"]["temp"]
+        feels_like = data["main"]["feels_like"]
+        weather = data["weather"][0]["description"]
+        return f"Сейчас в городе {city}: {weather}, температура {temp}°C, ощущается как {feels_like}°C."
+    except Exception as e:
+        return f"Ошибка при получении данных о погоде: {e}"
+```
 # Usage
 ### Setting up a virtual environment and running the program
 
@@ -72,3 +72,11 @@ pyttsx3 2.98  <br />
 vosk 0.3.45  <br />
 Wikipedia 1.4.0  <br />
 python 3.11.9  <br />
+
+# New features that will be added in the future:
+Integrate the fuzzy recognition system using the "RapidFuzz" library.<br />
+Integration of the computer management system.<br />
+Integration with the WhatsApp messenger.<br />
+Support for multiple languages.<br />
+# Athor
+Fetkulin Grigory <br />
