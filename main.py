@@ -87,12 +87,17 @@ class Assistant:
             if any(command in query for command in v):
                 try:
                     # Gets the method associated with the command
-                    method = getattr(self, k)
-                    method()
+                    method = getattr(self, k, None)
+                    if method:
+                        method()
+                    elif k == 'search_wikipedia':
+                        wiki_result = self.network_actions.wikipedia_search(query)
+                        if wiki_result:
+                            self.speak(wiki_result)
+                    return
                 except AttributeError:
                     self.speak(f"Команда '{query}' пока не реализована.")
                     return
-                return
                 # Checks if the query needs a web search
         wiki_result = self.network_actions.check_searching(query)
         if wiki_result:

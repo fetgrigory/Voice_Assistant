@@ -6,6 +6,7 @@ commands_dict = {
         'music_player': ['музыку'],
         'open_telegram': ['открой телеграмм'],
         'search_engine': ['поиск'],
+        'search_wikipedia': ['википедия', 'найди в википедии', 'поиск в википедии'],
         'finish': ['пока'],
         'about': ['кто ты'],
         'time': ['сколько сейчас время'],
