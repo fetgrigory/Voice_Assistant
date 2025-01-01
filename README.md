@@ -1,4 +1,4 @@
-# Gapuсya Voice Assistant
+# 🌐 Voice Assistant in Python
 Gapusya is a voice assistant designed to execute various commands using STT (Speech-to-Text) and TTS (Text-to-Speech) technologies. It operates offline and does not require connection to cloud services.<br />
 The goal of the project is to create a local voice assistant capable of performing various tasks, such as creating notes, playing music, checking the weather, and much more, relying solely on local resources.<br />
 # Key Features of the Project:
