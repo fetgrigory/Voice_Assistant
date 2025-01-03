@@ -79,31 +79,32 @@ python 3.11.9  <br />
 3. Restart PC  
 4. Sleep mode  
 5. Empty recycle bin  
-6. Create folder/document  
-7. Increase/decrease/mute volume  
-8. Take a screenshot
-9. Copy text
-10. Paste text
-11. Delete selected text
-12. Switch language
-13. Open videos via voice commands
-14. Pause
-15. Next video
-16. Previous video
-17. Rewind backward
-18. Fast forward
-19. Open the beginning/middle/end of the video
-20. Enable/disable subtitles
-21. Fullscreen mode
-22. Turn sound on/off/increase/decrease
-23. Zoom in/zoom out/reset page scale
-24. New tab
-25. Browser homepage
-26. Incognito mode
-27. Open next/previous tab
-28. Reopen closed tab
-29. Integration with the WhatsApp messenger  
-30. Support for multiple languages
+6. Create folder/document
+7. Check microphone responsiveness  
+8. Increase/decrease/mute volume  
+9. Take a screenshot
+10. Copy text
+11. Paste text
+12. Delete selected text
+13. Switch language
+14. Open videos via voice commands
+15. Pause
+16. Next video
+17. Previous video
+18. Rewind backward
+19. Fast forward
+20. Open the beginning/middle/end of the video
+21. Enable/disable subtitles
+22. Fullscreen mode
+23. Turn sound on/off/increase/decrease
+24. Zoom in/zoom out/reset page scale
+25. New tab
+26. Browser homepage
+27. Incognito mode
+28. Open next/previous tab
+29. Reopen closed tab
+30. Integration with the WhatsApp messenger  
+31. Support for multiple languages
 
 # Athor
 Fetkulin Grigory <br />
