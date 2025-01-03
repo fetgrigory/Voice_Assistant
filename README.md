@@ -105,6 +105,16 @@ python 3.11.9  <br />
 29. Reopen closed tab
 30. Integration with the WhatsApp messenger  
 31. Support for multiple languages
+32. Calculator
+33. Windows Settings
+34. List of commands
+35. File Explorer
+36. Task Manager
+37. Start menu
+38. Run center/menu
+39. Close a program
+40. Minimize/maximize a program (fully)
+41. Partial minimize
 
 # Athor
 Fetkulin Grigory <br />
