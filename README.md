@@ -74,15 +74,16 @@ Wikipedia 1.4.0  <br />
 python 3.11.9  <br />
 
 # New features that will be added in the future:
-1. Integrate the fuzzy recognition system using the "RapidFuzz" library.<br />
-2. Shut down PC <br />
-3. Restart PC <br />
-4. Sleep mode <br />
-5. Empty recycle bin <br />
-6.Create folder/document <br />
-7.Increase/decrease/mute volume <br />
-8.Take a screenshot<br />
-9.Integration with the WhatsApp messenger.<br />
-10. Support for multiple languages.<br />
+1. Integrate the fuzzy recognition system using the "RapidFuzz" library.  
+2. Shut down PC  
+3. Restart PC  
+4. Sleep mode  
+5. Empty recycle bin  
+6. Create folder/document  
+7. Increase/decrease/mute volume  
+8. Take a screenshot  
+9. Integration with the WhatsApp messenger  
+10. Support for multiple languages  
+
 # Athor
 Fetkulin Grigory <br />
