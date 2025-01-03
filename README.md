@@ -73,7 +73,7 @@ vosk 0.3.45  <br />
 Wikipedia 1.4.0  <br />
 python 3.11.9  <br />
 
-# New features that will be added in the future:
+# New features that will be added in the future (Information may be updated as needed):
 1. Integrate the fuzzy recognition system using the "RapidFuzz" library.  
 2. Shut down PC  
 3. Restart PC  
@@ -81,9 +81,29 @@ python 3.11.9  <br />
 5. Empty recycle bin  
 6. Create folder/document  
 7. Increase/decrease/mute volume  
-8. Take a screenshot  
-9. Integration with the WhatsApp messenger  
-10. Support for multiple languages  
+8. Take a screenshot
+9. Copy text
+10. Paste text
+11. Delete selected text
+12. Switch language
+13. Open videos via voice commands
+14. Pause
+15. Next video
+16. Previous video
+17. Rewind backward
+18. Fast forward
+19. Open the beginning/middle/end of the video
+20. Enable/disable subtitles
+21. Fullscreen mode
+22. Turn sound on/off/increase/decrease
+23. Zoom in/zoom out/reset page scale
+24. New tab
+25. Browser homepage
+26. Incognito mode
+27. Open next/previous tab
+28. Reopen closed tab
+29. Integration with the WhatsApp messenger  
+30. Support for multiple languages
 
 # Athor
 Fetkulin Grigory <br />
