@@ -11,6 +11,7 @@ import os
 import random
 import sounddevice as sd
 import pyttsx3
+from rapidfuzz import process, fuzz
 from commands import commands_dict
 from network import NetworkActions
 
@@ -81,23 +82,34 @@ class Assistant:
         Args:
             query ([type]): [description]
         """
-        #  Iterates through the commands dictionary
-        for k, v in commands_dict['commands'].items():
-            # Checks if any keyword for a command is present in the query
-            if any(command in query for command in v):
-                try:
-                    # Gets the method associated with the command
-                    method = getattr(self, k, None)
-                    if method:
-                        method()
-                    elif k == 'search_wikipedia':
-                        wiki_result = self.network_actions.wikipedia_search(query)
-                        if wiki_result:
-                            self.speak(wiki_result)
-                    return
-                except AttributeError:
-                    self.speak(f"Команда '{query}' пока не реализована.")
-                    return
+        best_match = None
+        best_score = 0
+
+        # Iterate through all commands and their keywords
+        for command, keywords in commands_dict['commands'].items():
+            # Find the best match for the current command
+            match, score, _ = process.extractOne(query, keywords, scorer=fuzz.ratio)
+
+            # Save the command with the best match
+            if score > best_score:
+                best_match = command
+                best_score = score
+
+        # If a match is found with a high percentage (e.g., above 75)
+        if best_match and best_score > 75:
+            try:
+                # Execute the matched command
+                method = getattr(self, best_match, None)
+                if method:
+                    method()
+                elif best_match == 'search_wikipedia':
+                    wiki_result = self.network_actions.wikipedia_search(query)
+                    if wiki_result:
+                        self.speak(wiki_result)
+                return
+            except AttributeError:
+                self.speak(f"Команда '{query}' пока не реализована.")
+                return
                 # Checks if the query needs a web search
         wiki_result = self.network_actions.check_searching(query)
         if wiki_result:

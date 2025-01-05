@@ -71,10 +71,11 @@ python-dotenv 1.0.1 <br />
 pyttsx3 2.98  <br />
 vosk 0.3.45  <br />
 Wikipedia 1.4.0  <br />
+RapidFuzz 3.11.0 <br />
 python 3.11.9  <br />
 
 # New features that will be added in the future (Information may be updated as needed):
-1. Integrate the fuzzy recognition system using the "RapidFuzz" library.  
+1. Integrate the fuzzy recognition system using the "RapidFuzz" library.  ✅
 2. Shut down PC  
 3. Restart PC  
 4. Sleep mode  
