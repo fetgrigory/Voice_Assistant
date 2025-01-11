@@ -14,6 +14,7 @@ import pyttsx3
 from rapidfuzz import process, fuzz
 from commands import commands_dict
 from network import NetworkActions
+from system_control import SystemControl
 
 
 class Assistant:
@@ -24,8 +25,11 @@ class Assistant:
     """
     # Class representing a voice assistant that can listen to commands, process them, and respond accordingly
     def __init__(self):
-        self.model = vosk.Model("vosk-model-small-ru-0.22")  # Replace with the path to your Vosk model
+        # Replace with the path to your Vosk model
+        self.model = vosk.Model("vosk-model-small-ru-0.22")
         self.network_actions = NetworkActions()
+        # Creating an instance of the SystemControl class
+        self.system_control = SystemControl()
 
         # Initialize pyttsx3 TTS engine
         self.engine = pyttsx3.init()
@@ -106,6 +110,9 @@ class Assistant:
                     wiki_result = self.network_actions.wikipedia_search(query)
                     if wiki_result:
                         self.speak(wiki_result)
+                # Checking the shutdown command
+                elif best_match == 'shutdown':
+                    self.system_control.shutdown()
                 return
             except AttributeError:
                 self.speak(f"Команда '{query}' пока не реализована.")

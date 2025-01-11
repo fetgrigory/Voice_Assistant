@@ -1,3 +1,9 @@
+'''
+This program make
+Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
+Starting 23/11/2024
+Ending //
+'''
 # settings
 commands_dict = {
     'commands': {
@@ -10,6 +16,7 @@ commands_dict = {
         'finish': ['пока'],
         'about': ['кто ты'],
         'time': ['сколько сейчас время'],
-        "get_city_weather": ["какая погода", "погода в"]
+        "get_city_weather": ["какая погода", "погода в"],
+        'shutdown': ['выключи компьютер', 'выключение', 'покинь']
     }
 }

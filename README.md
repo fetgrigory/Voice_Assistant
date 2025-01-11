@@ -76,7 +76,7 @@ python 3.11.9  <br />
 
 # New features that will be added in the future (Information may be updated as needed):
 1. Integrate the fuzzy recognition system using the "RapidFuzz" library.  ✅
-2. Shut down PC  
+2. Shut down PC  ✅
 3. Restart PC  
 4. Sleep mode  
 5. Empty recycle bin  
