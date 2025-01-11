@@ -113,6 +113,9 @@ class Assistant:
                 # Checking the shutdown command
                 elif best_match == 'shutdown':
                     self.system_control.shutdown()
+                # Checking the restart command
+                elif best_match == 'restart':
+                    self.system_control.restart()
                 return
             except AttributeError:
                 self.speak(f"Команда '{query}' пока не реализована.")
