@@ -89,6 +89,13 @@ class Assistant:
         best_match = None
         best_score = 0
 
+        # Dictionary for system commands
+        system_command = {
+            'shutdown': self.system_control.shutdown,
+            'restart': self.system_control.restart,
+            'sleep': self.system_control.sleep,
+        }
+
         # Iterate through all commands and their keywords
         for command, keywords in commands_dict['commands'].items():
             # Find the best match for the current command
@@ -102,27 +109,22 @@ class Assistant:
         # If a match is found with a high percentage (e.g., above 75)
         if best_match and best_score > 75:
             try:
-                # Execute the matched command
-                method = getattr(self, best_match, None)
-                if method:
-                    method()
-                elif best_match == 'search_wikipedia':
-                    wiki_result = self.network_actions.wikipedia_search(query)
-                    if wiki_result:
-                        self.speak(wiki_result)
-                # Checking the shutdown command
-                elif best_match == 'shutdown':
-                    self.system_control.shutdown()
-                # Checking the restart command
-                elif best_match == 'restart':
-                    self.system_control.restart()
-                # Checking the sleep command
-                elif best_match == 'sleep':
-                    self.system_control.sleep()
-                return
+                # If the command is one of the system commands, call the appropriate method
+                if best_match in system_command:
+                    system_command[best_match]()
+                else:
+                    method = getattr(self, best_match, None)
+                    if method:
+                        method()
+                    elif best_match == 'search_wikipedia':
+                        wiki_result = self.network_actions.wikipedia_search(query)
+                        if wiki_result:
+                            self.speak(wiki_result)
+                    return
             except AttributeError:
                 self.speak(f"Команда '{query}' пока не реализована.")
                 return
+
                 # Checks if the query needs a web search
         wiki_result = self.network_actions.check_searching(query)
         if wiki_result:
