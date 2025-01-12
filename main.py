@@ -116,6 +116,9 @@ class Assistant:
                 # Checking the restart command
                 elif best_match == 'restart':
                     self.system_control.restart()
+                # Checking the sleep command
+                elif best_match == 'sleep':
+                    self.system_control.sleep()
                 return
             except AttributeError:
                 self.speak(f"Команда '{query}' пока не реализована.")

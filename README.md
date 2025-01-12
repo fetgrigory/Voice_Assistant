@@ -78,7 +78,7 @@ python 3.11.9  <br />
 1. Integrate the fuzzy recognition system using the "RapidFuzz" library.  ✅
 2. Shut down PC  ✅
 3. Restart PC ✅ 
-4. Sleep mode  
+4. Sleep mode  ✅
 5. Empty recycle bin  
 6. Create folder/document
 7. Check microphone responsiveness  

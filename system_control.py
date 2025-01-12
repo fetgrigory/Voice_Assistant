@@ -45,3 +45,18 @@ class SystemControl:
         else:
             # Raise an error for unsupported operating systems
             raise NotImplementedError("Unsupported operating system for restart command.")
+
+    def sleep(self):
+        """AI is creating summary for sleep
+
+        Raises:
+            NotImplementedError: [description]
+        """
+        # Get the type of operating system (e.g., Windows, Linux, macOS)
+        os_type = platform.system()
+        # If the operating system is Windows, execute the command to put the system into sleep mode
+        if os_type == "Windows":
+            os.system("rundll32.exe powrprof.dll,SetSuspendState Sleep")
+        else:
+            # Raise an error for unsupported operating systems
+            raise NotImplementedError("Unsupported operating system for sleep command.")
