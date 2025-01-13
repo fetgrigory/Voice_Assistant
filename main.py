@@ -91,6 +91,7 @@ class Assistant:
 
         # Dictionary for system commands
         system_command = {
+            'empty':  self.system_control.empty,
             'shutdown': self.system_control.shutdown,
             'restart': self.system_control.restart,
             'sleep': self.system_control.sleep,

@@ -7,11 +7,34 @@ Ending //
 # Installing the necessary libraries
 import os
 import platform
+from win32com.shell import shell
 
 
 class SystemControl:
     """AI is creating summary for
     """
+    def empty(self, confirm=True, show_progress=True, sound=True):
+        """AI is creating summary for empty
+
+        Args:
+            confirm (bool, optional): [description]. Defaults to True.
+            show_progress (bool, optional): [description]. Defaults to True.
+            sound (bool, optional): [description]. Defaults to True.
+        """
+        flags = 0
+        if not confirm:
+            flags |= 0x00000001  # Suppress confirmation dialog
+        if not show_progress:
+            flags |= 0x00000002  # Suppress progress dialog
+        if not sound:
+            flags |= 0x00000004  # Suppress sound
+
+        try:
+            shell.SHEmptyRecycleBin(None, None, flags)
+            print("Корзина успешно очищена.")
+        except Exception as e:
+            print(f"Ошибка при очистке корзины: {e}")
+
     def shutdown(self):
         """AI is creating summary for shutdown
 
