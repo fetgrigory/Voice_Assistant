@@ -79,7 +79,7 @@ python 3.11.9  <br />
 2. Shut down PC  ✅
 3. Restart PC ✅ 
 4. Sleep mode  ✅
-5. Empty recycle bin  
+5. Empty recycle bin ✅ 
 6. Create folder/document
 7. Check microphone responsiveness  
 8. Increase/decrease/mute volume  

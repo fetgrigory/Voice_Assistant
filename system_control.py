@@ -31,8 +31,15 @@ class SystemControl:
         if not sound:
             # Turn off sound
             flags |= shellcon.SHERB_NOSOUND
-
         try:
+            # Check if the recycle bin is empty
+            stats = shell.SHQueryRecycleBin(None)
+            # SHQueryRecycleBin returns a structure with multiple values. To get information
+            # about the number of items, use the i64NumItems property from stats.
+            if stats[0] == 0:  # stats[0] is the number of items in the recycle bin
+                print("Корзина уже пуста.")
+                return
+            # Clear the recycle bin
             shell.SHEmptyRecycleBin(None, None, flags)
             print("Корзина успешно очищена.")
         except Exception as e:
