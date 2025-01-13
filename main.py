@@ -175,7 +175,7 @@ class Assistant:
         else:
             self.speak("В папке 'music' нет файлов.")
 
-    # Opens the Telegram application
+        # Opens the Telegram application
     def open_telegram(self):
         """AI is creating summary for open_telegram
         """
@@ -184,6 +184,16 @@ class Assistant:
             os.system('C:/Users/Admin/AppData/Roaming/"Telegram Desktop"/Telegram.exe')
         except Exception as e:
             self.speak(f"Ошибка при открытии Telegram: {e}")
+
+    # Opens the Browser application
+    def open_browser(self):
+        """AI is creating summary for open_browser
+        """
+        try:
+            self.speak('Открываю браузер')
+            os.system('"C:/Program Files/Google/Chrome/Application/chrome.exe"')
+        except Exception as e:
+            self.speak(f"Ошибка при открытии браузера: {e}")
 
 # Gets the weather for the specified city
     def get_city_weather(self):
