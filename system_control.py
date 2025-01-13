@@ -7,27 +7,30 @@ Ending //
 # Installing the necessary libraries
 import os
 import platform
-from win32com.shell import shell
+from win32com.shell import shell, shellcon
 
 
 class SystemControl:
     """AI is creating summary for
     """
-    def empty(self, confirm=True, show_progress=True, sound=True):
+    def empty(self, confirm=False, show_progress=False, sound=True):
         """AI is creating summary for empty
 
         Args:
-            confirm (bool, optional): [description]. Defaults to True.
-            show_progress (bool, optional): [description]. Defaults to True.
+            confirm (bool, optional): [description]. Defaults to False.
+            show_progress (bool, optional): [description]. Defaults to False.
             sound (bool, optional): [description]. Defaults to True.
         """
         flags = 0
         if not confirm:
-            flags |= 0x00000001  # Suppress confirmation dialog
+            # Disable confirmation dialog
+            flags |= shellcon.SHERB_NOCONFIRMATION
         if not show_progress:
-            flags |= 0x00000002  # Suppress progress dialog
+            # Disable progress display
+            flags |= shellcon.SHERB_NOPROGRESSUI
         if not sound:
-            flags |= 0x00000004  # Suppress sound
+            # Turn off sound
+            flags |= shellcon.SHERB_NOSOUND
 
         try:
             shell.SHEmptyRecycleBin(None, None, flags)
