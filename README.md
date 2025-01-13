@@ -99,8 +99,8 @@ python 3.11.9  <br />
 22. Fullscreen mode
 23. Turn sound on/off/increase/decrease
 24. Zoom in/zoom out/reset page scale
-25. New tab
-26. Browser homepage
+25. Open browser ✅
+26. New tab
 27. Incognito mode
 28. Open next/previous tab
 29. Reopen closed tab
