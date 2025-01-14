@@ -1,5 +1,6 @@
 # 🌐 Voice Assistant in Python
 Gapusya is a voice assistant designed to execute various commands using STT (Speech-to-Text) and TTS (Text-to-Speech) technologies. It operates offline and does not require connection to cloud services.<br />
+This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle. The code adheres to the flake8 style guide, ensuring readability and quality.<br />
 The goal of the project is to create a local voice assistant capable of performing various tasks, such as creating notes, playing music, checking the weather, and much more, relying solely on local resources.<br />
 # Key Features of the Project:
 **Works Offline:** However, an internet connection is required for executing commands related to Wikipedia searches and weather data retrieval.<br />
@@ -13,10 +14,10 @@ The project is written in Python using various libraries for speech recognition,
 **Weather Retrieval via OpenWeather API**: for obtaining weather information.<br /> 
 
 # Architecture and Code Description
-**main.py** — the main program file. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
-**commands.py** — a file with command settings, where keywords for various commands are defined.<br />
-**network.py** — a file for interacting with external services, such as Wikipedia search, weather retrieval, and web search <br />
-
+**main.py** — the main program module. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
+**commands.py** — a module with command settings, where keywords for various commands are defined.<br />
+**network.py** — a module for interacting with external services, such as Wikipedia search, weather retrieval, and web search <br />
+**system_control.py** —  a module responsible for executing system-level commands, such as shutting down, restarting, or putting the PC to sleep. It also includes functionality for managing the recycle bin and controlling system volume.<br />
 **Code Example:**
 ```
 def get_weather(self, city):
