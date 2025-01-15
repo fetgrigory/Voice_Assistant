@@ -42,17 +42,20 @@ class Assistant:
         """
         print("Слушаю...")
 
-        # Define parameters for recording
-        fs = 16000  # Sampling frequency
+        # Set device and samplerate
+        device = sd.default.device  # Default device
+        # sd.default.device = 1, 3  # Specify your input and output device
+        samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])  # Get the microphone frequency
+
         duration = 5  # Seconds to record
 
         try:
-            # Record audio using sounddevice
-            audio = sd.rec(int(duration * fs), samplerate=fs, channels=1, dtype='int16')
+            # Record audio using sounddevice with the selected device and samplerate
+            audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype='int16')
             sd.wait()  # Wait until recording is finished
 
             # Convert audio to Vosk-compatible format
-            rec = vosk.KaldiRecognizer(self.model, fs)
+            rec = vosk.KaldiRecognizer(self.model, samplerate)
             if rec.AcceptWaveform(audio.tobytes()):
                 result = rec.Result()  # Get the raw result
                 query = result.split('"')[3].lower()  # Extract the recognized text
