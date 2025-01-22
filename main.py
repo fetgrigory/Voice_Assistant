@@ -29,7 +29,7 @@ class Assistant:
         self.model = vosk.Model("vosk-model-small-ru-0.22")
         self.network_actions = NetworkActions()
         # Creating an instance of the SystemControl class
-        self.system_control = SystemControl()
+        self.system_control = SystemControl(self.speak)
 
         # Initialize pyttsx3 TTS engine
         self.engine = pyttsx3.init()

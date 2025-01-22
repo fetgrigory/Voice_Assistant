@@ -13,6 +13,10 @@ from win32com.shell import shell, shellcon
 class SystemControl:
     """AI is creating summary for
     """
+    # Accepts the speak function that is used to voice messages
+    def __init__(self, speak):
+        self.speak = speak
+
     def empty(self, confirm=False, show_progress=False, sound=True):
         """AI is creating summary for empty
 
@@ -35,13 +39,13 @@ class SystemControl:
             # Check if the recycle bin is empty (0 means it's empty)
             stats = shell.SHQueryRecycleBin(None)
             if stats[0] == 0:
-                print("Корзина уже пуста.")
+                self.speak("Корзина уже пуста.")
                 return
             # Clear the recycle bin
             shell.SHEmptyRecycleBin(None, None, flags)
-            print("Корзина успешно очищена.")
+            self.speak("Корзина успешно очищена.")
         except Exception as e:
-            print(f"Ошибка при очистке корзины: {e}")
+            self.speak(f"Ошибка при очистке корзины: {e}")
 
     def shutdown(self):
         """AI is creating summary for shutdown
