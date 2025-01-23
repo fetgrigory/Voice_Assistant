@@ -68,6 +68,7 @@ def get_weather(self, city):
 ## Libraries Used and Language Version
 Sounddevice 0.5.1<br />
 numpy 2.2.1  <br />
+pygame 2.6.1 <br />
 python-dotenv 1.0.1 <br />
 pyttsx3 2.98  <br />
 vosk 0.3.45  <br />

@@ -8,6 +8,7 @@ Ending //
 import vosk
 import datetime
 import os
+import pygame
 import random
 import sounddevice as sd
 import pyttsx3
@@ -33,6 +34,32 @@ class Assistant:
 
         # Initialize pyttsx3 TTS engine
         self.engine = pyttsx3.init()
+        # Initialize pygame mixer for playing audio
+        pygame.mixer.init()
+
+        # Play the startup MP3 file
+        self.play_startup_sound()
+
+    def play_startup_sound(self):
+        """AI is creating summary for play_startup_sound
+        """
+        # Replace with your MP3 file path
+        startup_file = 'sounds\start.mp3'
+        if os.path.exists(startup_file):
+            pygame.mixer.music.load(startup_file)
+            pygame.mixer.music.play()
+        else:
+            print(f"Startup file '{startup_file}' not found.")
+
+    def play_shutdown_sound(self):
+        """AI is creating summary for play_shutdown_sound
+        """
+        shutdown_file = 'sounds/shutdown.mp3'
+        if os.path.exists(shutdown_file):
+            pygame.mixer.music.load(shutdown_file)
+            pygame.mixer.music.play()
+        else:
+            print(f"Shutdown file '{shutdown_file}' not found.")
 
     def listen_command(self):
         """AI is creating summary for listen_command
@@ -62,7 +89,7 @@ class Assistant:
                 print("Распознано: " + query)
                 return query
             else:
-                print("Не удалось распознать речь.")
+                self.speak("Не удалось распознать речь.")
                 return None
         except Exception as e:
             self.speak(f"Ошибка записи звука: {e}")
@@ -214,13 +241,16 @@ class Assistant:
         """AI is creating summary for finish
         """
         self.speak("Пока!")
+        self.play_shutdown_sound()
+        pygame.time.wait(3000)
         exit()
 
     # Starts the main loop of the assistant
     def main(self):
         """AI is creating summary for main
         """
-        user_name = os.getlogin()  # Get the username of the logged-in user
+        # Get the username of the logged-in user
+        user_name = os.getlogin()
         self.speak(f"Привет, {user_name}! Гапуся слушает.")
         while True:
             query = self.listen_command()
