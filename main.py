@@ -139,7 +139,7 @@ class Assistant:
     def greeting(self):
         """AI is creating summary for greeting
         """
-        self.speak("Привет друг!")
+        self.speak("Привет!")
 
     # Provides information about the assistant
     def about(self):
@@ -213,14 +213,15 @@ class Assistant:
     def finish(self):
         """AI is creating summary for finish
         """
-        self.speak(" Пока, друг!")
+        self.speak("Пока!")
         exit()
 
     # Starts the main loop of the assistant
     def main(self):
         """AI is creating summary for main
         """
-        self.speak("Привет, друг! Гапуся слушает.")
+        user_name = os.getlogin()  # Get the username of the logged-in user
+        self.speak(f"Привет, {user_name}! Гапуся слушает.")
         while True:
             query = self.listen_command()
             if query:
