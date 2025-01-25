@@ -36,9 +36,9 @@ class SystemControl:
             # Turn off sound
             flags |= shellcon.SHERB_NOSOUND
         try:
-            # Check if the recycle bin is empty (0 means it's empty)
+            # Check the number of objects in the recycle bin (e.g., files and folders)
             stats = shell.SHQueryRecycleBin(None)
-            if stats[0] == 0:
+            if stats[1] == 0:
                 self.speak("Корзина уже пуста.")
                 return
             # Clear the recycle bin
