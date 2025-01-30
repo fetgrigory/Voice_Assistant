@@ -15,6 +15,7 @@ import pyttsx3
 from rapidfuzz import process, fuzz
 from commands import commands_dict
 from network import NetworkActions
+from chat_gpt import ChatGPT
 from system_control import SystemControl
 
 
@@ -31,7 +32,8 @@ class Assistant:
         self.network_actions = NetworkActions()
         # Creating an instance of the SystemControl class
         self.system_control = SystemControl(self.speak)
-
+        # Creating an instance of ChatGPT module
+        self.chat_gpt = ChatGPT()
         # Initialize pyttsx3 TTS engine
         self.engine = pyttsx3.init()
         # Initialize pygame mixer for playing audio
@@ -39,6 +41,21 @@ class Assistant:
 
         # Play the startup MP3 file
         self.play_startup_sound()
+
+    def activate_neural_network(self):
+        """AI is creating summary for activate_neural_network
+        """
+        # Notify the user that the neural network is activated
+        self.speak("Нейросеть активирована. Скажите ваш запрос.")
+        query = self.listen_command()
+
+        if query:
+            # Send the query to ChatGPT and get a response
+            response = self.chat_gpt.ask(query)
+            self.speak(response)
+        else:
+            # Notify the user that the query was not recognized
+            self.speak("Не удалось распознать запрос.")
 
     def play_startup_sound(self):
         """AI is creating summary for play_startup_sound
