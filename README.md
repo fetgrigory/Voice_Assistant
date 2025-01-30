@@ -82,7 +82,7 @@ python 3.11.9  <br />
 3. Restart PC ✅ 
 4. Sleep mode  ✅
 5. Empty recycle bin ✅
-6. [ChatGPT] (https://chadgpt.ru/)✅
+6. ChatGPT ✅
 7. Create folder/document
 8. Check microphone responsiveness  
 9. Increase/decrease/mute volume  
