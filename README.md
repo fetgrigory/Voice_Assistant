@@ -81,43 +81,44 @@ python 3.11.9  <br />
 2. Shut down PC  ✅
 3. Restart PC ✅ 
 4. Sleep mode  ✅
-5. Empty recycle bin ✅ 
-6. Create folder/document
-7. Check microphone responsiveness  
-8. Increase/decrease/mute volume  
-9. Take a screenshot
-10. Copy text
-11. Paste text
-12. Delete selected text
-13. Switch language
-14. Open videos via voice commands
-15. Pause
-16. Next video
-17. Previous video
-18. Rewind backward
-19. Fast forward
-20. Open the beginning/middle/end of the video
-21. Enable/disable subtitles
-22. Fullscreen mode
-23. Turn sound on/off/increase/decrease
-24. Zoom in/zoom out/reset page scale
-25. Open browser ✅
-26. New tab
-27. Incognito mode
-28. Open next/previous tab
-29. Reopen closed tab
-30. Integration with the WhatsApp messenger  
-31. Support for multiple languages
-32. Calculator
-33. Windows Settings
-34. List of commands
-35. File Explorer
-36. Task Manager
-37. Start menu
-38. Run center/menu
-39. Close a program
-40. Minimize/maximize a program (fully)
-41. Partial minimize
+5. Empty recycle bin ✅
+6. ChatGPT✅
+7. Create folder/document
+8. Check microphone responsiveness  
+9. Increase/decrease/mute volume  
+10. Take a screenshot
+11. Copy text
+12. Paste text
+13. Delete selected text
+14. Switch language
+15. Open videos via voice commands
+16. Pause
+17. Next video
+18. Previous video
+19. Rewind backward
+20. Fast forward
+21. Open the beginning/middle/end of the video
+22. Enable/disable subtitles
+23. Fullscreen mode
+24. Turn sound on/off/increase/decrease
+25. Zoom in/zoom out/reset page scale
+26. Open browser ✅
+27. New tab
+28. Incognito mode
+29. Open next/previous tab
+30. Reopen closed tab
+31. Integration with the WhatsApp messenger  
+32. Support for multiple languages
+33. Calculator
+34. Windows Settings
+35. List of commands
+36. File Explorer
+37. Task Manager
+38. Start menu
+39. Run center/menu
+40. Close a program
+41. Minimize/maximize a program (fully)
+42. Partial minimize
 
 # Athor
 Fetkulin Grigory <br />
