@@ -178,6 +178,9 @@ class Assistant:
         if wiki_result:
             # Speaks the result of the web search
             self.speak(wiki_result)
+    # If no match found, ask ChatGPT for a response
+        response = self.chat_gpt.ask(query)
+        self.speak(response)
 
         # Provides a greeting
     def greeting(self):
