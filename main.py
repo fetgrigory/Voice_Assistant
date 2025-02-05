@@ -170,10 +170,10 @@ class Assistant:
                 return
 
                 # Checks if the query needs a web search
-        wiki_result = self.network_actions.check_searching(query)
-        if wiki_result:
+        web_search = self.network_actions.check_searching(query)
+        if web_search:
             # Speaks the result of the web search
-            self.speak(wiki_result)
+            self.speak(web_search)
     # If no match found, ask ChatGPT for a response
         response = self.chat_gpt.ask(query)
         self.speak(response)
