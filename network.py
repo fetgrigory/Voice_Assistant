@@ -5,7 +5,6 @@ Starting 27/11/2024
 Ending //
 '''
 # Installing the necessary libraries
-import wikipedia
 import webbrowser as wb
 import os
 import requests
@@ -38,34 +37,7 @@ class NetworkActions:
             # Returns an error message for empty queries
             return "Я не поняла, что надо искать."
 
-# Performs a search on the Russian Wikipedia
-    def wikipedia_search(self, query):
-        """AI is creating summary for wikipedia_search
-
-        Args:
-            query ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-        try:
-            # Sets the Wikipedia language to Russian
-            wikipedia.set_lang("ru")
-            # Remove "wikipedia" from the query
-            query = query.replace("википедия", "").strip()
-            # Retrieves the first 2 sentences of the Wikipedia summary
-            wiki_result = wikipedia.summary(query, sentences=2)
-            print(f"По данным русской википедии: {wiki_result}")
-            # Returns the summary
-            return wiki_result
-        except wikipedia.exceptions.PageError:
-            return "Информация по запросу не найдена в Википедии."
-        except wikipedia.exceptions.DisambiguationError:
-            return "Найдено несколько вариантов, уточните запрос."
-        except Exception as e:
-            return "Я не поняла, что надо искать в Википедии."
-
-    # Checks the query string to determine the appropriate search method (web or Wikipedia)
+    # Checks the query string to determine the appropriate search method (web only)
     def check_searching(self, query):
         """AI is creating summary for check_searching
 
@@ -81,9 +53,6 @@ class NetworkActions:
             query = query.replace("найди", "").replace("найти", "").strip()
             # Performs a web search
             return self.web_search(query)
-        elif "википедия" in query:
-            # Performs a Wikipedia search
-            return self.wikipedia_search(query)
         else:
             return False
 

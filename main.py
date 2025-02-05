@@ -164,10 +164,6 @@ class Assistant:
                     method = getattr(self, best_match, None)
                     if method:
                         method()
-                    elif best_match == 'search_wikipedia':
-                        wiki_result = self.network_actions.wikipedia_search(query)
-                        if wiki_result:
-                            self.speak(wiki_result)
                     return
             except AttributeError:
                 self.speak(f"Команда '{query}' пока не реализована.")
