@@ -3,20 +3,19 @@ Gapusya is a voice assistant designed to execute various commands using STT (Spe
 This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle. The code adheres to the flake8 style guide, ensuring readability and quality.<br />
 The goal of the project is to create a local voice assistant capable of performing various tasks, such as creating notes, playing music, checking the weather, and much more, relying solely on local resources.<br />
 # Key Features of the Project:
-**Works Offline:** However, an internet connection is required for executing commands related to Wikipedia searches and weather data retrieval.<br />
+**Works Offline:** However, an internet connection is required to execute commands related to weather data retrieval.<br />
 **No Data Collection:** All data remains on your device without being sent to the cloud.
 The project is written in Python using various libraries for speech recognition, speech synthesis, and working with internet resources.
 # Technology Stack
 **Speech Recognition:**  Vosk (a local speech recognition engine)<br />
 **Speech Synthesis (TTS):** pyttsx3 (a local speech synthesizer)<br />
 **Command Processing**: A command dictionary based on keywords using Python. <br />
-**Wikipedia Information Search**: wikipedia library for searching Wikipedia. <br />
 **Weather Retrieval via OpenWeather API**: for obtaining weather information.<br /> 
 
 # Architecture and Code Description
 **main.py** — the main program module. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
 **commands.py** — a module with command settings, where keywords for various commands are defined.<br />
-**network.py** — a module for interacting with external services, such as Wikipedia search, weather retrieval, and web search <br />
+**network.py** — a module for interacting with external services, such, weather retrieval, and web search <br />
 **system_control.py** —  a module responsible for executing system-level commands, such as shutting down, restarting, or putting the PC to sleep. It also includes functionality for managing the recycle bin and controlling system volume.<br />
 **Code Example:**
 ```
@@ -72,7 +71,6 @@ pygame 2.6.1 <br />
 python-dotenv 1.0.1 <br />
 pyttsx3 2.98  <br />
 vosk 0.3.45  <br />
-Wikipedia 1.4.0  <br />
 RapidFuzz 3.11.0 <br />
 python 3.11.9  <br />
 
