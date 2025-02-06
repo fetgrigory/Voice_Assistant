@@ -15,7 +15,8 @@ The project is written in Python using various libraries for speech recognition,
 # Architecture and Code Description
 **main.py** — the main program module. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
 **commands.py** — a module with command settings, where keywords for various commands are defined.<br />
-**network.py** — a module for interacting with external services, such, weather retrieval, and web search <br />
+**network.py** — a module for interacting with external services, such, weather retrieval, and web search.<br />
+**chat_gpt.py** — a module designed for working with language models, allowing the assistant to send requests and receive responses from various neural networks. This enhances functionality and enables more complex dialogues with the user, providing flexibility in using different models such as ChatGPT, Gigachat, or Deep Seek.<br />
 **system_control.py** —  a module responsible for executing system-level commands, such as shutting down, restarting, or putting the PC to sleep. It also includes functionality for managing the recycle bin and controlling system volume.<br />
 **Code Example:**
 ```
