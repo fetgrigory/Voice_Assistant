@@ -100,21 +100,24 @@ python 3.11.9  <br />
 25. Zoom in/zoom out/reset page scale
 26. Open browser ✅
 27. New tab
-28. Incognito mode
-29. Open next/previous tab
-30. Reopen closed tab
-31. Integration with the WhatsApp messenger  
-32. Support for multiple languages
-33. Calculator
-34. Windows Settings
-35. List of commands
-36. File Explorer
-37. Task Manager
-38. Start menu
-39. Run center/menu
-40. Close a program
-41. Minimize/maximize a program (fully)
-42. Partial minimize
+28. Traffic: Google Maps API
+29. Calendar: Google Calendar API (via google-auth and google-api-python-client)
+30. Opening programs: subprocess.run(["program_name"])
+31. Incognito mode
+32. Open next/previous tab
+33. Reopen closed tab
+34. Integration with the WhatsApp messenger  
+35. Support for multiple languages
+36. Calculator
+37. Windows Settings
+38. List of commands
+39. File Explorer
+40. Task Manager
+41. Start menu
+42. Run center/menu
+43. Close a program
+44. Minimize/maximize a program (fully)
+45. Partial minimize
 
 # Athor
 Fetkulin Grigory <br />
