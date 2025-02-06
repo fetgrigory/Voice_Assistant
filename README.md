@@ -3,10 +3,6 @@
 Gapusya is a voice assistant designed to execute various commands using STT (Speech-to-Text) and TTS (Text-to-Speech) technologies. It operates offline and does not require connection to cloud services.<br />
 This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle. The code adheres to the flake8 style guide, ensuring readability and quality.<br />
 The goal of the project is to create a local voice assistant capable of performing various tasks, such as creating notes, playing music, checking the weather, and much more, relying solely on local resources.<br />
-# Key Features of the Project:
-**Works Offline:** However, an internet connection is required to execute commands related to weather data retrieval.<br />
-**No Data Collection:** All data remains on your device without being sent to the cloud.
-The project is written in Python using various libraries for speech recognition, speech synthesis, and working with internet resources.
 # Technology Stack
 **Speech Recognition:**  Vosk (a local speech recognition engine)<br />
 **Speech Synthesis (TTS):** pyttsx3 (a local speech synthesizer)<br />
