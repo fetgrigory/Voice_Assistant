@@ -9,7 +9,6 @@ import vosk
 import datetime
 import os
 import pygame
-import random
 import sounddevice as sd
 import pyttsx3
 from rapidfuzz import process, fuzz
@@ -210,17 +209,17 @@ class Assistant:
         now = datetime.datetime.now()
         self.speak("Сейчас " + now.strftime("%H:%M"))
 
-    # Plays a random music file from a specified directory
+        # Requests a music track from the user and plays it using NetworkActions
     def music_player(self):
         """AI is creating summary for music_player
         """
-        files = os.listdir('music')
-        if files:
-            random_file = f'music/{random.choice(files)}'
-            os.system(f'start {random_file}')
-            self.speak(f'Танцуем под {random_file.split("/")[-1]}')
+        self.speak("Что будем слушать?")
+        query = self.listen_command()
+        if query:
+            result = self.network_actions.play_music_request(query)
+            self.speak(result)
         else:
-            self.speak("В папке 'music' нет файлов.")
+            self.speak("Не удалось распознать запрос.")
 
         # Opens the Telegram application
     def open_telegram(self):
