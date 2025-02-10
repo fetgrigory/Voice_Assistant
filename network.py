@@ -169,7 +169,7 @@ class MusicPlayer:
         """
         # Play music based on the given query
         try:
-           # Initialize WebDriver only when calling the method
+            # Initialize WebDriver only when calling the method
             self.driver = self.setup_driver()
             self.open_search_page(query)
             if "404" in self.driver.title:
