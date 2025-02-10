@@ -112,10 +112,15 @@ class MusicPlayer:
     """AI is creating summary for
     """
     def __init__(self):
-       # Do not initialize WebDriver immediately
+        # Do not initialize WebDriver immediately
         self.driver = None
 
     def setup_driver(self):
+        """AI is creating summary for setup_driver
+
+        Returns:
+            [type]: [description]
+        """
         # Set up Selenium WebDriver with Chrome options
         chrome_options = Options()
         chrome_options.add_argument("--log-level=3")
