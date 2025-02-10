@@ -26,7 +26,7 @@ class NetworkActions:
     """
     def __init__(self):
         # Initialize the music player instance
-        self.music_player = MusicPlayer()
+        self.music_player = None
 
     # Performs a web search using Google
     def web_search(self, query):
@@ -102,7 +102,9 @@ class NetworkActions:
         Args:
             query ([type]): [description]
         """
-    # Delegate the music playback request to MusicPlayer
+        # Initialize MusicPlayer only if necessary
+        if self.music_player is None:
+            self.music_player = MusicPlayer()
         return self.music_player.play_music(query)
 
 
@@ -110,8 +112,8 @@ class MusicPlayer:
     """AI is creating summary for
     """
     def __init__(self):
-        # Initialize the web driver
-        self.driver = self.setup_driver()
+       # Do not initialize WebDriver immediately
+        self.driver = None
 
     def setup_driver(self):
         # Set up Selenium WebDriver with Chrome options
@@ -167,6 +169,8 @@ class MusicPlayer:
         """
         # Play music based on the given query
         try:
+           # Initialize WebDriver only when calling the method
+            self.driver = self.setup_driver()
             self.open_search_page(query)
             if "404" in self.driver.title:
                 return "Ошибка 404: страница не найдена!"
@@ -181,4 +185,5 @@ class MusicPlayer:
         except Exception as e:
             return f"Ошибка при воспроизведении музыки: {e}"
         finally:
-            self.driver.quit()
+            if self.driver:
+                self.driver.quit()
