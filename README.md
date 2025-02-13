@@ -121,3 +121,4 @@ python 3.11.9  <br />
 
 # Athor
 Fetkulin Grigory <br />
+This project code is provided for informational purposes only. Any use, copying, modification, or distribution without my permission is prohibited. <br />
