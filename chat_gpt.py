@@ -22,7 +22,7 @@ class ChatGPT:
             raise ValueError("Не найден API-ключ для ChatGPT. Проверьте .env файл.")
 
         self.client = OpenAI(
-            base_url="https://openrouter.ai/api/v1/chat/completions",
+            base_url="https://openrouter.ai/api/v1",
             api_key=self.api_key,
         )
         self.model = "deepseek/deepseek-r1"
