@@ -255,7 +255,14 @@ class Assistant:
         while True:
             query = self.listen_command()
             if query:
-                self.process_command(query)
+                if any(activation in query for activation in commands_dict['commands']['activation']):
+                    self.speak("Я вас слушаю.")
+                while True:
+                    query = self.listen_command()
+                    if query:
+                        self.process_command(query)
+                    else:
+                        self.speak("Пожалуйста, скажите активационную фразу.")
 
 
 if __name__ == '__main__':
