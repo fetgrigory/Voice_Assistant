@@ -5,7 +5,7 @@ Starting 30/01/2025
 Ending //
 '''
 # Installing the necessary libraries
-import requests
+from openai import OpenAI
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,8 +21,11 @@ class ChatGPT:
         if not self.api_key:
             raise ValueError("Не найден API-ключ для ChatGPT. Проверьте .env файл.")
 
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1/chat/completions",
+            api_key=self.api_key,
+        )
         self.model = "deepseek/deepseek-r1"
-        self.api_url = "https://openrouter.ai/api/v1/chat/completions"
 
     def process_content(self, content):
         """AI is creating summary for process_content
@@ -44,29 +47,13 @@ class ChatGPT:
         Returns:
             [type]: [description]
         """
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-
-        data = {
-            "model": self.model,
-            "messages": [{"role": "user", "content": message}],
-            "stream": False
-        }
-
         try:
-            response = requests.post(self.api_url, headers=headers, json=data)
-            # Check if the response status code is not 200 (OK)
-            if response.status_code != 200:
-                return f"Ошибка при отправке запроса: {response.status_code}"
-                # Parse the JSON response
-            response_json = response.json()
-            if "choices" in response_json:
-                content = response_json["choices"][0]["message"].get("content", "")
-                return self.process_content(content)
-            else:
-                return "Ошибка в ответе сервера."
+            completion = self.client.chat.completions.create(
+                extra_body={},
+                model=self.model,
+                messages=[{"role": "user", "content": message}]
+            )
+            return self.process_content(completion.choices[0].message.content)
         except Exception as e:
-            # Handle any exceptions that may occur during the request
+            # Handling possible errors when making a request to the API
             return f"Ошибка при работе с нейросетью: {e}"
