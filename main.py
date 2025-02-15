@@ -251,7 +251,7 @@ class Assistant:
         """
         # Get the username of the logged-in user
         user_name = os.getlogin()
-        self.speak(f"Привет, {user_name}! Гапуся слушает.")
+        self.speak(f"Привет, {user_name}! Астра слушает.")
         while True:
             query = self.listen_command()
             if query:

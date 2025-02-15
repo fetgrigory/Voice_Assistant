@@ -1,6 +1,6 @@
 # 🌐 Voice Assistant in Python
 ![](img/Banner.png)
-Gapusya is a voice assistant designed to execute various commands using STT (Speech-to-Text) and TTS (Text-to-Speech) technologies. It operates offline and does not require connection to cloud services.<br />
+Astra is a voice assistant designed to execute various commands using STT (Speech-to-Text) and TTS (Text-to-Speech) technologies. It operates offline and does not require connection to cloud services.<br />
 This project implements a voice assistant in Python using object-oriented programming (OOP) and the composition principle. The code adheres to the flake8 style guide, ensuring readability and quality.<br />
 The goal of the project is to create a local voice assistant capable of performing various tasks, such as creating notes, playing music, checking the weather, and much more, relying solely on local resources.<br />
 # Technology Stack
