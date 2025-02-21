@@ -162,12 +162,6 @@ class Assistant:
         response = self.chat_gpt.ask(query)
         self.speak(response)
 
-        # Provides a greeting
-    def greeting(self):
-        """AI is creating summary for greeting
-        """
-        self.speak("Привет!")
-
     # Provides information about the assistant
     def about(self):
         """AI is creating summary for about
@@ -251,12 +245,11 @@ class Assistant:
         """
         # Get the username of the logged-in user
         user_name = os.getlogin()
-        self.speak(f"Привет, {user_name}! Астра слушает.")
         while True:
             query = self.listen_command()
             if query:
                 if any(activation in query for activation in commands_dict['commands']['activation']):
-                    self.speak("Я вас слушаю.")
+                    self.speak(f"Привет, {user_name}! Астра слушает.")
                 while True:
                     query = self.listen_command()
                     if query:
