@@ -70,6 +70,9 @@ python-dotenv 1.0.1 <br />
 pyttsx3 2.98  <br />
 vosk 0.3.45  <br />
 RapidFuzz 3.11.0 <br />
+pywin32 <br />
+selenium 4.28.1 <br />
+openai 1.61.1   <br />
 python 3.11.9  <br />
 
 # New features that will be added in the future (Information may be updated as needed):
