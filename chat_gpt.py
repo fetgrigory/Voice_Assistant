@@ -5,27 +5,16 @@ Starting 30/01/2025
 Ending //
 '''
 # Installing the necessary libraries
-from openai import OpenAI
-import os
-from dotenv import load_dotenv
-load_dotenv()
+from g4f.client import Client
 
 
 class ChatGPT:
     """AI is creating summary for
     """
     def __init__(self):
-        # Retrieve the API key from environment variables
-        self.api_key = os.getenv("GPT_API_KEY")
-        # If the API key is not found, raise an error
-        if not self.api_key:
-            raise ValueError("Не найден API-ключ для ChatGPT. Проверьте .env файл.")
-
-        self.client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key=self.api_key,
-        )
-        self.model = "deepseek/deepseek-r1"
+        # Initialize the GPT4Free client
+        self.client = Client()
+        self.model = "gpt-4o-mini"
 
     def process_content(self, content):
         """AI is creating summary for process_content
@@ -48,12 +37,13 @@ class ChatGPT:
             [type]: [description]
         """
         try:
-            completion = self.client.chat.completions.create(
-                extra_body={},
+            # Make a request to the GPT4Free API
+            response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[{"role": "user", "content": message}]
+                messages=[{"role": "user", "content": message}],
+                web_search=False  # Disable web search if not needed
             )
-            return self.process_content(completion.choices[0].message.content)
+            return self.process_content(response.choices[0].message.content)
         except Exception as e:
             # Handling possible errors when making a request to the API
             return f"Ошибка при работе с нейросетью: {e}"
