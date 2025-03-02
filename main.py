@@ -5,6 +5,7 @@ Starting 23/11/2024
 Ending //
 '''
 # Installing the necessary libraries
+import queue
 import vosk
 import datetime
 import os
@@ -40,6 +41,8 @@ class Assistant:
 
         # Play the startup MP3 file
         self.play_startup_sound()
+        self.audio_queue = queue.Queue()
+        self.is_listening = False
 
     def play_startup_sound(self):
         """AI is creating summary for play_startup_sound
@@ -61,6 +64,39 @@ class Assistant:
             pygame.mixer.music.play()
         else:
             print(f"Shutdown file '{shutdown_file}' not found.")
+
+    # Constantly listens to ambient sounds while waiting for the activation word
+    def listen_for_activation(self):
+        """AI is creating summary for listen_for_activation
+        """
+        device = sd.default.device
+        samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])
+        rec = vosk.KaldiRecognizer(self.model, samplerate)
+
+        # Callback function for the audio stream. It is called whenever new audio data is available
+        def callback(indata, frames, time, status):
+            if status:
+                print(status)
+                # Add the incoming audio data to the queue for processing
+            self.audio_queue.put(bytes(indata))
+            # Start recording audio in a continuous stream
+        with sd.RawInputStream(samplerate=samplerate, blocksize=8000, device=device[0],
+                               dtype='int16', channels=1, callback=callback):
+            # Notify that the assistant is waiting for the keyword
+            print("Ожидание активационного слова 'Астра'...")
+            while True:
+                # Get the next chunk of audio data from the queue
+                data = self.audio_queue.get()
+                # Process the audio data with the Vosk recognizer
+                if rec.AcceptWaveform(data):
+                    result = rec.Result()
+                    # Check if the activation keyword 'Астра' is in the recognized text
+                    if 'астра' in result.lower():
+                        # Notify that the keyword was detected
+                        print("Активационное слово распознано.")
+                        self.is_listening = True
+                        self.speak("Слушаю...")
+                        break
 
     def listen_command(self):
         """AI is creating summary for listen_command
@@ -243,19 +279,15 @@ class Assistant:
     def main(self):
         """AI is creating summary for main
         """
-        # Get the username of the logged-in user
-        user_name = os.getlogin()
         while True:
-            query = self.listen_command()
-            if query:
-                if any(activation in query for activation in commands_dict['commands']['activation']):
-                    self.speak(f"Привет, {user_name}! Астра слушает.")
-                while True:
-                    query = self.listen_command()
-                    if query:
-                        self.process_command(query)
-                    else:
-                        self.speak("Пожалуйста, скажите активационную фразу.")
+            self.listen_for_activation()
+            while self.is_listening:
+                query = self.listen_command()
+                if query:
+                    self.process_command(query)
+                else:
+                    self.speak("Пожалуйста, повторите запрос.")
+                self.is_listening = False
 
 
 if __name__ == '__main__':
