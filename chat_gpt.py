@@ -14,7 +14,7 @@ class ChatGPT:
     def __init__(self):
         # Initialize the GPT4Free client
         self.client = Client()
-        self.model = "gpt-4o-mini"
+        self.model = "gpt-4o-mini" # deepseek-r1
 
     def process_content(self, content):
         """AI is creating summary for process_content
