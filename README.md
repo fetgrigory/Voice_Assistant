@@ -13,25 +13,19 @@ The goal of the project is to create a local voice assistant capable of performi
 **main.py** — the main program module. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
 **commands.py** — a module with command settings, where keywords for various commands are defined.<br />
 **network.py** — a module for interacting with external services, such, weather retrieval, and web search.<br />
-**chat_gpt.py** — a module designed for working with language models, allowing the assistant to send requests and receive responses from various neural networks. This enhances functionality and enables more complex dialogues with the user, providing flexibility in using different models such as ChatGPT, Gigachat, or Deep Seek.<br />
 **system_control.py** —  a module responsible for executing system-level commands, such as shutting down, restarting, or putting the PC to sleep. It also includes functionality for managing the recycle bin and controlling system volume.<br />
+**chat_gpt.py** —  a module designed for working with language models using the  [gpt4free](https://github.com/xtekky/gpt4free) library, allowing the assistant to send requests and receive responses from various neural networks. This enhances functionality and enables more complex dialogues with the user, providing flexibility in using different models such as ChatGPT, Deep Seek.<br />
 **Code Example:**
 ```
-def get_weather(self, city):
-    open_weather_token = os.getenv("OPEN_WEATHER_TOKEN")
-    if not open_weather_token:
-        return "Ошибка: не задан токен для OpenWeather."
-    try:
-        r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric&lang=ru")
-        data = r.json()
-        if data.get("cod") != 200:
-            return f"Ошибка: {data.get('message', 'не удалось получить данные о погоде')}."
-        temp = data["main"]["temp"]
-        feels_like = data["main"]["feels_like"]
-        weather = data["weather"][0]["description"]
-        return f"Сейчас в городе {city}: {weather}, температура {temp}°C, ощущается как {feels_like}°C."
-    except Exception as e:
-        return f"Ошибка при получении данных о погоде: {e}"
+from g4f.client import Client
+
+client = Client()
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Hello"}],
+    web_search=False
+)
+print(response.choices[0].message.content)
 ```
 # Usage
 ### Setting up a virtual environment and running the program
