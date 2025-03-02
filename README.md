@@ -66,7 +66,6 @@ vosk 0.3.45  <br />
 RapidFuzz 3.11.0 <br />
 pywin32 <br />
 selenium 4.28.1 <br />
-openai 1.61.1   <br />
 webdriver-manager 4.0.2 <br />
 python 3.11.9  <br />
 
