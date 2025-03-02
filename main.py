@@ -90,8 +90,11 @@ class Assistant:
                 # Process the audio data with the Vosk recognizer
                 if rec.AcceptWaveform(data):
                     result = rec.Result()
+                    # Extract the recognized text from the result
+                    recognized_text = result.lower()
                     # Check if the activation keyword 'Астра' is in the recognized text
-                    if 'астра' in result.lower():
+                    activation_words = commands_dict['commands']['activation']
+                    if any(word in recognized_text for word in activation_words):
                         # Notify that the keyword was detected
                         print("Активационное слово распознано.")
                         self.is_listening = True
