@@ -165,6 +165,7 @@ class Assistant:
             'shutdown': self.system_control.shutdown,
             'restart': self.system_control.restart,
             'sleep': self.system_control.sleep,
+            'system_info': self.system_control.system_info,
         }
 
         # Iterate through all commands and their keywords

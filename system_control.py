@@ -17,6 +17,13 @@ class SystemControl:
     def __init__(self, speak):
         self.speak = speak
 
+    # Displays information about the system
+    def system_info(self):
+        """AI is creating summary for system_info
+        """
+        uname = platform.uname()
+        self.speak(f"У вас установлен:{uname.processor}")
+
     def empty(self, confirm=False, show_progress=False, sound=True):
         """AI is creating summary for empty
 
