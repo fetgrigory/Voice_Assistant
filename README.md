@@ -84,37 +84,38 @@ python 3.11.9  <br />
 12. Paste text
 13. Delete selected text
 14. Switch language
-15. Open videos via voice commands
+15. Watching movies online ✅
 16. Pause
 17. Next video
 18. Previous video
-19. Rewind backward
-20. Fast forward
-21. Open the beginning/middle/end of the video
-22. Enable/disable subtitles
-23. Fullscreen mode
-24. Turn sound on/off/increase/decrease
-25. Zoom in/zoom out/reset page scale
-26. Open browser ✅
-27. New tab
-28. Traffic: Google Maps API
-29. Calendar: Google Calendar API (via google-auth and google-api-python-client)
-30. Opening programs: subprocess.run(["program_name"])
-31. Incognito mode
-32. Open next/previous tab
-33. Reopen closed tab
-34. Integration with the WhatsApp messenger  
-35. Support for multiple languages
-36. Calculator
-37. Windows Settings
-38. List of commands
-39. File Explorer
-40. Task Manager
-41. Start menu
-42. Run center/menu
-43. Close a program
-44. Minimize/maximize a program (fully)
-45. Partial minimize
+19. Listening to music online ✅
+20. Rewind backward
+21. Fast forward
+22. Open the beginning/middle/end of the video
+23. Enable/disable subtitles
+24. Fullscreen mode
+25. Turn sound on/off/increase/decrease
+26. Zoom in/zoom out/reset page scale
+27. Open browser ✅
+28. New tab
+29. Traffic: Google Maps API
+30. Calendar: Google Calendar API (via google-auth and google-api-python-client)
+31. Opening programs: subprocess.run(["program_name"])
+32. Incognito mode
+33. Open next/previous tab
+34. Reopen closed tab
+35. Integration with the WhatsApp messenger  
+36. Support for multiple languages
+37. Calculator
+38. Windows Settings
+39. List of commands
+40. File Explorer
+41. Task Manager
+42. Start menu
+43. Run center/menu
+44. Close a program
+45. Minimize/maximize a program (fully)
+46. Partial minimize
 
 # Athor
 Fetkulin Grigory <br />
