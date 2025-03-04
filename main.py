@@ -240,6 +240,18 @@ class Assistant:
         else:
             self.speak("Не удалось распознать запрос.")
 
+    # Requests a film from the user and plays it using NetworkActions
+    def play_film(self):
+        """AI is creating summary for play_film
+        """
+        self.speak("Что будем смотреть?")
+        query = self.listen_command()
+        if query:
+            result = self.network_actions.play_film_request(query)
+            self.speak(result)
+        else:
+            self.speak("Не удалось распознать запрос.")
+
         # Opens the Telegram application
     def open_telegram(self):
         """AI is creating summary for open_telegram

@@ -9,6 +9,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
@@ -27,6 +28,7 @@ class NetworkActions:
     def __init__(self):
         # Initialize the music player instance
         self.music_player = None
+        self.film_player = None
 
     # Performs a web search using Google
     def web_search(self, query):
@@ -106,6 +108,17 @@ class NetworkActions:
         if self.music_player is None:
             self.music_player = MusicPlayer()
         return self.music_player.play_music(query)
+
+    def play_film_request(self, query):
+        """AI is creating summary for play_film_request
+
+        Args:
+            query ([type]): [description]
+        """
+        # Initialize FilmPlayer only if necessary
+        if self.film_player is None:
+            self.film_player = FilmPlayer()
+        return self.film_player.play_film(query)
 
 
 class MusicPlayer:
@@ -189,6 +202,100 @@ class MusicPlayer:
             return f"Трек {artist_name} – {track_name} завершился."
         except Exception as e:
             return f"Ошибка при воспроизведении музыки: {e}"
+        finally:
+            if self.driver:
+                self.driver.quit()
+
+
+class FilmPlayer:
+    def __init__(self):
+        self.driver = None
+
+    def setup_driver(self):
+        s = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=s)
+        self.driver.maximize_window()
+
+    # Opening of the Kinopoisk website
+    def open_kinopoisk(self):
+        """AI is creating summary for open_kinopoisk
+        """
+        self.driver.get('https://www.kinopoisk.ru/')
+        time.sleep(5)
+
+    # Search for a movie by name
+    def search_film(self, film_name):
+        film_input = self.driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/div[1]/header/div/div[2]/div[2]/div/form/div/input')
+        film_input.clear()
+        film_input.send_keys(film_name)
+        film_input.send_keys(Keys.ENTER)
+        time.sleep(5)
+
+    # Selecting the first movie from the list
+    def select_first_film(self):
+        find_film = self.driver.find_element(By.XPATH, '//div[@class="element most_wanted"]//p[@class="name"]/a')
+        name_film = find_film.get_attribute('textContent')  # Получение названия фильма
+        find_film.click()
+        time.sleep(5)
+        return name_film
+
+    # Going to the website sspoisk.ru
+    def switch_to_sspoisk(self):
+        film_url = self.driver.current_url
+        new_url = film_url.replace("kinopoisk.ru", "sspoisk.ru")
+        self.driver.get(new_url)
+        time.sleep(5)
+
+    # Switching to an iframe
+    def switch_to_iframe(self):
+        iframes = self.driver.find_elements(By.TAG_NAME, 'iframe')
+        if iframes:
+            self.driver.switch_to.frame(iframes[0])
+
+    # Pressing the play button
+    def click_play_button(self):
+        play_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, "allplay__controls__item.allplay__control"))
+        )
+        if play_button.is_enabled():
+            play_button.click()
+
+    # Switching to full-screen mode
+    def click_fullscreen_button(self):
+        self.driver.find_element(By.TAG_NAME, 'body').send_keys("f")
+    time.sleep(2)
+
+    # Waiting for playback to start
+    def wait_for_playback_to_start(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "allplay__controls__item.allplay__control.allplay__control--pressed"))
+        )
+
+    # Waiting for playback to finish
+    def wait_for_playback_to_end(self):
+        while True:
+            play_button = self.driver.find_element(By.CLASS_NAME, "allplay__controls__item.allplay__control")
+            play_button_class = play_button.get_attribute("class")
+            if "allplay__control--pressed" not in play_button_class:
+                break
+            time.sleep(1)
+
+    # The main method for playing a movie
+    def play_film(self, film_name):
+        try:
+            self.setup_driver()
+            self.open_kinopoisk()
+            self.search_film(film_name)
+            name_film = self.select_first_film()
+            self.switch_to_sspoisk()
+            self.switch_to_iframe()
+            self.click_play_button()
+            self.wait_for_playback_to_start()
+            self.click_fullscreen_button()
+            self.wait_for_playback_to_end()
+            return f"Фильм '{name_film}' завершился."
+        except Exception as e:
+            return f"Произошла ошибка: {e}"
         finally:
             if self.driver:
                 self.driver.quit()
