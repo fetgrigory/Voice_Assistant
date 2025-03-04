@@ -228,7 +228,7 @@ class Assistant:
         now = datetime.datetime.now()
         self.speak("Сейчас " + now.strftime("%H:%M"))
 
-        # Requests a music track from the user and plays it using NetworkActions
+    # Requests a music track from the user and plays it using NetworkActions
     def music_player(self):
         """AI is creating summary for music_player
         """
