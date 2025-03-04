@@ -235,7 +235,7 @@ class Assistant:
         self.speak("Что будем слушать?")
         query = self.listen_command()
         if query:
-            result = self.network_actions.play_music_request(query)
+            result = self.network_actions.music_player.play_music_request(query)
             self.speak(result)
         else:
             self.speak("Не удалось распознать запрос.")
@@ -247,7 +247,7 @@ class Assistant:
         self.speak("Что будем смотреть?")
         query = self.listen_command()
         if query:
-            result = self.network_actions.play_film_request(query)
+            result = self.network_actions.film_player.play_film_request(query)
             self.speak(result)
         else:
             self.speak("Не удалось распознать запрос.")
