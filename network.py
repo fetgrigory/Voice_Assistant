@@ -211,9 +211,8 @@ class FilmPlayer(WebDriverManager):
     def wait_for_playback_to_start(self):
         """AI is creating summary for wait_for_playback_to_start
         """
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "allplay__controls__item.allplay__control.allplay__control--pressed"))
-        )
+        self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.SPACE)
+        time.sleep(2)
 
     # Waiting for playback to finish
     def wait_for_playback_to_end(self):
