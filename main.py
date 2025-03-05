@@ -12,6 +12,7 @@ import os
 import pygame
 import sounddevice as sd
 import pyttsx3
+import json
 from rapidfuzz import process, fuzz
 from commands import commands_dict
 from network import NetworkActions
@@ -90,8 +91,7 @@ class Assistant:
                 # Process the audio data with the Vosk recognizer
                 if rec.AcceptWaveform(data):
                     result = rec.Result()
-                    # Extract the recognized text from the result
-                    recognized_text = result.lower()
+                    recognized_text = json.loads(result)['text'].lower()
                     # Check if the activation keyword 'Астра' is in the recognized text
                     activation_words = commands_dict['commands']['activation']
                     if any(word in recognized_text for word in activation_words):
@@ -100,6 +100,8 @@ class Assistant:
                         self.is_listening = True
                         self.speak("Слушаю...")
                         break
+                else:
+                    print(rec.PartialResult())
 
     def listen_command(self):
         """AI is creating summary for listen_command
