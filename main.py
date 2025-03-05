@@ -49,7 +49,7 @@ class Assistant:
         """AI is creating summary for play_startup_sound
         """
         # Replace with your MP3 file path
-        startup_file = 'sounds\start.mp3'
+        startup_file = 'sounds/start.mp3'
         if os.path.exists(startup_file):
             pygame.mixer.music.load(startup_file)
             pygame.mixer.music.play()
