@@ -8,6 +8,7 @@ Ending //
 import os
 import datetime
 import platform
+import locale
 from win32com.shell import shell, shellcon
 
 
@@ -29,6 +30,7 @@ class SystemControl:
     def get_current_date(self):
         """AI is creating summary for get_current_date
         """
+        locale.setlocale(locale.LC_TIME, "Russian_Russia.1251")
         now = datetime.datetime.now()
         day_of_week = now.strftime("%A")
         day_of_month = now.strftime("%d")
