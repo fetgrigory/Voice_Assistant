@@ -188,6 +188,7 @@ class Assistant:
                 # If the command is one of the system commands, call the appropriate method
                 if best_match in system_command:
                     system_command[best_match]()
+                    return
                 else:
                     method = getattr(self, best_match, None)
                     if method:
@@ -202,6 +203,7 @@ class Assistant:
         if web_search:
             # Speaks the result of the web search
             self.speak(web_search)
+            return
     # If no match found, ask ChatGPT for a response
         response = self.chat_gpt.ask(query)
         self.speak(response)
