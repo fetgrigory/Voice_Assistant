@@ -168,6 +168,8 @@ class Assistant:
             'restart': self.system_control.restart,
             'sleep': self.system_control.sleep,
             'system_info': self.system_control.system_info,
+            'get_current_time': self.system_control.get_current_time,
+            'get_current_date': self.system_control.get_current_date,
         }
 
         # Iterate through all commands and their keywords
@@ -222,13 +224,6 @@ class Assistant:
                 now = datetime.datetime.now()
             formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
             self.speak(f'Заметка "{query}" создана от {formatted_datetime}.')
-
-    # Tells the current time
-    def time(self):
-        """AI is creating summary for time
-        """
-        now = datetime.datetime.now()
-        self.speak("Сейчас " + now.strftime("%H:%M"))
 
     # Requests a music track from the user and plays it using NetworkActions
     def music_player(self):

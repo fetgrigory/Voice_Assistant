@@ -6,6 +6,7 @@ Ending //
 '''
 # Installing the necessary libraries
 import os
+import datetime
 import platform
 from win32com.shell import shell, shellcon
 
@@ -16,6 +17,23 @@ class SystemControl:
     # Accepts the speak function that is used to voice messages
     def __init__(self, speak):
         self.speak = speak
+
+    # Reports current time
+    def get_current_time(self):
+        """AI is creating summary for get_current_time
+        """
+        now = datetime.datetime.now()
+        self.speak("Сейчас " + now.strftime("%H:%M"))
+
+    # Reports current day and date
+    def get_current_date(self):
+        """AI is creating summary for get_current_date
+        """
+        now = datetime.datetime.now()
+        day_of_week = now.strftime("%A")
+        day_of_month = now.strftime("%d")
+        month = now.strftime("%B")
+        self.speak(f"Сегодня {day_of_week}, {day_of_month} {month}")
 
     # Displays information about the system
     def system_info(self):
