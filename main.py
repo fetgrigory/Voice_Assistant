@@ -13,8 +13,7 @@ import pygame
 import sounddevice as sd
 import pyttsx3
 import json
-from rapidfuzz import process, fuzz
-from commands import commands_dict
+from rapidfuzz import fuzz
 from network import NetworkActions
 from chat_gpt import ChatGPT
 from system_control import SystemControl
@@ -28,6 +27,12 @@ class Assistant:
     """
     # Class representing a voice assistant that can listen to commands, process them, and respond accordingly
     def __init__(self):
+        # Load commands from JSON file
+        with open('commands.json', 'r', encoding='utf-8') as file:
+            commands_data = json.load(file)
+            self.commands = commands_data['commands']
+            self.activation_words = commands_data['activation']
+
         # Replace with the path to your Vosk model
         self.model = vosk.Model("vosk-model-small-ru-0.22")
         self.network_actions = NetworkActions()
@@ -93,8 +98,7 @@ class Assistant:
                     result = rec.Result()
                     recognized_text = json.loads(result)['text'].lower()
                     # Check if the activation keyword 'Астра' is in the recognized text
-                    activation_words = commands_dict['commands']['activation']
-                    if any(word in recognized_text for word in activation_words):
+                    if any(word in recognized_text for word in self.activation_words):
                         # Notify that the keyword was detected
                         print("Активационное слово распознано.")
                         self.is_listening = True
@@ -151,6 +155,20 @@ class Assistant:
         # Speak the message
         self.engine.say(message)
         self.engine.runAndWait()
+        # Runs the file on the specified path
+    def start_file(self, file_path):
+        """AI is creating summary for start_file
+
+        Args:
+            file_path ([type]): [description]
+        """        
+        if os.path.isfile(file_path):
+            try:
+                os.startfile(file_path)
+            except Exception as e:
+                self.speak(f"Ошибка при открытии файла: {e}")
+        else:
+            self.speak(f"Файл '{file_path}' не найден.")
 
     def process_command(self, query):
         """AI is creating summary for process_command
@@ -161,39 +179,25 @@ class Assistant:
         best_match = None
         best_score = 0
 
-        # Dictionary for system commands
-        system_command = {
-            'empty':  self.system_control.empty,
-            'shutdown': self.system_control.shutdown,
-            'restart': self.system_control.restart,
-            'sleep': self.system_control.sleep,
-            'system_info': self.system_control.system_info,
-            'get_current_time': self.system_control.get_current_time,
-            'get_current_date': self.system_control.get_current_date,
-        }
-
-        # Iterate through all commands and their keywords
-        for command, keywords in commands_dict['commands'].items():
-            # Find the best match for the current command
-            match, score, _ = process.extractOne(query, keywords, scorer=fuzz.ratio)
-
-            # Save the command with the best match
-            if score > best_score:
-                best_match = command
-                best_score = score
+        # Going through all the commands from JSON
+        for cmd in self.commands:
+            for trigger in cmd['triggers']:
+                score = fuzz.ratio(query, trigger)
+                if score > best_score:
+                    best_match = cmd
+                    best_score = score
 
         # If a match is found with a high percentage (e.g., above 75)
         if best_match and best_score > 75:
             try:
-                # If the command is one of the system commands, call the appropriate method
-                if best_match in system_command:
-                    system_command[best_match]()
-                    return
-                else:
-                    method = getattr(self, best_match, None)
-                    if method:
+                method = getattr(self, best_match['make'], None)
+                if method:
+                    self.speak(best_match['say'])
+                    if best_match['parameters']:
+                        method(*best_match['parameters'])
+                    else:
                         method()
-                    return
+                return
             except AttributeError:
                 self.speak(f"Команда '{query}' пока не реализована.")
                 return
@@ -308,3 +312,4 @@ class Assistant:
 if __name__ == '__main__':
     assistant = Assistant()
     assistant.main()
+

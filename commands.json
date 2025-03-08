@@ -1,0 +1,111 @@
+
+{
+    "commands": [
+        {
+            "command": "telegram",
+            "make": "open_telegram",
+            "parameters": [],
+            "say": "Открываю Telegram",
+            "triggers": ["открой телеграмм"]
+        },
+        {
+            "command": "browser",
+            "make": "open_browser",
+            "parameters": [],
+            "say": "Открываю браузер",
+            "triggers": ["открой браузер", "запусти браузер", "открой гугл хром", "гугл хром"]
+        },
+        {
+            "command": "music_player",
+            "make": "music_player",
+            "parameters": [],
+            "say": "Что будем слушать?",
+            "triggers": ["включи музыку", "музыку"]
+        },
+        {
+            "command": "play_film",
+            "make": "play_film",
+            "parameters": [],
+            "say": "Что будем смотреть?",
+            "triggers": ["включи фильм", "запусти фильм", "фильм"]
+        },
+        {
+            "command": "finish",
+            "make": "finish",
+            "parameters": [],
+            "say": "Пока!",
+            "triggers": ["пока"]
+        },
+        {
+            "command": "about",
+            "make": "about",
+            "parameters": [],
+            "say": "Я Голосовой ассистент, создана чтобы служить людям!",
+            "triggers": ["кто ты"]
+        },
+        {
+            "command": "get_current_time",
+            "make": "get_current_time",
+            "parameters": [],
+            "say": "Сейчас ",
+            "triggers": ["сколько время", "время", "текущее время", "сейчас времени"]
+        },
+        {
+            "command": "get_current_date",
+            "make": "get_current_date",
+            "parameters": [],
+            "say": "Сегодня ",
+            "triggers": ["какой сегодня день", "какое сегодня число", "дата"]
+        },
+        {
+            "command": "system_info",
+            "make": "system_info",
+            "parameters": [],
+            "say": "У вас установлен:",
+            "triggers": ["какая у меня система", "информация о системе"]
+        },
+        {
+            "command": "get_city_weather",
+            "make": "get_city_weather",
+            "parameters": [],
+            "say": "Укажите город:",
+            "triggers": ["какая погода", "погода в"]
+        },
+        {
+            "command": "empty",
+            "make": "empty",
+            "parameters": [],
+            "say": "Корзина успешно очищена.",
+            "triggers": ["очисти корзину"]
+        },
+        {
+            "command": "shutdown",
+            "make": "shutdown",
+            "parameters": [],
+            "say": "Выключаю компьютер.",
+            "triggers": ["выключи компьютер"]
+        },
+        {
+            "command": "restart",
+            "make": "restart",
+            "parameters": [],
+            "say": "Перезагружаю компьютер.",
+            "triggers": ["перезагрузи компьютер"]
+        },
+        {
+            "command": "sleep",
+            "make": "sleep",
+            "parameters": [],
+            "say": "Перехожу в режим сна.",
+            "triggers": ["режим сна"]
+        },
+        {
+            "command": "create_note",
+            "make": "create_note",
+            "parameters": [],
+            "say": "Что добавим в список дел?",
+            "triggers": ["добавить задачу", "создать задачу", "заметка"]
+        }
+    ],
+    "activation": ["астра"]
+}
