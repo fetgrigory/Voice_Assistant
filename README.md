@@ -11,7 +11,7 @@ The goal of the project is to create a local voice assistant capable of performi
 
 # Architecture and Code Description
 **main.py** — the main program module. Here, an instance of the assistant is created, and the main loop for processing commands is launched.<br />
-**commands.py** — a module with command settings, where keywords for various commands are defined.<br />
+**commands.json** — a module with command settings, where keywords for various commands are defined.<br />
 **network.py** — a module for interacting with external services, such, weather retrieval, and web search.<br />
 **system_control.py** —  a module responsible for executing system-level commands, such as shutting down, restarting, or putting the PC to sleep. It also includes functionality for managing the recycle bin and controlling system volume.<br />
 **chat_gpt.py** —   a module designed for working with language models using the  [gpt4free](https://github.com/xtekky/gpt4free) library, allowing the assistant to send requests and receive responses from various neural networks. This enhances functionality and enables more complex dialogues with the user, providing flexibility in using different models such as ChatGPT and Deep Seek. For interacting with language models such as GPT, the `gpt4free` library is used. This project provides the ability to use language models without the need to connect to official APIs, allowing for local operation.
