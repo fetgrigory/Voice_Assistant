@@ -155,13 +155,14 @@ class Assistant:
         # Speak the message
         self.engine.say(message)
         self.engine.runAndWait()
-        # Runs the file on the specified path
+
+    # Runs the file on the specified path
     def start_file(self, file_path):
         """AI is creating summary for start_file
 
         Args:
             file_path ([type]): [description]
-        """        
+        """
         if os.path.isfile(file_path):
             try:
                 os.startfile(file_path)
