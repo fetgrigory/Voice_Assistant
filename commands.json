@@ -1,17 +1,16 @@
-
 {
     "commands": [
         {
             "command": "telegram",
-            "make": "open_telegram",
-            "parameters": [],
+            "make": "start_file",
+            "parameters": ["main_applications\\Telegram.lnk"],
             "say": "Открываю Telegram",
             "triggers": ["открой телеграмм"]
         },
         {
             "command": "browser",
-            "make": "open_browser",
-            "parameters": [],
+            "make": "start_file",
+            "parameters": ["main_applications\\Google Chrome.lnk"],
             "say": "Открываю браузер",
             "triggers": ["открой браузер", "запусти браузер", "открой гугл хром", "гугл хром"]
         },
