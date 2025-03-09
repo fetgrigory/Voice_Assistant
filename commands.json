@@ -19,7 +19,7 @@
             "command": "music_player",
             "make": "music_player",
             "parameters": [],
-            "say": "Что будем слушать?",
+            "say": "",
             "triggers": ["включи музыку", "музыку"]
         },
         {
