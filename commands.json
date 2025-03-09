@@ -9,6 +9,13 @@
             "triggers": ["открой телеграмм"]
         },
         {
+            "command": "WhatsApp",
+            "make": "start_file",
+            "parameters": ["main_applications\\WhatsApp.lnk"],
+            "say": "Открываю ватсап",
+            "triggers": ["открой ватсап"]
+        },
+        {
             "command": "browser",
             "make": "start_file",
             "parameters": ["main_applications\\Google Chrome.lnk"],
