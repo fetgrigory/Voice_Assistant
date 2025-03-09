@@ -1,4 +1,5 @@
 {
+    "activation": ["астра"],
     "commands": [
         {
             "command": "telegram",
@@ -46,21 +47,21 @@
             "command": "get_current_time",
             "make": "get_current_time",
             "parameters": [],
-            "say": "Сейчас ",
+            "say": "",
             "triggers": ["сколько время", "время", "текущее время", "сейчас времени"]
         },
         {
             "command": "get_current_date",
             "make": "get_current_date",
             "parameters": [],
-            "say": "Сегодня ",
+            "say": "",
             "triggers": ["какой сегодня день", "какое сегодня число", "дата"]
         },
         {
             "command": "system_info",
             "make": "system_info",
             "parameters": [],
-            "say": "У вас установлен:",
+            "say": "",
             "triggers": ["какая у меня система", "информация о системе"]
         },
         {
@@ -74,28 +75,28 @@
             "command": "empty",
             "make": "empty",
             "parameters": [],
-            "say": "Корзина успешно очищена.",
+            "say": "",
             "triggers": ["очисти корзину"]
         },
         {
             "command": "shutdown",
             "make": "shutdown",
             "parameters": [],
-            "say": "Выключаю компьютер.",
+            "say": "", 
             "triggers": ["выключи компьютер"]
         },
         {
             "command": "restart",
             "make": "restart",
             "parameters": [],
-            "say": "Перезагружаю компьютер.",
+            "say": "",
             "triggers": ["перезагрузи компьютер"]
         },
         {
             "command": "sleep",
             "make": "sleep",
             "parameters": [],
-            "say": "Перехожу в режим сна.",
+            "say": "",
             "triggers": ["режим сна"]
         },
         {
@@ -105,6 +106,5 @@
             "say": "Что добавим в список дел?",
             "triggers": ["добавить задачу", "создать задачу", "заметка"]
         }
-    ],
-    "activation": ["астра"]
+    ]
 }
