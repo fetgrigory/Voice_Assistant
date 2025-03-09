@@ -191,7 +191,12 @@ class Assistant:
         # If a match is found with a high percentage (e.g., above 75)
         if best_match and best_score > 75:
             try:
-                method = getattr(self, best_match['make'], None)
+                # Check if the SystemControl method belongs
+                if hasattr(self.system_control, best_match['make']):
+                    method = getattr(self.system_control, best_match['make'])
+                else:
+                    method = getattr(self, best_match['make'], None)
+
                 if method:
                     self.speak(best_match['say'])
                     if best_match['parameters']:
@@ -209,7 +214,8 @@ class Assistant:
             # Speaks the result of the web search
             self.speak(web_search)
             return
-    # If no match found, ask ChatGPT for a response
+
+        # If no match found, ask ChatGPT for a response
         response = self.chat_gpt.ask(query)
         self.speak(response)
 
@@ -219,7 +225,7 @@ class Assistant:
         """
         self.speak('Я Голосовой ассистент, создана чтобы служить людям!')
 
-# Creates a new note and saves it to a file
+    # Creates a new note and saves it to a file
     def create_note(self):
         """AI is creating summary for create_note
         """
@@ -255,26 +261,6 @@ class Assistant:
             self.speak(result)
         else:
             self.speak("Не удалось распознать запрос.")
-
-        # Opens the Telegram application
-    def open_telegram(self):
-        """AI is creating summary for open_telegram
-        """
-        try:
-            self.speak('Открываю Telegram')
-            os.system('C:/Users/Admin/AppData/Roaming/"Telegram Desktop"/Telegram.exe')
-        except Exception as e:
-            self.speak(f"Ошибка при открытии Telegram: {e}")
-
-    # Opens the Browser application
-    def open_browser(self):
-        """AI is creating summary for open_browser
-        """
-        try:
-            self.speak('Открываю браузер')
-            os.system('"C:/Program Files/Google/Chrome/Application/chrome.exe"')
-        except Exception as e:
-            self.speak(f"Ошибка при открытии браузера: {e}")
 
 # Gets the weather for the specified city
     def get_city_weather(self):
@@ -313,4 +299,3 @@ class Assistant:
 if __name__ == '__main__':
     assistant = Assistant()
     assistant.main()
-
