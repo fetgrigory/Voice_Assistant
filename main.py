@@ -191,9 +191,11 @@ class Assistant:
         # If a match is found with a high percentage (e.g., above 75)
         if best_match and best_score > 75:
             try:
-                # Check if the SystemControl method belongs
+                # Find and call the method that matches the command, taking into account the parameters
                 if hasattr(self.system_control, best_match['make']):
                     method = getattr(self.system_control, best_match['make'])
+                elif hasattr(self.network_actions, best_match['make']):
+                    method = getattr(self.network_actions, best_match['make'])
                 else:
                     method = getattr(self, best_match['make'], None)
 

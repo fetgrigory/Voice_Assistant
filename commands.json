@@ -112,6 +112,28 @@
             "parameters": [],
             "say": "Что добавим в список дел?",
             "triggers": ["добавить задачу", "создать задачу", "заметка"]
+        },
+        {
+            "command": "open_youtube",
+            "make": "open_url",
+            "parameters": ["https://www.youtube.com"],
+            "say": "Открываю",
+            "triggers": ["открой ютуб", "ютуб"]
+        },
+        {
+            "command": "open_ozon",
+            "make": "open_url",
+            "parameters": ["https://www.ozon.ru/"],
+            "say": "Открываю",
+            "triggers": ["открой озон", "озон"]
+        },
+        {
+            "command": "open_teleprogram",
+            "make": "open_url",
+            "parameters": ["https://tv.yandex.ru/"],
+            "say": "Открываю",
+            "triggers": ["открой телепрограмм", "телепрограмма"]
         }
+
     ]
 }

@@ -205,7 +205,7 @@ class FilmPlayer(WebDriverManager):
         """AI is creating summary for click_fullscreen_button
         """
         self.driver.find_element(By.TAG_NAME, 'body').send_keys("f")
-    time.sleep(2)
+        time.sleep(2)
 
     # Waiting for playback to start
     def wait_for_playback_to_start(self):
@@ -227,6 +227,14 @@ class FilmPlayer(WebDriverManager):
 
     # The main method for playing a movie
     def play_film(self, film_name):
+        """AI is creating summary for play_film
+
+        Args:
+            film_name ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         try:
             self.setup_driver()
             self.open_kinopoisk()
@@ -325,3 +333,19 @@ class NetworkActions:
             return f"Сейчас в городе {city}: {weather}, температура {temp}°C, ощущается как {feels_like}°C."
         except Exception as e:
             return f"Ошибка при получении данных о погоде: {e}"
+
+    # Opens specified URL in browser
+    def open_url(self, url):
+        """AI is creating summary for open_url
+
+        Args:
+            url ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        try:
+            wb.open(url)
+            return f"Открываю сайт: {url}"
+        except Exception as e:
+            return f"Ошибка при открытии сайта: {e}"
