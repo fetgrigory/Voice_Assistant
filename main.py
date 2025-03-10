@@ -202,6 +202,8 @@ class Assistant:
                 if method:
                     self.speak(best_match['say'])
                     if best_match['parameters']:
+                        if best_match['make'] == "hotkey":
+                            method(best_match)
                         method(*best_match['parameters'])
                     else:
                         method()

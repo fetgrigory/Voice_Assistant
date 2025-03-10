@@ -133,6 +133,13 @@
             "parameters": ["https://tv.yandex.ru/"],
             "say": "Открываю",
             "triggers": ["открой телепрограмм", "телепрограмма"]
+        },
+        {
+            "command": "close_program",
+            "make": "hotkey",
+            "parameters": ["alt", "f4"],
+            "say": "Закрыла программу",
+            "triggers": ["закрой программу", "закрыть программу"]
         }
 
     ]

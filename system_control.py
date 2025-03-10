@@ -10,6 +10,7 @@ import datetime
 import platform
 import locale
 from win32com.shell import shell, shellcon
+import pyautogui  # Добавлена библиотека для работы с горячими клавишами
 
 
 class SystemControl:
@@ -122,3 +123,15 @@ class SystemControl:
         else:
             # Raise an error for unsupported operating systems
             raise NotImplementedError("Unsupported operating system for sleep command.")
+
+    # Emulates pressing the hot keys
+    def hotkey(self, command):
+        """AI is creating summary for hotkey
+
+        Args:
+            command ([type]): [description]
+        """
+        try:
+            pyautogui.hotkey(*command["parameters"])
+        except Exception as e:
+            self.speak(f"Ошибка при нажатии горячих клавиш: {e}")
