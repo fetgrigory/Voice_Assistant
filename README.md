@@ -113,7 +113,7 @@ python 3.11.9  <br />
 41. Task Manager
 42. Start menu
 43. Run center/menu
-44. Close a program
+44. Close a program ✅
 45. Minimize/maximize a program (fully)
 46. Partial minimize
 
