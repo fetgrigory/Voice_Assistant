@@ -204,7 +204,8 @@ class Assistant:
                     if best_match['parameters']:
                         if best_match['make'] == "hotkey":
                             method(best_match)
-                        method(*best_match['parameters'])
+                        else:
+                            method(*best_match['parameters'])
                     else:
                         method()
                 return

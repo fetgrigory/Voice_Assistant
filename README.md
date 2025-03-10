@@ -67,7 +67,7 @@ RapidFuzz 3.11.0 <br />
 pywin32 <br />
 selenium 4.28.1 <br />
 webdriver-manager 4.0.2 <br />
-PyAutoGUI 0.9.54 <br />
+keyboard 0.13.5 <br />
 python 3.11.9  <br />
 
 # New features that will be added in the future (Information may be updated as needed):
@@ -98,7 +98,7 @@ python 3.11.9  <br />
 25. Turn sound on/off/increase/decrease
 26. Zoom in/zoom out/reset page scale
 27. Open browser ✅
-28. New tab
+28. New tab ✅
 29. Traffic: Google Maps API
 30. Calendar: Google Calendar API (via google-auth and google-api-python-client)
 31. Opening programs: subprocess.run(["program_name"])

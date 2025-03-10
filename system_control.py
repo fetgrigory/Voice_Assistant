@@ -10,7 +10,7 @@ import datetime
 import platform
 import locale
 from win32com.shell import shell, shellcon
-import pyautogui  # Добавлена библиотека для работы с горячими клавишами
+import keyboard
 
 
 class SystemControl:
@@ -132,6 +132,7 @@ class SystemControl:
             command ([type]): [description]
         """
         try:
-            pyautogui.hotkey(*command["parameters"])
+            hotkey_str = '+'.join(command["parameters"])
+            keyboard.send(hotkey_str)
         except Exception as e:
             self.speak(f"Ошибка при нажатии горячих клавиш: {e}")
