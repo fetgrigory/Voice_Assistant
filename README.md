@@ -67,6 +67,7 @@ RapidFuzz 3.11.0 <br />
 pywin32 <br />
 selenium 4.28.1 <br />
 webdriver-manager 4.0.2 <br />
+PyAutoGUI 0.9.54 <br />
 python 3.11.9  <br />
 
 # New features that will be added in the future (Information may be updated as needed):
