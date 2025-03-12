@@ -147,6 +147,13 @@
             "parameters": ["ctrl", "t"],
             "say": "Открываю",
             "triggers": ["открой вкладку","вкладку"]
+        },
+        {
+            "command": "keyboard_write",
+            "make": "keyboard_write",
+            "parameters": [],
+            "say": "Что написать?",
+            "triggers": ["напиши текст", "напечатай текст"]
         }
 
     ]

@@ -37,7 +37,7 @@ class Assistant:
         self.model = vosk.Model("vosk-model-small-ru-0.22")
         self.network_actions = NetworkActions()
         # Creating an instance of the SystemControl class
-        self.system_control = SystemControl(self.speak)
+        self.system_control = SystemControl(self.speak, self.listen_command)
         # Creating an instance of ChatGPT module
         self.chat_gpt = ChatGPT()
         # Initialize pyttsx3 TTS engine

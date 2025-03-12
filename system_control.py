@@ -11,14 +11,16 @@ import platform
 import locale
 from win32com.shell import shell, shellcon
 import keyboard
+import pyperclip
 
 
 class SystemControl:
     """AI is creating summary for
     """
     # Accepts the speak function that is used to voice messages
-    def __init__(self, speak):
+    def __init__(self, speak, listen_command):
         self.speak = speak
+        self.listen_command = listen_command
 
     # Reports current time
     def get_current_time(self):
@@ -136,3 +138,19 @@ class SystemControl:
             keyboard.send(hotkey_str)
         except Exception as e:
             self.speak(f"Ошибка при нажатии горячих клавиш: {e}")
+
+    # Writes text using keyboard
+    def keyboard_write(self):
+        """AI is creating summary for keyboard_write
+        """
+        # Request text from user
+        input_str = self.listen_command()
+        if input_str:
+            try:
+                pyperclip.copy(input_str)
+                keyboard.write(input_str)
+                self.speak("Текст успешно вставлен.")
+            except Exception as e:
+                self.speak(f"Ошибка при вставке текста: {e}")
+        else:
+            self.speak("Текст не распознан.")
