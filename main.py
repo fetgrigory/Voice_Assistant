@@ -7,7 +7,6 @@ Ending //
 # Installing the necessary libraries
 import queue
 import vosk
-import datetime
 import os
 import pygame
 import sounddevice as sd
@@ -46,32 +45,22 @@ class Assistant:
         pygame.mixer.init()
 
         # Play the startup MP3 file
-        self.play_startup_sound()
+        self.play_sound('start')
         self.audio_queue = queue.Queue()
         self.is_listening = False
 
-    @staticmethod
-    def play_startup_sound():
-        """AI is creating summary for play_startup_sound
-        """
-        # Replace with your MP3 file path
-        startup_file = 'sounds/start.mp3'
-        if os.path.exists(startup_file):
-            pygame.mixer.music.load(startup_file)
-            pygame.mixer.music.play()
-        else:
-            print(f"Startup file '{startup_file}' not found.")
+    def play_sound(self, sound_type):
+        """AI is creating summary for play_sound
 
-    @staticmethod
-    def play_shutdown_sound():
-        """AI is creating summary for play_shutdown_sound
+        Args:
+            sound_type ([type]): [description]
         """
-        shutdown_file = 'sounds/shutdown.mp3'
-        if os.path.exists(shutdown_file):
-            pygame.mixer.music.load(shutdown_file)
+        sound_file = f'sounds/{sound_type}.mp3'
+        if os.path.exists(sound_file):
+            pygame.mixer.music.load(sound_file)
             pygame.mixer.music.play()
         else:
-            print(f"Shutdown file '{shutdown_file}' not found.")
+            print(f"Sound file '{sound_file}' not found.")
 
     # Constantly listens to ambient sounds while waiting for the activation word
     def listen_for_activation(self):
@@ -270,8 +259,7 @@ class Assistant:
     def finish(self):
         """AI is creating summary for finish
         """
-        self.speak("Пока!")
-        self.play_shutdown_sound()
+        self.play_sound('shutdown')
         pygame.time.wait(3000)
         exit()
 

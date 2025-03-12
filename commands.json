@@ -40,7 +40,7 @@
             "command": "finish",
             "make": "finish",
             "parameters": [],
-            "say": "Пока!",
+            "say": "",
             "triggers": ["пока"]
         },
         {
