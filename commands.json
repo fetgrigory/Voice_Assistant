@@ -107,13 +107,6 @@
             "triggers": ["режим сна"]
         },
         {
-            "command": "create_note",
-            "make": "create_note",
-            "parameters": [],
-            "say": "Что добавим в список дел?",
-            "triggers": ["добавить задачу", "создать задачу", "заметка"]
-        },
-        {
             "command": "open_youtube",
             "make": "open_url",
             "parameters": ["https://www.youtube.com"],

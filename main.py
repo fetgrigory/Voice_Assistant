@@ -50,7 +50,8 @@ class Assistant:
         self.audio_queue = queue.Queue()
         self.is_listening = False
 
-    def play_startup_sound(self):
+    @staticmethod
+    def play_startup_sound():
         """AI is creating summary for play_startup_sound
         """
         # Replace with your MP3 file path
@@ -61,7 +62,8 @@ class Assistant:
         else:
             print(f"Startup file '{startup_file}' not found.")
 
-    def play_shutdown_sound(self):
+    @staticmethod
+    def play_shutdown_sound():
         """AI is creating summary for play_shutdown_sound
         """
         shutdown_file = 'sounds/shutdown.mp3'
@@ -229,19 +231,6 @@ class Assistant:
         """AI is creating summary for about
         """
         self.speak('Я Голосовой ассистент, создана чтобы служить людям!')
-
-    # Creates a new note and saves it to a file
-    def create_note(self):
-        """AI is creating summary for create_note
-        """
-        print('Что добавим в список дел?')
-        query = self.listen_command()
-        if query:
-            with open('todo-list.txt', 'a', encoding='utf-8') as file:
-                file.write(f' {query}\n')
-                now = datetime.datetime.now()
-            formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
-            self.speak(f'Заметка "{query}" создана от {formatted_datetime}.')
 
     # Requests a music track from the user and plays it using NetworkActions
     def music_player(self):
