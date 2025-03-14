@@ -16,8 +16,6 @@ from rapidfuzz import fuzz
 from network import NetworkActions
 from chat_gpt import ChatGPT
 from system_control import SystemControl
-import threading
-import customtkinter as ctk
 from interface import VoiceAssistantApp
 
 
@@ -54,21 +52,9 @@ class Assistant:
         # Default input device
         self.input_device = sd.default.device[0]
 
-        # Running the interface in a separate thread
-        self.start_interface()
-
-    def start_interface(self):
-        """AI is creating summary for start_interface
-        """
-        threading.Thread(target=self.run_interface, daemon=True).start()
-
-        # Launches interface
-    def run_interface(self):
-        """AI is creating summary for run_interface
-        """
-        root = ctk.CTk()
-        self.app = VoiceAssistantApp(root, self)
-        root.mainloop()
+        # Initialize and start the interface
+        self.interface_manager = VoiceAssistantApp(self)
+        self.interface_manager.start_interface()
 
         # Sets the selected input device
     def set_input_device(self, device_index):

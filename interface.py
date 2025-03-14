@@ -11,10 +11,9 @@ import sounddevice as sd
 class VoiceAssistantApp:
     """AI is creating summary for
     """
-    def __init__(self, root, assistant):
-        self.root = root
-        # Send the Assistant instance for interaction
+    def __init__(self, assistant):
         self.assistant = assistant
+        self.root = ctk.CTk()
         self.root.title("Голосовой помощник")
         self.root.geometry("600x400")
         self.root.resizable(width=False, height=False)
@@ -92,8 +91,7 @@ class VoiceAssistantApp:
         self.root.update_idletasks()
         self.statusbar2.place(x=10, y=self.device_combobox.winfo_y())
 
-
-if __name__ == "__main__":
-    root = ctk.CTk()
-    app = VoiceAssistantApp(root)
-    root.mainloop()
+    def start_interface(self):
+        """AI is creating summary for start_interface
+        """
+        self.root.mainloop()
