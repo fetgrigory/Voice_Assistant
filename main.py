@@ -67,7 +67,7 @@ class Assistant:
         """AI is creating summary for run_interface
         """
         root = ctk.CTk()
-        app = VoiceAssistantApp(root, self)
+        self.app = VoiceAssistantApp(root, self)
         root.mainloop()
 
         # Sets the selected input device
