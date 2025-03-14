@@ -16,6 +16,9 @@ from rapidfuzz import fuzz
 from network import NetworkActions
 from chat_gpt import ChatGPT
 from system_control import SystemControl
+import threading
+import customtkinter as ctk
+from interface import VoiceAssistantApp
 
 
 class Assistant:
@@ -48,6 +51,34 @@ class Assistant:
         self.play_sound('start')
         self.audio_queue = queue.Queue()
         self.is_listening = False
+        # Default input device
+        self.input_device = sd.default.device[0]
+
+        # Running the interface in a separate thread
+        self.start_interface()
+
+    def start_interface(self):
+        """AI is creating summary for start_interface
+        """
+        threading.Thread(target=self.run_interface, daemon=True).start()
+
+        # Launches interface
+    def run_interface(self):
+        """AI is creating summary for run_interface
+        """
+        root = ctk.CTk()
+        app = VoiceAssistantApp(root, self)
+        root.mainloop()
+
+        # Sets the selected input device
+    def set_input_device(self, device_index):
+        """AI is creating summary for set_input_device
+
+        Args:
+            device_index ([type]): [description]
+        """
+        self.input_device = device_index
+        print(f"Устройство ввода изменено на: {device_index}")
 
     def play_sound(self, sound_type):
         """AI is creating summary for play_sound
