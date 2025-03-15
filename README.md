@@ -68,6 +68,7 @@ pywin32 <br />
 selenium 4.28.1 <br />
 webdriver-manager 4.0.2 <br />
 keyboard 0.13.5 <br />
+customtkinter 5.2.2 <br />
 python 3.11.9  <br />
 
 # New features that will be added in the future (Information may be updated as needed):
