@@ -200,12 +200,14 @@ class Assistant:
         if best_match and best_score > 75:
             try:
                 # Find and call the method that matches the command, taking into account the parameters
-                if hasattr(self.system_control, best_match['make']):
+                if hasattr(self, best_match['make']):
+                    method = getattr(self, best_match['make'])
+                elif hasattr(self.system_control, best_match['make']):
                     method = getattr(self.system_control, best_match['make'])
                 elif hasattr(self.network_actions, best_match['make']):
                     method = getattr(self.network_actions, best_match['make'])
                 else:
-                    method = getattr(self, best_match['make'], None)
+                    method = None
 
                 if method:
                     self.speak(best_match['say'])
