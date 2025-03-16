@@ -240,15 +240,23 @@ class Assistant:
         """
         self.speak('Я Голосовой ассистент, создана чтобы служить людям!')
 
-    # Requests a music track from the user and plays it using NetworkActions
+    # Requests a music track from the user and plays it
+    def play_music(self, query):
+        """AI is creating summary for play_music
+
+        Args:
+            query ([type]): [description]
+        """
+        result = self.network_actions.music_player.play_music_request(query)
+        self.speak(result)
+
     def music_player(self):
         """AI is creating summary for music_player
         """
         self.speak("Что будем слушать?")
         query = self.listen_command()
         if query:
-            result = self.network_actions.music_player.play_music_request(query)
-            self.speak(result)
+            self.play_music(query)
         else:
             self.speak("Не удалось распознать запрос.")
 
@@ -264,7 +272,7 @@ class Assistant:
         else:
             self.speak("Не удалось распознать запрос.")
 
-# Gets the weather for the specified city
+    # Gets the weather for the specified city
     def get_city_weather(self):
         """AI is creating summary for get_city_weather
         """
