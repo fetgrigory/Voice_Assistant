@@ -199,19 +199,17 @@ class Assistant:
         # If a match is found with a high percentage (e.g., above 75)
         if best_match and best_score > 75:
             try:
-                # Dictionary to map objects where methods can be found
-                method_objects = {
-                    'self': self,
-                    'system_control': self.system_control,
-                    'network_actions': self.network_actions
+                # Create a dictionary to map commands to their respective methods
+                command_handlers = {
+                    "self": self,
+                    "system_control": self.system_control,
+                    "network_actions": self.network_actions
                 }
 
-                # Find the method in the objects
-                method = None
-                for obj_name, obj in method_objects.items():
-                    if hasattr(obj, best_match['make']):
-                        method = getattr(obj, best_match['make'])
-                        break
+                # Get the handler object based on the command source
+                handler = command_handlers.get(best_match.get('handler', 'self'))
+                # Get the method from the handler object
+                method = getattr(handler, best_match['make'], None)
 
                 if method:
                     self.speak(best_match['say'])
@@ -222,16 +220,15 @@ class Assistant:
                             method(*best_match['parameters'])
                     else:
                         method()
-                else:
-                    self.speak(f"Команда '{query}' пока не реализована.")
                 return
             except AttributeError:
-                self.speak(f"Ошибка при выполнении команды '{query}'.")
+                self.speak(f"Команда '{query}' пока не реализована.")
                 return
 
-        # Check if the query needs a web search
+        # Checks if the query needs a web search
         web_search = self.network_actions.check_searching(query)
         if web_search:
+            # Speaks the result of the web search
             self.speak(web_search)
             return
 
