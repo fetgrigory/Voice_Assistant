@@ -33,7 +33,7 @@
             "command": "play_film",
             "make": "play_film",
             "parameters": [],
-            "say": "Что будем смотреть?",
+            "say": "",
             "triggers": ["включи фильм", "запусти фильм", "фильм"]
         },
         {
