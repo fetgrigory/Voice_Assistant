@@ -107,9 +107,9 @@ class MusicPlayer(WebDriverManager):
             artist_name_element = self.driver.find_element(By.CLASS_NAME, "jp-track-info__artist")
             track_name = track_name_element.text.strip()
             artist_name = artist_name_element.text.strip()
-            print(f"Музыка начала играть: {artist_name} – {track_name}")
+            print(f"Музыка начала играть: {artist_name} - {track_name}")
             self.wait_for_track_to_end()
-            return f"Трек {artist_name} – {track_name} завершился."
+            return f"Трек {artist_name} - {track_name} завершился."
         except Exception as e:
             return f"Ошибка при воспроизведении музыки: {e}"
         finally:
@@ -146,6 +146,15 @@ class FilmPlayer(WebDriverManager):
         """
         self.driver.get('https://www.kinopoisk.ru/')
         time.sleep(5)
+        # Check if captcha appears
+        try:
+            captcha_checkbox = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="checkbox-captcha-form"]/div[3]/div/div[1]/div[1]')))
+            captcha_checkbox.click()
+            print("Капча обнаружена, клик выполнен")
+            time.sleep(2)
+        except Exception:
+            print("Капча не обнаружена, продолжаем работу")
 
     # Search for a movie by name
     def search_film(self, film_name):
