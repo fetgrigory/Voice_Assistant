@@ -4,6 +4,7 @@
         {
             "command": "telegram",
             "make": "start_file",
+            "handler": "self",
             "parameters": ["main_applications\\Telegram.lnk"],
             "say": "Открываю Telegram",
             "triggers": ["открой телеграмм"]
@@ -11,6 +12,7 @@
         {
             "command": "WhatsApp",
             "make": "start_file",
+            "handler": "self",
             "parameters": ["main_applications\\WhatsApp.lnk"],
             "say": "Открываю ватсап",
             "triggers": ["открой ватсап"]
@@ -18,6 +20,7 @@
         {
             "command": "browser",
             "make": "start_file",
+            "handler": "self",
             "parameters": ["main_applications\\Google Chrome.lnk"],
             "say": "Открываю браузер",
             "triggers": ["открой браузер", "запусти браузер", "открой гугл хром", "гугл хром"]
@@ -25,6 +28,7 @@
         {
             "command": "music_player",
             "make": "music_player",
+            "handler": "self",
             "parameters": [],
             "say": "",
             "triggers": ["включи музыку", "музыку"]
@@ -32,6 +36,7 @@
         {
             "command": "play_film",
             "make": "play_film",
+            "handler": "self",
             "parameters": [],
             "say": "",
             "triggers": ["включи фильм", "запусти фильм", "фильм"]
@@ -39,6 +44,7 @@
         {
             "command": "finish",
             "make": "finish",
+            "handler": "self",
             "parameters": [],
             "say": "",
             "triggers": ["пока"]
@@ -46,13 +52,15 @@
         {
             "command": "about",
             "make": "about",
+            "handler": "self",
             "parameters": [],
-            "say": "Я Голосовой ассистент, создана чтобы служить людям!",
+            "say": "Я голосовой ассистент, созданный чтобы служить людям!",
             "triggers": ["кто ты"]
         },
         {
             "command": "get_current_time",
             "make": "get_current_time",
+            "handler": "system_control",
             "parameters": [],
             "say": "",
             "triggers": ["сколько время", "время", "текущее время", "сейчас времени"]
@@ -60,6 +68,7 @@
         {
             "command": "get_current_date",
             "make": "get_current_date",
+            "handler": "system_control",
             "parameters": [],
             "say": "",
             "triggers": ["какой сегодня день", "какое сегодня число", "дата"]
@@ -67,6 +76,7 @@
         {
             "command": "system_info",
             "make": "system_info",
+            "handler": "system_control",
             "parameters": [],
             "say": "",
             "triggers": ["какая у меня система", "информация о системе"]
@@ -74,6 +84,7 @@
         {
             "command": "get_city_weather",
             "make": "get_city_weather",
+            "handler": "self",
             "parameters": [],
             "say": "Укажите город:",
             "triggers": ["какая погода", "погода в"]
@@ -81,6 +92,7 @@
         {
             "command": "empty",
             "make": "empty",
+            "handler": "system_control",
             "parameters": [],
             "say": "",
             "triggers": ["очисти корзину"]
@@ -88,13 +100,15 @@
         {
             "command": "shutdown",
             "make": "shutdown",
+            "handler": "system_control",
             "parameters": [],
-            "say": "", 
+            "say": "",
             "triggers": ["выключи компьютер"]
         },
         {
             "command": "restart",
             "make": "restart",
+            "handler": "system_control",
             "parameters": [],
             "say": "",
             "triggers": ["перезагрузи компьютер"]
@@ -102,6 +116,7 @@
         {
             "command": "sleep",
             "make": "sleep",
+            "handler": "system_control",
             "parameters": [],
             "say": "",
             "triggers": ["режим сна"]
@@ -109,45 +124,51 @@
         {
             "command": "open_youtube",
             "make": "open_url",
+            "handler": "network_actions",
             "parameters": ["https://www.youtube.com"],
-            "say": "Открываю",
+            "say": "Открываю YouTube",
             "triggers": ["открой ютуб", "ютуб"]
         },
         {
             "command": "open_ozon",
             "make": "open_url",
+            "handler": "network_actions",
             "parameters": ["https://www.ozon.ru/"],
-            "say": "Открываю",
+            "say": "Открываю Ozon",
             "triggers": ["открой озон", "озон"]
         },
         {
             "command": "open_teleprogram",
             "make": "open_url",
+            "handler": "network_actions",
             "parameters": ["https://tv.yandex.ru/"],
-            "say": "Открываю",
-            "triggers": ["открой телепрограмм", "телепрограмма"]
+            "say": "Открываю телепрограмму",
+            "triggers": ["открой телепрограмму", "телепрограмма"]
         },
         {
             "command": "close_program",
             "make": "hotkey",
+            "handler": "system_control",
             "parameters": ["alt", "f4"],
-            "say": "Закрыла программу",
+            "say": "Закрываю программу",
             "triggers": ["закрой программу", "закрыть программу"]
         },
         {
             "command": "new_tab",
             "make": "hotkey",
+            "handler": "system_control",
             "parameters": ["ctrl", "t"],
-            "say": "Открываю",
-            "triggers": ["открой вкладку","вкладку"]
+            "say": "Открываю новую вкладку",
+            "triggers": ["открой вкладку", "новая вкладка"]
         },
         {
             "command": "keyboard_write",
             "make": "keyboard_write",
+            "handler": "system_control",
             "parameters": [],
             "say": "Что написать?",
             "triggers": ["напиши текст", "напечатай текст"]
         }
-
+        
     ]
 }
