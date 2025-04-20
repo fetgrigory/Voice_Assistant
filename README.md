@@ -100,6 +100,7 @@ graph LR
 | `RapidFuzz`     | Нечеткий поиск команд             |
 | `g4f`           | Бесплатный ChatGPT API            |
 | `selenium`      | Автоматизация браузера для медиа  |
+| `fake-useragent`| Генерация случайных User-Agent для веб-запросов|
 | `webdriver-manager`| Управление драйверами для Selenium|
 | `pygame`        | Воспроизведение аудио             |
 | `python-dotenv` | Работа с переменными окружения    |
