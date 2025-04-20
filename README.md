@@ -103,6 +103,7 @@ graph LR
 | `selenium`      | Автоматизация браузера для медиа  |
 | `fake-useragent`| Генерация случайных User-Agent для веб-запросов|
 | `webdriver-manager`| Управление драйверами для Selenium|
+| `requests`         |HTTP-запросы к API и веб-серверам|
 | `pygame`        | Воспроизведение аудио             |
 | `python-dotenv` | Работа с переменными окружения    |
 | `pywin32`       | Интеграция с Windows API          |
