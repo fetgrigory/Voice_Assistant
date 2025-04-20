@@ -13,6 +13,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+import fake_useragent
 from selenium.webdriver.chrome.options import Options
 import webbrowser as wb
 import os
@@ -39,7 +40,7 @@ class WebDriverManager:
         chrome_options = Options()
         chrome_options.add_argument("--log-level=3")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        chrome_options.add_argument(f'--user-agent={fake_useragent.UserAgent().random}')
         service = Service(ChromeDriverManager().install())
         self.driver = webdriver.Chrome(service=service, options=chrome_options)
         self.driver.maximize_window()
