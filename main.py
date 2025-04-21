@@ -27,6 +27,9 @@ class Assistant:
     """
     # Class representing a voice assistant that can listen to commands, process them, and respond accordingly
     def __init__(self):
+        # Load settings
+        self.settings_file = 'settings.json'
+        self.load_settings()
         # Load commands from JSON file
         with open('commands.json', 'r', encoding='utf-8') as file:
             commands_data = json.load(file)
@@ -49,12 +52,31 @@ class Assistant:
         self.play_sound('start')
         self.audio_queue = queue.Queue()
         self.is_listening = False
-        # Default input device
-        self.input_device = sd.default.device[0]
 
         # Initialize and start the interface
         self.interface_manager = VoiceAssistantApp(self)
         self.interface_manager.start_interface()
+
+    # Load saved settings from file
+    def load_settings(self):
+        """AI is creating summary for load_settings
+        """
+        try:
+            with open(self.settings_file, 'r', encoding='utf-8') as f:
+                settings = json.load(f)
+                self.input_device = settings.get('input_device', sd.default.device[0])
+        except (FileNotFoundError, json.JSONDecodeError):
+            self.input_device = sd.default.device[0]
+
+    # Save current settings to file
+    def save_settings(self):
+        """AI is creating summary for save_settings
+        """
+        settings = {
+            'input_device': self.input_device
+        }
+        with open(self.settings_file, 'w', encoding='utf-8') as f:
+            json.dump(settings, f)
 
         # Sets the selected input device
     def set_input_device(self, device_index):
@@ -64,6 +86,7 @@ class Assistant:
             device_index ([type]): [description]
         """
         self.input_device = device_index
+        self.save_settings()
         print(f"Устройство ввода изменено на: {device_index}")
 
     def play_sound(self, sound_type):
@@ -83,8 +106,7 @@ class Assistant:
     def listen_for_activation(self):
         """AI is creating summary for listen_for_activation
         """
-        device = sd.default.device
-        samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])
+        samplerate = int(sd.query_devices(self.input_device, 'input')['default_samplerate'])
         rec = vosk.KaldiRecognizer(self.model, samplerate)
 
         # Callback function for the audio stream. It is called whenever new audio data is available
@@ -94,8 +116,8 @@ class Assistant:
                 # Add the incoming audio data to the queue for processing
             self.audio_queue.put(bytes(indata))
             # Start recording audio in a continuous stream
-        with sd.RawInputStream(samplerate=samplerate, blocksize=8000, device=device[0],
-                               dtype='int16', channels=1, callback=callback):
+        with sd.RawInputStream(samplerate=samplerate, blocksize=8000, device=self.input_device,
+                             dtype='int16', channels=1, callback=callback):
             # Notify that the assistant is waiting for the keyword
             print("Ожидание активационного слова 'Астра'...")
             while True:
@@ -122,17 +144,13 @@ class Assistant:
             [type]: [description]
         """
         print("Слушаю...")
-
-        # Set device and samplerate
-        device = sd.default.device  # Default device
-        # sd.default.device = 1, 3  # Specify your input and output device
-        samplerate = int(sd.query_devices(device[0], 'input')['default_samplerate'])  # Get the microphone frequency
-
+        # Get the microphone frequency
+        samplerate = int(sd.query_devices(self.input_device, 'input')['default_samplerate'])
         duration = 5  # Seconds to record
-
         try:
             # Record audio using sounddevice with the selected device and samplerate
-            audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype='int16')
+            audio = sd.rec(int(duration * samplerate),
+                           samplerate=samplerate, device=self.input_device, channels=1, dtype='int16')
             sd.wait()  # Wait until recording is finished
 
             # Convert audio to Vosk-compatible format

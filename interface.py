@@ -35,16 +35,31 @@ class VoiceAssistantApp:
         # Combobox for selecting sound input devices
         self.device_options = self.get_input_devices()
         # Get default device
-        default_device = self.get_default_input_device()
+        saved_device = self.get_device_by_index(self.assistant.input_device)
         self.device_combobox = ctk.CTkComboBox(self.root, values=self.device_options, font=('Arial', 14))
         # Default device installation
-        self.device_combobox.set(default_device)
+        self.device_combobox.set(saved_device if saved_device else self.get_default_input_device())
         self.device_combobox.pack(padx=10, pady=10)
         # "Save" button
         self.save_button = ctk.CTkButton(self.root, text="Сохранить", command=self.save_device)
         self.save_button.pack(pady=10)
         self.statusbar2 = ctk.CTkLabel(self.root, text="Вход микрофона:", anchor="w", font=('Arial', 16, 'italic'))
         self.update_statusbar2_position()
+
+    # Get device name by index
+    def get_device_by_index(self, index):
+        """AI is creating summary for get_device_by_index
+
+        Args:
+            index ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        devices = sd.query_devices()
+        if 0 <= index < len(devices):
+            return f"{index}: {devices[index]['name']}"
+        return None
 
     # Gets a list of available audio input devices
     def get_input_devices(self):
