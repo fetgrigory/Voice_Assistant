@@ -12,11 +12,21 @@ import pygame
 import sounddevice as sd
 import pyttsx3
 import json
+import logging
 from rapidfuzz import fuzz
 from network import NetworkActions
 from chat_gpt import ChatGPT
 from system_control import SystemControl
 from interface import VoiceAssistantApp
+
+# Configure logging
+logging.basicConfig(
+    filename='assistant.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    encoding='utf-8'
+)
+logger = logging.getLogger(__name__)
 
 
 class Assistant:
@@ -27,6 +37,8 @@ class Assistant:
     """
     # Class representing a voice assistant that can listen to commands, process them, and respond accordingly
     def __init__(self):
+        # Initialize logger
+        self.logger = logging.getLogger(__name__)
         # Load settings
         self.settings_file = 'settings.json'
         self.load_settings()
@@ -65,8 +77,10 @@ class Assistant:
             with open(self.settings_file, 'r', encoding='utf-8') as f:
                 settings = json.load(f)
                 self.input_device = settings.get('input_device', sd.default.device[0])
-        except (FileNotFoundError, json.JSONDecodeError):
+                self.logger.debug("Settings loaded successfully")
+        except (FileNotFoundError, json.JSONDecodeError) as e:
             self.input_device = sd.default.device[0]
+            self.logger.warning("Failed to load settings: %s, using defaults", e)
 
     # Save current settings to file
     def save_settings(self):
@@ -75,10 +89,14 @@ class Assistant:
         settings = {
             'input_device': self.input_device
         }
-        with open(self.settings_file, 'w', encoding='utf-8') as f:
-            json.dump(settings, f)
+        try:
+            with open(self.settings_file, 'w', encoding='utf-8') as f:
+                json.dump(settings, f)
+            self.logger.debug("Settings saved successfully")
+        except Exception as e:
+            self.logger.error("Failed to save settings: %s", e)
 
-        # Sets the selected input device
+    # Sets the selected input device
     def set_input_device(self, device_index):
         """AI is creating summary for set_input_device
 
@@ -87,7 +105,7 @@ class Assistant:
         """
         self.input_device = device_index
         self.save_settings()
-        print(f"Устройство ввода изменено на: {device_index}")
+        self.logger.info("Input device changed to: %s", device_index)
 
     def play_sound(self, sound_type):
         """AI is creating summary for play_sound
@@ -97,10 +115,14 @@ class Assistant:
         """
         sound_file = f'sounds/{sound_type}.mp3'
         if os.path.exists(sound_file):
-            pygame.mixer.music.load(sound_file)
-            pygame.mixer.music.play()
+            try:
+                pygame.mixer.music.load(sound_file)
+                pygame.mixer.music.play()
+                self.logger.debug("Played sound: %s", sound_file)
+            except Exception as e:
+                self.logger.error("Failed to play sound %s: %s", sound_file, e)
         else:
-            print(f"Sound file '{sound_file}' not found.")
+            self.logger.warning("Sound file not found: %s", sound_file)
 
     # Constantly listens to ambient sounds while waiting for the activation word
     def listen_for_activation(self):
@@ -112,14 +134,14 @@ class Assistant:
         # Callback function for the audio stream. It is called whenever new audio data is available
         def callback(indata, frames, time, status):
             if status:
-                print(status)
-                # Add the incoming audio data to the queue for processing
+                self.logger.warning("Audio stream status: %s", status)
+            # Add the incoming audio data to the queue for processing
             self.audio_queue.put(bytes(indata))
-            # Start recording audio in a continuous stream
+        # Start recording audio in a continuous stream
         with sd.RawInputStream(samplerate=samplerate, blocksize=8000, device=self.input_device,
                              dtype='int16', channels=1, callback=callback):
             # Notify that the assistant is waiting for the keyword
-            print("Ожидание активационного слова 'Астра'...")
+            self.logger.info("Ожидание активационного слова 'Астра'...")
             while True:
                 # Get the next chunk of audio data from the queue
                 data = self.audio_queue.get()
@@ -130,12 +152,12 @@ class Assistant:
                     # Check if the activation keyword 'Астра' is in the recognized text
                     if any(word in recognized_text for word in self.activation_words):
                         # Notify that the keyword was detected
-                        print("Активационное слово распознано.")
+                        self.logger.info("Активационное слово распознано.")
                         self.is_listening = True
                         self.speak("Слушаю...")
                         break
                 else:
-                    print(rec.PartialResult())
+                    self.logger.debug(rec.PartialResult())
 
     def listen_command(self):
         """AI is creating summary for listen_command
@@ -143,14 +165,14 @@ class Assistant:
         Returns:
             [type]: [description]
         """
-        print("Слушаю...")
+        self.logger.info("Слушаю...")
         # Get the microphone frequency
         samplerate = int(sd.query_devices(self.input_device, 'input')['default_samplerate'])
         duration = 5  # Seconds to record
         try:
             # Record audio using sounddevice with the selected device and samplerate
             audio = sd.rec(int(duration * samplerate),
-                           samplerate=samplerate, device=self.input_device, channels=1, dtype='int16')
+                          samplerate=samplerate, device=self.input_device, channels=1, dtype='int16')
             sd.wait()  # Wait until recording is finished
 
             # Convert audio to Vosk-compatible format
@@ -158,13 +180,15 @@ class Assistant:
             if rec.AcceptWaveform(audio.tobytes()):
                 result = rec.Result()  # Get the raw result
                 query = result.split('"')[3].lower()  # Extract the recognized text
-                print("Распознано: " + query)
+                self.logger.info("Recognized: %s", query)
                 return query
             else:
                 self.speak("Не удалось распознать речь.")
+                self.logger.warning("Speech recognition failed")
                 return None
         except Exception as e:
             self.speak(f"Ошибка записи звука: {e}")
+            self.logger.error("Audio recording error: %s", e)
             return None
 
     def speak(self, message):
@@ -173,14 +197,16 @@ class Assistant:
         Args:
             message ([type]): [description]
         """
-        print(message)
-        # Set properties for voice (optional)
-        self.engine.setProperty('rate', 200)  # Speed of speech
-        self.engine.setProperty('volume', 1)  # Volume (0.0 to 1.0)
-
-        # Speak the message
-        self.engine.say(message)
-        self.engine.runAndWait()
+        self.logger.info("Speaking: %s", message)
+        try:
+            # Set properties for voice (optional)
+            self.engine.setProperty('rate', 200)  # Speed of speech
+            self.engine.setProperty('volume', 1)  # Volume (0.0 to 1.0)
+            # Speak the message
+            self.engine.say(message)
+            self.engine.runAndWait()
+        except Exception as e:
+            self.logger.error("TTS error: %s", e)
 
     # Runs the file on the specified path
     def start_file(self, file_path):
@@ -191,11 +217,17 @@ class Assistant:
         """
         if os.path.isfile(file_path):
             try:
+                logging.info("Попытка открыть файл: %s", file_path)
                 os.startfile(file_path)
+                logging.info("Файл успешно открыт: %s", file_path)
             except Exception as e:
-                self.speak(f"Ошибка при открытии файла: {e}")
+                error_msg = f"Ошибка при открытии файла: {e}"
+                logging.error(error_msg, exc_info=True)
+                self.speak(error_msg)
         else:
-            self.speak(f"Файл '{file_path}' не найден.")
+            error_msg = f"Файл '{file_path}' не найден."
+            logging.warning(error_msg)
+            self.speak(error_msg)
 
     def process_command(self, query):
         """AI is creating summary for process_command
@@ -203,6 +235,7 @@ class Assistant:
         Args:
             query ([type]): [description]
         """
+        self.logger.info("Processing command: %s", query)
         best_match = None
         best_score = 0
 
@@ -238,9 +271,10 @@ class Assistant:
                             method(*best_match['parameters'])
                     else:
                         method()
-                return
-            except AttributeError:
+                    return
+            except Exception as e:
                 self.speak(f"Команда '{query}' пока не реализована.")
+                self.logger.error("Command execution error: %s", e)
                 return
 
         # Checks if the query needs a web search
@@ -259,6 +293,7 @@ class Assistant:
         """AI is creating summary for about
         """
         self.speak('Я Голосовой ассистент, создана чтобы служить людям!')
+        self.logger.info("Displayed 'about' information")
 
     # Requests a music track from the user and plays it
     def play_music(self, query):
@@ -269,6 +304,7 @@ class Assistant:
         """
         result = self.network_actions.music_player.play_music_request(query)
         self.speak(result)
+        self.logger.info("Music play request: %s", query)
 
     def music_player(self):
         """AI is creating summary for music_player
@@ -278,7 +314,7 @@ class Assistant:
         if query:
             self.play_music(query)
         else:
-            self.speak("Не удалось распознать запрос.")
+            self.logger.warning("Music play request failed - no query")
 
     # Requests a film from the user and plays it using NetworkActions
     def play_film(self):
@@ -301,6 +337,9 @@ class Assistant:
         if city:
             result = self.network_actions.get_weather(city)
             self.speak(result)
+            self.logger.info("Weather request for city: %s", city)
+        else:
+            self.logger.warning("Weather request failed - no city specified")
 
     # Ends the assistant's operation
     def finish(self):
@@ -308,12 +347,14 @@ class Assistant:
         """
         self.play_sound('shutdown')
         pygame.time.wait(3000)
+        self.logger.info("PC shutdown")
         exit()
 
     # Starts the main loop of the assistant
     def main(self):
         """AI is creating summary for main
         """
+        self.logger.info("Starting main assistant loop")
         while True:
             self.listen_for_activation()
             while self.is_listening:
