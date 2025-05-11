@@ -23,6 +23,28 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+class Config:
+    """AI is creating summary for
+    """
+    # Settings for Music Player
+    MUSIC_SEARCH_URL = "https://rus.hitmotop.com/search?q={query}"
+    MUSIC_PLAY_BUTTON_CLASS = "jp-play"
+    MUSIC_PLAYER_STATE_PLAYING_CLASS = "jp-state-playing"
+    PLAYER_AUDIO_CLASS = "jp-audio"
+    TRACK_INFO_CLASS = "jp-track-info__track"
+    ARTIST_INFO_CLASS = "jp-track-info__artist"
+
+    # Settings for Film Player
+    KINOPOISK_URL = "https://www.kinopoisk.ru/"
+    SSPOISK_URL_REPLACE = ("kinopoisk.ru", "sspoisk.ru")
+    KINOPOISK_CAPTCHA_XPATH = '//*[@id="checkbox-captcha-form"]/div[3]/div/div[1]/div[1]'
+    KINOPOISK_SEARCH_INPUT_XPATH = '//*[@id="__next"]/div[1]/div[1]/header/div/div[2]/div[2]/div/form/div/input'
+    FIRST_FILM_XPATH = '//div[@class="element most_wanted"]//p[@class="name"]/a'
+    IFRAME_TAG = "iframe"
+    PLAY_BUTTON_FILM_CLASS = "allplay__controls__item.allplay__control"
+    FULLSCREEN_BUTTON_ACTION = "f"
+
+
 class WebDriverManager:
     """Class for managing WebDriver."""
 
@@ -61,7 +83,7 @@ class MusicPlayer(WebDriverManager):
         Args:
             query ([type]): [description]
         """
-        self.driver.get(f'https://rus.hitmotop.com/search?q={query}')
+        self.driver.get(Config.MUSIC_SEARCH_URL.format(query=query))
         time.sleep(3)
 
     # Find and click the play button
@@ -69,12 +91,12 @@ class MusicPlayer(WebDriverManager):
         """AI is creating summary for click_play_button
         """
         play_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "jp-play"))
+            EC.element_to_be_clickable((By.CLASS_NAME, Config.MUSIC_PLAY_BUTTON_CLASS))
         )
         if play_button.is_enabled():
             play_button.click()
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "jp-state-playing"))
+            EC.presence_of_element_located((By.CLASS_NAME, Config.MUSIC_PLAYER_STATE_PLAYING_CLASS))
         )
 
     def wait_for_track_to_end(self):
@@ -82,9 +104,9 @@ class MusicPlayer(WebDriverManager):
         """
         # Wait until the track finishes playing
         while True:
-            player = self.driver.find_element(By.CLASS_NAME, "jp-audio")
+            player = self.driver.find_element(By.CLASS_NAME, Config.PLAYER_AUDIO_CLASS)
             player_class = player.get_attribute("class")
-            if "jp-state-playing" not in player_class:
+            if Config.MUSIC_PLAYER_STATE_PLAYING_CLASS not in player_class:
                 break
             time.sleep(1)
 
@@ -104,8 +126,8 @@ class MusicPlayer(WebDriverManager):
             if "404" in self.driver.title:
                 return "Ошибка 404: страница не найдена!"
             self.click_play_button()
-            track_name_element = self.driver.find_element(By.CLASS_NAME, "jp-track-info__track")
-            artist_name_element = self.driver.find_element(By.CLASS_NAME, "jp-track-info__artist")
+            track_name_element = self.driver.find_element(By.CLASS_NAME, Config.TRACK_INFO_CLASS)
+            artist_name_element = self.driver.find_element(By.CLASS_NAME, Config.ARTIST_INFO_CLASS)
             track_name = track_name_element.text.strip()
             artist_name = artist_name_element.text.strip()
             print(f"Музыка начала играть: {artist_name} - {track_name}")
