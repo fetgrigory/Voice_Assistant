@@ -42,6 +42,7 @@ class Config:
     FIRST_FILM_XPATH = '//div[@class="element most_wanted"]//p[@class="name"]/a'
     IFRAME_TAG = "iframe"
     PLAY_BUTTON_FILM_CLASS = "allplay__controls__item.allplay__control"
+    PLAY_BUTTON_PRESSED_CLASS = "allplay__control--pressed"
     FULLSCREEN_BUTTON_ACTION = "f"
 
 
@@ -167,12 +168,12 @@ class FilmPlayer(WebDriverManager):
     def open_kinopoisk(self):
         """AI is creating summary for open_kinopoisk
         """
-        self.driver.get('https://www.kinopoisk.ru/')
+        self.driver.get(Config.KINOPOISK_URL)
         time.sleep(5)
         # Check if captcha appears
         try:
             captcha_checkbox = WebDriverWait(self.driver, 5).until(
-                EC.element_to_be_clickable((By.XPATH, '//*[@id="checkbox-captcha-form"]/div[3]/div/div[1]/div[1]')))
+                EC.element_to_be_clickable((By.XPATH, Config.KINOPOISK_CAPTCHA_XPATH)))
             captcha_checkbox.click()
             print("Капча обнаружена, клик выполнен")
             time.sleep(2)
@@ -186,7 +187,7 @@ class FilmPlayer(WebDriverManager):
         Args:
             film_name ([type]): [description]
         """
-        film_input = self.driver.find_element(By.XPATH, '//*[@id="__next"]/div[1]/div[1]/header/div/div[2]/div[2]/div/form/div/input')
+        film_input = self.driver.find_element(By.XPATH, Config.KINOPOISK_SEARCH_INPUT_XPATH)
         film_input.clear()
         film_input.send_keys(film_name)
         film_input.send_keys(Keys.ENTER)
@@ -199,7 +200,7 @@ class FilmPlayer(WebDriverManager):
         Returns:
             [type]: [description]
         """
-        find_film = self.driver.find_element(By.XPATH, '//div[@class="element most_wanted"]//p[@class="name"]/a')
+        find_film = self.driver.find_element(By.XPATH, Config.FIRST_FILM_XPATH)
         name_film = find_film.get_attribute('textContent')
         find_film.click()
         time.sleep(5)
@@ -210,7 +211,7 @@ class FilmPlayer(WebDriverManager):
         """AI is creating summary for switch_to_sspoisk
         """
         film_url = self.driver.current_url
-        new_url = film_url.replace("kinopoisk.ru", "sspoisk.ru")
+        new_url = film_url.replace(*Config.SSPOISK_URL_REPLACE)
         self.driver.get(new_url)
         time.sleep(5)
 
@@ -218,7 +219,7 @@ class FilmPlayer(WebDriverManager):
     def switch_to_iframe(self):
         """AI is creating summary for switch_to_iframe
         """
-        iframes = self.driver.find_elements(By.TAG_NAME, 'iframe')
+        iframes = self.driver.find_elements(By.TAG_NAME, Config.IFRAME_TAG)
         if iframes:
             self.driver.switch_to.frame(iframes[0])
 
@@ -227,7 +228,7 @@ class FilmPlayer(WebDriverManager):
         """AI is creating summary for click_play_button
         """
         play_button = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "allplay__controls__item.allplay__control"))
+            EC.element_to_be_clickable((By.CLASS_NAME, Config.PLAY_BUTTON_FILM_CLASS))
         )
         if play_button.is_enabled():
             play_button.click()
@@ -236,7 +237,7 @@ class FilmPlayer(WebDriverManager):
     def click_fullscreen_button(self):
         """AI is creating summary for click_fullscreen_button
         """
-        self.driver.find_element(By.TAG_NAME, 'body').send_keys("f")
+        self.driver.find_element(By.TAG_NAME, 'body').send_keys(Config.FULLSCREEN_BUTTON_ACTION)
         time.sleep(2)
 
     # Waiting for playback to start
@@ -251,9 +252,9 @@ class FilmPlayer(WebDriverManager):
         """AI is creating summary for wait_for_playback_to_end
         """
         while True:
-            play_button = self.driver.find_element(By.CLASS_NAME, "allplay__controls__item.allplay__control")
+            play_button = self.driver.find_element(By.CLASS_NAME, Config.PLAY_BUTTON_FILM_CLASS)
             play_button_class = play_button.get_attribute("class")
-            if "allplay__control--pressed" not in play_button_class:
+            if Config.PLAY_BUTTON_PRESSED_CLASS not in play_button_class:
                 break
             time.sleep(1)
 
