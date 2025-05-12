@@ -211,7 +211,7 @@ class FilmPlayer(WebDriverManager):
         """AI is creating summary for switch_to_sspoisk
         """
         film_url = self.driver.current_url
-        new_url = film_url.replace(*Config.SSPOISK_URL_REPLACE)
+        new_url = film_url.replace(Config.SSPOISK_URL_REPLACE[0], Config.SSPOISK_URL_REPLACE[1])
         self.driver.get(new_url)
         time.sleep(5)
 
