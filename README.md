@@ -113,7 +113,7 @@ graph LR
 | `pyttsx3`       | Синтез речи                       |
 | `numpy`         | Работа с аудиоданными             |
 | `RapidFuzz`     | Нечеткий поиск команд             |
-| `g4f`           | Бесплатный ChatGPT API            |
+| `g4f`           | Бесплатный доступ к LLM (GPT-4, DeepSeek и др.) через [gpt4free](https://github.com/xtekky/gpt4free)            |
 | `selenium`      | Автоматизация браузера для медиа  |
 | `fake-useragent`| Генерация случайных User-Agent для веб-запросов|
 | `webdriver-manager`| Управление драйверами для Selenium|
