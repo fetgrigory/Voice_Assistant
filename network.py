@@ -5,20 +5,20 @@ Starting 27/11/2024
 Ending //
 '''
 # Installing the necessary libraries
+import os
 import time
+import webbrowser as wb
+import fake_useragent
+import requests
+from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-import fake_useragent
-from selenium.webdriver.chrome.options import Options
-import webbrowser as wb
-import os
-import requests
-from dotenv import load_dotenv
 
 load_dotenv()
 

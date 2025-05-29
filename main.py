@@ -5,19 +5,19 @@ Starting 23/11/2024
 Ending //
 '''
 # Installing the necessary libraries
-import queue
-import vosk
-import os
-import pygame
-import sounddevice as sd
-import pyttsx3
 import json
 import logging
+import os
+import queue
+import pygame
+import pyttsx3
+import sounddevice as sd
+import vosk
 from rapidfuzz import fuzz
-from network import NetworkActions
 from chat_gpt import ChatGPT
-from system_control import SystemControl
 from interface import VoiceAssistantApp
+from network import NetworkActions
+from system_control import SystemControl
 
 # Configure logging
 logging.basicConfig(
