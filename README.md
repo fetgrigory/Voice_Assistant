@@ -123,7 +123,6 @@ graph LR
 | `webdriver-manager`| Управление драйверами для Selenium|
 | `requests`         |HTTP-запросы к API и веб-серверам|
 | `pygame`        | Воспроизведение аудио             |
-| `python-dotenv` | Работа с переменными окружения    |
 | `pywin32`       | Интеграция с Windows API          |
 | `keyboard`      | Эмуляция нажатия клавиш           |
 | `pyperclip`     | Работа с буфером обмена           |
