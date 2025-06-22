@@ -5,7 +5,6 @@ Starting 27/11/2024
 Ending //
 '''
 # Installing the necessary libraries
-import os
 import time
 import webbrowser as wb
 import fake_useragent
@@ -339,31 +338,22 @@ class NetworkActions:
             return False
 
     # Get the weather for a given city
-    def get_weather(self, city):
+    def get_weather(self, city: str) -> str:
         """AI is creating summary for get_weather
 
         Args:
-            city ([type]): [description]
+            city (str): [description]
 
         Returns:
-            [type]: [description]
+            str: [description]
         """
-        open_weather_token = os.getenv("OPEN_WEATHER_TOKEN")
-        if not open_weather_token:
-            return "Ошибка: не задан токен для OpenWeather."
-
         try:
-            r = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={open_weather_token}&units=metric&lang=ru")
-            data = r.json()
-
-            if data.get("cod") != 200:
-                return f"Ошибка: {data.get('message', 'не удалось получить данные о погоде')}."
-
-            temp = data["main"]["temp"]
-            feels_like = data["main"]["feels_like"]
-            weather = data["weather"][0]["description"]
-
-            return f"Сейчас в городе {city}: {weather}, температура {temp}°C, ощущается как {feels_like}°C."
+            url = f"http://wttr.in/{city}"
+            params = {'format': 3}
+            response = requests.get(url, params=params, timeout=5)
+            if response.status_code == 200:
+                return response.text.strip()
+            return f"Ошибка: не удалось получить данные (код {response.status_code})."
         except Exception as e:
             return f"Ошибка при получении данных о погоде: {e}"
 

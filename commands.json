@@ -86,7 +86,7 @@
             "make": "get_city_weather",
             "handler": "self",
             "parameters": [],
-            "say": "Укажите город:",
+            "say": "",
             "triggers": ["какая погода", "погода в"]
         },
         {
