@@ -1,8 +1,7 @@
 /.mypy_cache
 /venv
-__pycache__/commands.cpython-311.pyc
-__pycache__/network.cpython-311.pyc
-__pycache__/system_control.cpython-311.pyc
-__pycache__/chat_gpt.cpython-311.pyc
-__pycache__/interface.cpython-311.pyc
 assistant.log
+__pycache__/system_control.cpython-312.pyc
+__pycache__/chat_gpt.cpython-312.pyc
+__pycache__/network.cpython-312.pyc
+__pycache__/interface.cpython-312.pyc
