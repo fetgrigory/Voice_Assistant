@@ -162,6 +162,14 @@
             "triggers": ["открой вкладку", "новая вкладка"]
         },
         {
+            "command": "get_news",
+            "make": "read_news",
+            "handler": "self",
+            "parameters": [],
+            "say": "Вот последние новости",
+            "triggers": ["новости", "последние новости", "что нового"]
+        },
+        {
             "command": "keyboard_write",
             "make": "keyboard_write",
             "handler": "system_control",

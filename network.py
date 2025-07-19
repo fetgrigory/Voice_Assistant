@@ -18,7 +18,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-
+from bs4 import BeautifulSoup
+import feedparser
 load_dotenv()
 
 
@@ -304,6 +305,36 @@ class NetworkActions:
     def __init__(self):
         self.music_player = MusicPlayer()
         self.film_player = FilmPlayer()
+        self.rss_url = "https://russian.rt.com/rss"
+    
+    def _clean_html(self, raw_html):
+        """Очищает текст от HTML-тегов"""
+        if not raw_html:
+            return ""
+        soup = BeautifulSoup(raw_html, "html.parser")
+        text = soup.get_text(separator=" ", strip=True)
+        return ' '.join(text.split())
+
+    def get_news(self, count=5):
+        """Получает новости с RSS-ленты RT"""
+        try:
+            feed = feedparser.parse(self.rss_url)
+            news_items = []
+            
+            for entry in feed.entries[:count]:
+                title = self._clean_html(entry.get('title', 'Без заголовка'))
+                summary = self._clean_html(
+                    entry.get('summary', entry.get('description', 'Нет описания')))
+                
+                news_items.append({
+                    'title': title,
+                    'summary': summary
+                })
+            
+            return news_items
+        except Exception as e:
+            print(f"Ошибка при получении новостей: {e}")
+            return None
 
     # Perform a web search
     def web_search(self, query):

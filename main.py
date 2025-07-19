@@ -14,6 +14,7 @@ import pyttsx3
 import sounddevice as sd
 import vosk
 from rapidfuzz import fuzz
+import time
 from chat_gpt import ChatGPT
 from interface import VoiceAssistantApp
 from network import NetworkActions
@@ -68,6 +69,26 @@ class Assistant:
         # Initialize and start the interface
         self.interface_manager = VoiceAssistantApp(self)
         self.interface_manager.start_interface()
+    def read_news(self):
+        """Read news aloud"""
+        try:
+            self.speak("Вот последние новости")
+            news_items = self.network_actions.get_news(count=5)
+            
+            if not news_items:
+                self.speak("Не удалось загрузить новости. Проверьте интернет соединение.")
+                return
+                
+            for i, news in enumerate(news_items, 1):
+                self.speak(f"Новость {i}. {news['title']}")
+                time.sleep(0.5)
+                if news['summary']:
+                    self.speak(news['summary'])
+                time.sleep(1)
+                
+        except Exception as e:
+            logger.error(f"Error reading news: {e}")
+            self.speak("Произошла ошибка при чтении новостей")
 
     # Load saved settings from file
     def load_settings(self):
