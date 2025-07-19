@@ -69,26 +69,6 @@ class Assistant:
         # Initialize and start the interface
         self.interface_manager = VoiceAssistantApp(self)
         self.interface_manager.start_interface()
-    def read_news(self):
-        """Read news aloud"""
-        try:
-            self.speak("Вот последние новости")
-            news_items = self.network_actions.get_news(count=5)
-            
-            if not news_items:
-                self.speak("Не удалось загрузить новости. Проверьте интернет соединение.")
-                return
-                
-            for i, news in enumerate(news_items, 1):
-                self.speak(f"Новость {i}. {news['title']}")
-                time.sleep(0.5)
-                if news['summary']:
-                    self.speak(news['summary'])
-                time.sleep(1)
-                
-        except Exception as e:
-            logger.error(f"Error reading news: {e}")
-            self.speak("Произошла ошибка при чтении новостей")
 
     # Load saved settings from file
     def load_settings(self):
@@ -348,6 +328,27 @@ class Assistant:
             self.speak(result)
         else:
             self.speak("Не удалось распознать запрос.")
+
+    # Handle news request and announcement
+    def read_news(self):
+        """AI is creating summary for read_news
+        """
+        try:
+            news_items = self.network_actions.get_latest_news()
+            if not news_items:
+                self.speak("Не удалось получить новости. Попробуйте позже.")
+                return
+
+            self.speak("Вот последние новости:")
+            for idx, item in enumerate(news_items, 1):
+                self.speak(f"Новость {idx}. {item['title']}")
+                time.sleep(0.3)
+                if item['summary']:
+                    self.speak(item['summary'])
+                time.sleep(0.5)
+
+        except Exception as e:
+            logger.error("Error in news handling: %s", e)
 
     # Gets the weather for the specified city
     def get_city_weather(self):

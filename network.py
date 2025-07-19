@@ -4,11 +4,15 @@ Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
 Starting 27/11/2024
 Ending //
 '''
+import logging
 # Installing the necessary libraries
 import time
 import webbrowser as wb
+
 import fake_useragent
+import feedparser
 import requests
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -18,8 +22,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-import feedparser
+
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 
@@ -306,35 +310,7 @@ class NetworkActions:
         self.music_player = MusicPlayer()
         self.film_player = FilmPlayer()
         self.rss_url = "https://russian.rt.com/rss"
-    
-    def _clean_html(self, raw_html):
-        """Очищает текст от HTML-тегов"""
-        if not raw_html:
-            return ""
-        soup = BeautifulSoup(raw_html, "html.parser")
-        text = soup.get_text(separator=" ", strip=True)
-        return ' '.join(text.split())
-
-    def get_news(self, count=5):
-        """Получает новости с RSS-ленты RT"""
-        try:
-            feed = feedparser.parse(self.rss_url)
-            news_items = []
-            
-            for entry in feed.entries[:count]:
-                title = self._clean_html(entry.get('title', 'Без заголовка'))
-                summary = self._clean_html(
-                    entry.get('summary', entry.get('description', 'Нет описания')))
-                
-                news_items.append({
-                    'title': title,
-                    'summary': summary
-                })
-            
-            return news_items
-        except Exception as e:
-            print(f"Ошибка при получении новостей: {e}")
-            return None
+        self.news_count = 5
 
     # Perform a web search
     def web_search(self, query):
@@ -387,6 +363,47 @@ class NetworkActions:
             return f"Ошибка: не удалось получить данные (код {response.status_code})."
         except Exception as e:
             return f"Ошибка при получении данных о погоде: {e}"
+
+        # Clean HTML tags from text
+    def clean_html_text(self, text):
+        """AI is creating summary for clean_html_text
+
+        Args:
+            text ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
+        if not text:
+            return
+        soup = BeautifulSoup(text, "html.parser")
+        return ' '.join(soup.get_text(separator=" ", strip=True).split())
+
+        # Fetch latest news from RSS feed
+    def get_latest_news(self):
+        """AI is creating summary for get_latest_news
+
+        Returns:
+            [type]: [description]
+        """
+        try:
+            feed = feedparser.parse(self.rss_url)
+            if not feed.entries:
+                logger.warning("No news entries found in RSS feed")
+                return None
+
+            return [
+                {
+                    'title': self.clean_html_text(entry.get('title', 'Без заголовка')),
+                    'summary': self.clean_html_text(
+                        entry.get('summary', entry.get('description', 'Нет описания'))
+                    )
+                }
+                for entry in feed.entries[:self.news_count]
+            ]
+        except Exception as e:
+            logger.error("Failed to fetch news: %s", e)
+            return None
 
     # Opens specified URL in browser
     def open_url(self, url):
