@@ -7,6 +7,7 @@ Ending //
 # Installing the necessary libraries
 import json
 import logging
+import time
 import os
 import queue
 import pygame
@@ -14,7 +15,6 @@ import pyttsx3
 import sounddevice as sd
 import vosk
 from rapidfuzz import fuzz
-import time
 from chat_gpt import ChatGPT
 from interface import VoiceAssistantApp
 from network import NetworkActions

@@ -4,11 +4,11 @@ Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
 Starting 27/11/2024
 Ending //
 '''
-import logging
+
 # Installing the necessary libraries
+import logging
 import time
 import webbrowser as wb
-
 import fake_useragent
 import feedparser
 import requests
