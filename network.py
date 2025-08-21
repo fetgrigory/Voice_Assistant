@@ -168,7 +168,6 @@ class MusicManager(WebDriverManager):
         self.driver = None
         self.search_engine = None
         self.metadata_extractor = None
-        self.player_core = None
 
     # Main method to play music
     def play_music(self, query):
@@ -185,16 +184,16 @@ class MusicManager(WebDriverManager):
             # Initialize components
             self.search_engine = MusicSearchEngine(self.driver)
             self.metadata_extractor = MusicMetadataExtractor(self.driver)
-            self.player_core = MusicPlaybackEngine(self.driver, self.metadata_extractor)
+            self.music_player_engine = MusicPlaybackEngine(self.driver, self.metadata_extractor)
             # Execute music playback flow
             if not self.search_engine.search_music(query):
                 return "Ошибка 404: страница не найдена!"
-            self.player_core.play()
+            self.music_player_engine.play()
             metadata = self.metadata_extractor.extract_metadata()
             if metadata:
                 logger.info("Музыка начала играть: %s - %s",
                            metadata['artist'], metadata['track'])
-            self.player_core.wait_for_completion()
+            self.music_player_engine.wait_for_completion()
             return f"Трек {metadata['artist']} - {metadata['track']} завершился."
         except Exception as e:
             return f"Ошибка при воспроизведении музыки: %s" % e
@@ -335,7 +334,8 @@ class FilmManager(WebDriverManager):
         super().__init__()
         self.driver = None
         self.search_engine = None
-        self.player_core = None
+        self.music_player_engine = None
+        self.video_player_engine = None
 
     # The main method to play film
     def play_film(self, film_name):
@@ -351,17 +351,16 @@ class FilmManager(WebDriverManager):
             self.driver = self.setup_driver()
             # Initialize components
             self.search_engine = FilmSearchEngine(self.driver)
-            self.player_core = FilmPlaybackEngine(self.driver)
+            self.video_player_engine = FilmPlaybackEngine(self.driver)
             # Execute film playback flow
             self.search_engine.open_kinopoisk()
             self.search_engine.search_film(film_name)
             film_title = self.search_engine.select_first_film()
             self.search_engine.switch_to_sspoisk()
-            self.player_core.switch_to_iframe()
-            self.player_core.play()
-            self.player_core.start_playback()
-            self.player_core.enter_fullscreen()
-            self.player_core.wait_for_completion()
+            self.video_player_engine.switch_to_iframe()
+            self.video_player_engine.play()
+            self.video_player_engine.start_playback()
+            self.video_player_engine.wait_for_completion()
             return f"Фильм '{film_title}' завершился."
         except Exception as e:
             return f"Произошла ошибка: %s" % e
