@@ -124,7 +124,7 @@ class MusicMetadataExtractor:
 
 
 # Handles music playback operations
-class MusicPlayerCore:
+class MusicPlaybackEngine:
     """AI is creating summary for
     """
     def __init__(self, driver, metadata_extractor):
@@ -157,8 +157,8 @@ class MusicPlayerCore:
 
 
 # Orchestrates music-related operations
-class MusicPlayer(WebDriverManager):
-    """AI is creating summary for MusicPlayer
+class MusicManager(WebDriverManager):
+    """AI is creating summary for MusicManager
 
     Args:
         WebDriverManager ([type]): [description]
@@ -185,7 +185,7 @@ class MusicPlayer(WebDriverManager):
             # Initialize components
             self.search_engine = MusicSearchEngine(self.driver)
             self.metadata_extractor = MusicMetadataExtractor(self.driver)
-            self.player_core = MusicPlayerCore(self.driver, self.metadata_extractor)
+            self.player_core = MusicPlaybackEngine(self.driver, self.metadata_extractor)
             # Execute music playback flow
             if not self.search_engine.search_music(query):
                 return "Ошибка 404: страница не найдена!"
@@ -274,7 +274,7 @@ class FilmSearchEngine:
 
 
 # Handles film playback operations
-class FilmPlayerCore:
+class FilmPlaybackEngine:
     """AI is creating summary for
     """
     def __init__(self, driver):
@@ -325,8 +325,8 @@ class FilmPlayerCore:
 
 
 # Orchestrates film-related operations
-class FilmPlayer(WebDriverManager):
-    """AI is creating summary for FilmPlayer
+class FilmManager(WebDriverManager):
+    """AI is creating summary for FilmManager
 
     Args:
         WebDriverManager ([type]): [description]
@@ -351,7 +351,7 @@ class FilmPlayer(WebDriverManager):
             self.driver = self.setup_driver()
             # Initialize components
             self.search_engine = FilmSearchEngine(self.driver)
-            self.player_core = FilmPlayerCore(self.driver)
+            self.player_core = FilmPlaybackEngine(self.driver)
             # Execute film playback flow
             self.search_engine.open_kinopoisk()
             self.search_engine.search_film(film_name)
@@ -509,8 +509,8 @@ class NetworkActions:
     """AI is creating summary for
     """
     def __init__(self):
-        self.music_player = MusicPlayer()
-        self.film_player = FilmPlayer()
+        self.music_player = MusicManager()
+        self.film_player = FilmManager()
         self.weather_service = WeatherService()
         self.news_service = NewsService()
         self.web_search_service = WebSearchService()
