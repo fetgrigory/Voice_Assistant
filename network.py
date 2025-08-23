@@ -432,6 +432,9 @@ class NewsService:
         if not text:
             return ""
         soup = BeautifulSoup(text, "html.parser")
+        for a in soup.find_all("a"):
+            if "Читать далее" in a.get_text():
+                a.decompose()
         return ' '.join(soup.get_text(separator=" ", strip=True).split())
 
     # Fetch latest news from RSS feed
