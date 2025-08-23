@@ -90,6 +90,15 @@
             "triggers": ["какая погода", "погода в"]
         },
         {
+            "command": "google_search",
+            "make": "google_search",
+            "handler": "self",
+            "parameters": [],
+            "say": "",
+            "triggers": ["найди в интернете", "поиск в гугле", "поиск"]
+        },
+
+        {
             "command": "empty",
             "make": "empty",
             "handler": "system_control",

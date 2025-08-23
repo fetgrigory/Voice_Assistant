@@ -474,19 +474,19 @@ class WebSearchService:
     # Perform web search
     @staticmethod
     def web_search(query):
+        """AI is creating summary for web_search
+
+        Args:
+            query ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         if query:
             wb.open("https://www.google.ru/search?q=" + query)
             return "Ищу информацию по запросу " + query
         else:
             return "Я не поняла, что надо искать."
-
-    def check_searching(self, query):
-        """Check if query requires web search"""
-        if any(word in query for word in ["найди", "найти"]):
-            query = query.replace("найди", "").replace("найти", "").strip()
-            return self.web_search(query)
-        else:
-            return False
 
     # Open specified URL in browser
     @staticmethod
@@ -504,6 +504,24 @@ class WebSearchService:
             return f"Открываю сайт: {url}"
         except Exception as e:
             return f"Ошибка при открытии сайта: %s" % e
+
+        # Voice-activated Google search
+    def google_search(self, tts, speech_recognizer):
+        """AI is creating summary for google_search
+
+        Args:
+            tts ([type]): [description]
+            speech_recognizer ([type]): [description]
+        """
+        tts.speak("Что нужно найти в интернете?")
+        query = speech_recognizer.listen_command()
+        if query:
+            result = self.web_search(query)
+            logger.info("Google search query: %s, result: %s", query, result)
+            tts.speak(result)
+        else:
+            tts.speak("Не удалось распознать запрос.")
+            logger.warning("Google search: не удалось распознать запрос")
 
 
 # Orchestrates all network-related operations
@@ -537,18 +555,6 @@ class NetworkActions:
             [type]: [description]
         """
         return self.news_service.get_latest_news()
-
-    # Check if query requires web search
-    def check_searching(self, query):
-        """AI is creating summary for check_searching
-
-        Args:
-            query ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-        return self.web_search_service.check_searching(query)
 
     # Open specified URL
     def open_url(self, url):

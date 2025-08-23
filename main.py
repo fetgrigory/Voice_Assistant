@@ -292,6 +292,12 @@ class Assistant:
         else:
             self.tts.speak("Не удалось распознать город.")
 
+    # Google search function
+    def google_search(self):
+        """AI is creating summary for google_search
+        """
+        self.network_actions.web_search_service.google_search(self.tts, self.speech_recognizer)
+
     # Command processor
     def process_command(self, query):
         """AI is creating summary for process_command
@@ -332,11 +338,6 @@ class Assistant:
             except Exception as e:
                 self.tts.speak(f"Команда '{query}' пока не реализована.")
                 logger.error("Command execution error: %s", e)
-                return
-        # Checks if the query needs a web search
-        web_search = self.network_actions.check_searching(query)
-        if web_search:
-            self.tts.speak(web_search)
             return
         # If no match found, ask ChatGPT for a response
         response = self.chat_gpt.ask(query)
