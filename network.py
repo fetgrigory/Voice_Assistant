@@ -505,9 +505,9 @@ class WebSearchService:
         except Exception as e:
             return f"Ошибка при открытии сайта: %s" % e
 
-        # Voice-activated Google search
-    def google_search(self, tts, speech_recognizer):
-        """AI is creating summary for google_search
+        # Voice-activated search_online
+    def search_online(self, tts, speech_recognizer):
+        """AI is creating summary for search_online
 
         Args:
             tts ([type]): [description]
@@ -517,11 +517,11 @@ class WebSearchService:
         query = speech_recognizer.listen_command()
         if query:
             result = self.web_search(query)
-            logger.info("Google search query: %s, result: %s", query, result)
+            logger.info("search_online query: %s, result: %s", query, result)
             tts.speak(result)
         else:
             tts.speak("Не удалось распознать запрос.")
-            logger.warning("Google search: не удалось распознать запрос")
+            logger.warning("search_online: не удалось распознать запрос")
 
 
 # Orchestrates all network-related operations

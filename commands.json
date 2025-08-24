@@ -90,8 +90,8 @@
             "triggers": ["какая погода", "погода в"]
         },
         {
-            "command": "google_search",
-            "make": "google_search",
+            "command": "search_online",
+            "make": "search_online",
             "handler": "self",
             "parameters": [],
             "say": "",

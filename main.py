@@ -293,10 +293,10 @@ class Assistant:
             self.tts.speak("Не удалось распознать город.")
 
     # Google search function
-    def google_search(self):
-        """AI is creating summary for google_search
+    def search_online(self):
+        """AI is creating summary for search_online
         """
-        self.network_actions.web_search_service.google_search(self.tts, self.speech_recognizer)
+        self.network_actions.web_search_service.search_online(self.tts, self.speech_recognizer)
 
     # Command processor
     def process_command(self, query):
