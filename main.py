@@ -186,6 +186,8 @@ class Assistant:
         # Interface
         self.interface_manager = VoiceAssistantApp(self)
         self.interface_manager.start_interface()
+        # Duration of active session before timeout
+        self.session_timeout = 15
 
     def load_settings(self):
         """AI is creating summary for load_settings
@@ -348,12 +350,19 @@ class Assistant:
         """AI is creating summary for main
         """
         while True:
-            self.speech_recognizer.listen_for_activation(self.activation_words, lambda: self.tts.speak("Слушаю..."))
-            query = self.speech_recognizer.listen_command()
-            if query:
-                self.process_command(query)
-            else:
-                self.tts.speak("Пожалуйста, повторите запрос.")
+            # Waiting for the activation word to start the session
+            self.speech_recognizer.listen_for_activation(
+                self.activation_words,
+                lambda: self.tts.speak("Слушаю")
+            )
+            # Setting the session start time
+            last_active_time = time.time()
+            # Active session: listening to commands before timeout
+            while time.time() - last_active_time < self.session_timeout:
+                query = self.speech_recognizer.listen_command()
+                if query:
+                    self.process_command(query)
+                    last_active_time = time.time()
 
 
 if __name__ == '__main__':
