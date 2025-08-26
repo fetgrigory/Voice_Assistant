@@ -363,6 +363,8 @@ class Assistant:
                 if query:
                     self.process_command(query)
                     last_active_time = time.time()
+            # Session timeout — play shutdown sound
+            self.sound_player.play_sound('shutdown')
 
 
 if __name__ == '__main__':
