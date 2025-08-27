@@ -125,9 +125,10 @@ class TTS:
         Args:
             message ([type]): [description]
         """
-        logger.info("Speaking: %s", message)
+        message_str = str(message)
+        logger.info("Speaking: %s", message_str)
         try:
-            self.engine.say(message)
+            self.engine.say(message_str)
             self.engine.runAndWait()
         except Exception as e:
             logger.error("TTS error: %s", e)

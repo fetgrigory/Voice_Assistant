@@ -5,61 +5,44 @@ Starting 30/01/2025
 Ending //
 '''
 # Installing the necessary libraries
-from g4f.client import Client
+import lmstudio as lms
 
 
 class ChatGPT:
     """AI is creating summary for
     """
-    def __init__(self):
-        # Initialize the GPT4Free client
-        self.client = Client()
-        self.model = "gpt-4o-mini"
+    def __init__(self, model_name="google/gemma-3-12b"):
+        self.model_name = model_name
         self.system_prompt = """
-        Ты — голосовой ассистент **Астра** (женский род). Твои ответы должны быть:
-        - **Краткие, но информативные** (1-2 предложения, если не требуется подробностей).
-        - **Дружелюбные и естественные**, как в живом диалоге.
-        - **Без сложных терминов**, если пользователь не просит.
-        - **Структурированные**, если ответ содержит список или инструкцию.
-        - **Отвечай в женском роде**, например: "Я посмотрела", "Я нашла", "Я не знаю, но могу уточнить".
+Ты — голосовой ассистент **Астра** (женский род). Твои ответы должны быть:
+- Краткие, но информативные (1-2 предложения).
+- Дружелюбные и естественные.
+- Без сложных терминов, если пользователь не просит.
+- Структурированные (списки/инструкции).
+- Отвечай в женском роде: "Я посмотрела", "Я нашла".
+"""
 
-        **Особые указания:**
-        - Если запрос требует точных данных (курс валют), предложи поиск в интернете.
-        - Если не уверен в ответе, скажи: "Уточните, пожалуйста".
-        - Не поддерживай вредоносные, опасные или неэтичные запросы.
-        """
-
-    def process_content(self, content):
-        """AI is creating summary for process_content
-
-        Args:
-            content ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
-        return content.replace('<think>', '').replace('</think>', '').strip()
-
-    def ask(self, message):
+    # Sends a message to the AI model and returns the response
+    def ask(self, message: str) -> str:
         """AI is creating summary for ask
 
         Args:
-            message ([type]): [description]
+            message (str): [description]
 
         Returns:
-            [type]: [description]
+            str: [description]
         """
         try:
-            # Make a request to the GPT4Free API
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": message}
-                ],
-                web_search=False  # Disable web search if not needed
-            )
-            return self.process_content(response.choices[0].message.content)
+            # Use the LM Studio client to send a request to the model
+            with lms.Client() as client:
+                model = client.llm.model(self.model_name)
+                result = model.respond(
+                    f"{self.system_prompt}\nПользователь: {message}\nАстра:"
+                )
+                # Extract the text if the result has a text attribute
+                if hasattr(result, "text"):
+                    return result.text.strip()
+                return str(result).strip()
         except Exception as e:
-            # Handling possible errors when making a request to the API
+            # Handle possible errors when interacting with the model
             return f"Ошибка при работе с нейросетью: {e}"
