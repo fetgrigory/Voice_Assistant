@@ -483,7 +483,7 @@ class WebSearchService:
             [type]: [description]
         """
         if query:
-            wb.open("https://www.google.ru/search?q=" + query)
+            wb.open("https://www.yandex.ru/search?text=" + query)
             return "Ищу информацию по запросу " + query
         else:
             return "Я не поняла, что надо искать."
