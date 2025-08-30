@@ -5,3 +5,6 @@ __pycache__/system_control.cpython-312.pyc
 __pycache__/chat_gpt.cpython-312.pyc
 __pycache__/network.cpython-312.pyc
 __pycache__/interface.cpython-312.pyc
+__pycache__/film_service.cpython-312.pyc
+__pycache__/music_service.cpython-312.pyc
+__pycache__/web_driver_manager.cpython-312.pyc
