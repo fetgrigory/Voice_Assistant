@@ -122,6 +122,7 @@ class MusicManager(WebDriverManager):
         self.driver = None
         self.search_engine = None
         self.metadata_extractor = None
+        self.music_player_engine = None
 
     # Main method to play music
     def play_music(self, query):
