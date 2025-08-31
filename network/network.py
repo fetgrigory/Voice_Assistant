@@ -11,8 +11,8 @@ import webbrowser as wb
 import feedparser
 import requests
 from bs4 import BeautifulSoup
-from film_service import FilmManager
-from music_service import MusicManager
+from network.film_service import FilmManager
+from network.music_service import MusicManager
 
 logger = logging.getLogger(__name__)
 
