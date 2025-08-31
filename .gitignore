@@ -8,3 +8,8 @@ __pycache__/interface.cpython-312.pyc
 __pycache__/film_service.cpython-312.pyc
 __pycache__/music_service.cpython-312.pyc
 __pycache__/web_driver_manager.cpython-312.pyc
+network/__pycache__/web_driver_manager.cpython-312.pyc
+network/__pycache__/music_service.cpython-312.pyc
+network/__pycache__/network.cpython-312.pyc
+network/__pycache__/film_service.cpython-312.pyc
+network/__pycache__/__init__.cpython-312.pyc
