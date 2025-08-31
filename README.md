@@ -77,7 +77,7 @@ Voice_Assistant/
 │
 ├── logs/                         # Логи работы ассистента
 │   └── assistant.log
-├── requirements.txt               # Зависимости проекта
+├── requirements.txt              # Зависимости проекта
 ```
 ## Архитектура системы
 ```mermaid
