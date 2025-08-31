@@ -62,7 +62,7 @@ Voice_Assistant/
 │
 ├── network/                      # Сетевая логика
 │   ├── __init__.py               # Инициализация пакета
-│   ├── network.py                # Основные сетевые операции (Weather, News, WebSearch)
+│   ├── network.py                # Основные сетевые операции
 │   ├── music_service.py          # Музыкальный плеер через Selenium
 │   └── film_service.py           # Воспроизведение фильмов через Selenium
 │
