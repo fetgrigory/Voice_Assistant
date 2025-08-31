@@ -13,3 +13,7 @@ network/__pycache__/music_service.cpython-312.pyc
 network/__pycache__/network.cpython-312.pyc
 network/__pycache__/film_service.cpython-312.pyc
 network/__pycache__/__init__.cpython-312.pyc
+__pycache__/assistant_core.cpython-312.pyc
+__pycache__/speech_module.cpython-312.pyc
+__pycache__/tts_module.cpython-312.pyc
+__pycache__/sound_module.cpython-312.pyc
