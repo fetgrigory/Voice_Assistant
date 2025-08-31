@@ -57,7 +57,7 @@ Voice_Assistant/
 ├── tts_module.py                 # Синтез речи (pyttsx3)
 ├── sound_module.py               # Воспроизведение звуков (pygame)
 ├── system_control.py             # Управление системой (выключение, горячие клавиши)
-├── interface.py                  # GUI ассистента (VoiceAssistantApp)
+├── interface.py                  # GUI ассистента
 ├── chat_gpt.py                   # Локальная интеграция ChatGPT
 │
 ├── network/                      # Сетевая логика
