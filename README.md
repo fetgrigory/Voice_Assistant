@@ -87,7 +87,6 @@ Voice_Assistant/
 │   └── WhatsApp.lnk
 │
 └── img/                       # Изображения для README или интерфейса
-    └── Banner.png
 
 ```
 ## Дорожная карта
