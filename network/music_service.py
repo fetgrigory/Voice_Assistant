@@ -10,7 +10,7 @@ import logging
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from web_driver_manager import WebDriverManager
+from network.web_driver_manager import WebDriverManager
 
 logger = logging.getLogger(__name__)
 
