@@ -48,14 +48,13 @@
 ```text
 Voice_Assistant/
 │
-├── assistant_core.py          # Основной модуль ассистента
-├── main.py                    # Точка входа программы
-├── commands.json              # Конфигурация команд ассистента
-├── settings.json              # Настройки устройства
-│
-├── speech_module.py              # Распознавание речи (Vosk)
-├── tts_module.py                 # Синтез речи (pyttsx3)
-├── sound_module.py               # Воспроизведение звуков (pygame)
+    ├── assistant_core.py         # Основной модуль ассистента
+├── main.py                       # Точка входа программы
+├── commands.json                 # Конфигурация команд ассистента
+├── settings.json                 # Настройки устройства
+├── speech_module.py              # Распознавание речи
+├── tts_module.py                 # Синтез речи
+├── sound_module.py               # Воспроизведение звуков
 ├── system_control.py             # Управление системой (выключение, горячие клавиши)
 ├── interface.py                  # GUI ассистента
 ├── chat_gpt.py                   # Локальная интеграция ChatGPT
@@ -63,18 +62,18 @@ Voice_Assistant/
 ├── network/                      # Сетевая логика
 │   ├── __init__.py               # Инициализация пакета
 │   ├── network.py                # Основные сетевые операции
-│   ├── music_service.py          # Музыкальный плеер через Selenium
-│   └── film_service.py           # Воспроизведение фильмов через Selenium
+│   ├── music_service.py          # Воспроизведение музыки
+│   └── film_service.py           # Воспроизведение фильмов
 │
 ├── sounds/                       # Аудиофайлы для ассистента
 │   ├── start.mp3
 │   └── shutdown.mp3
-├── main_applications/         # Ярлыки программ
+├── main_applications/            # Ярлыки программ
 │   ├── Google Chrome.lnk
 │   ├── Telegram.lnk
 │   └── WhatsApp.lnk
 │
-└── img/                       # Изображения для интерфейса
+└── img/                          # Изображения для интерфейса
 │
 ├── logs/                         # Логи работы ассистента
 │   └── assistant.log
