@@ -55,6 +55,10 @@ graph LR
 ```text
 Voice_Assistant/
 │
+├── main_applications/  # Ярлылки программ
+    ├── Google Chrome.lnk
+    ├── Telegram.lnk
+    ├── WhatsApp.lnk
 ├── main.py                       # Точка входа
 ├── assistant_core.py             # Основной класс Assistant
 ├── commands.json                 # Настройки команд
