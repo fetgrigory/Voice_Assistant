@@ -50,7 +50,7 @@ Voice_Assistant/
 ├── assistant_core.py          # Основной модуль ассистента
 ├── main.py                    # Точка входа программы
 ├── commands.json              # Конфигурация команд ассистента
-├── settings.json                 # Настройки устройства
+├── settings.json              # Настройки устройства
 │
 ├── speech_module.py              # Распознавание речи (Vosk)
 ├── tts_module.py                 # Синтез речи (pyttsx3)
