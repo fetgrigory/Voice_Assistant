@@ -9,7 +9,7 @@ import logging
 from assistant_core import Assistant
 # Configure logging
 logging.basicConfig(
-    filename='assistant.log',
+    filename='logs/assistant.log',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     encoding='utf-8'
