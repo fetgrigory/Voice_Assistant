@@ -61,7 +61,7 @@ Voice_Assistant/
 ├── chat_gpt.py                   # Локальная интеграция ChatGPT
 │
 ├── network/                      # Сетевая логика
-│   ├── __init__.py               # Экспорт NetworkActions
+│   ├── __init__.py               # Инициализация пакета
 │   ├── network.py                # Основные сетевые операции (Weather, News, WebSearch)
 │   ├── music_service.py          # Музыкальный плеер через Selenium
 │   └── film_service.py           # Воспроизведение фильмов через Selenium
