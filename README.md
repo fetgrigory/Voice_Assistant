@@ -58,35 +58,33 @@ Voice_Assistant/
 ├── assistant_core.py          # Основной модуль ассистента
 ├── main.py                    # Точка входа программы
 ├── commands.json              # Конфигурация команд ассистента
-├── settings.json              # Настройки (например, input_device)
-├── requirements.txt           # Зависимости проекта
-├── README.md                  # Документация проекта
+├── settings.json                 # Настройки устройства
 │
-├── speech_module.py           # Распознавание речи (Vosk)
-├── tts_module.py              # Синтез речи (pyttsx3)
-├── sound_module.py            # Воспроизведение звуков
+├── speech_module.py              # Распознавание речи (Vosk)
+├── tts_module.py                 # Синтез речи (pyttsx3)
+├── sound_module.py               # Воспроизведение звуков (pygame)
+├── system_control.py             # Управление системой (выключение, горячие клавиши)
+├── interface.py                  # GUI ассистента (VoiceAssistantApp)
+├── chat_gpt.py                   # Локальная интеграция ChatGPT
 │
-├── network/                   # Сетевые сервисы
-│   ├── __init__.py            # Экспорт NetworkActions
-│   ├── network.py             # Основной сетевой модуль
-│   ├── music_service.py       # Музыкальный сервис
-│   ├── film_service.py        # Фильмовый сервис
-│   └── web_driver_manager.py  # Управление Selenium-драйвером
+├── network/                      # Сетевая логика
+│   ├── __init__.py               # Экспорт NetworkActions
+│   ├── network.py                # Основные сетевые операции (Weather, News, WebSearch)
+│   ├── music_service.py          # Музыкальный плеер через Selenium
+│   └── film_service.py           # Воспроизведение фильмов через Selenium
 │
-├── system_control.py          # Управление системой Windows
-├── chat_gpt.py                # Интерфейс ChatGPT / локальных моделей
-├── interface.py               # GUI ассистента (CustomTkinter)
-│
-├── sounds/                    # Аудиофайлы для ассистента
+├── sounds/                       # Аудиофайлы для ассистента
 │   ├── start.mp3
-│   ├── shutdown.mp3
-│
+│   └── shutdown.mp3
 ├── main_applications/         # Ярлыки программ
 │   ├── Google Chrome.lnk
 │   ├── Telegram.lnk
 │   └── WhatsApp.lnk
 │
-└── img/                       # Изображения для README или интерфейса
+└── img/                       # Изображения для интерфейса
+│
+├── logs/                         # Логи работы ассистента
+│   └── assistant.log
 
 ```
 ## Дорожная карта
