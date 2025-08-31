@@ -48,7 +48,7 @@
 ```text
 Voice_Assistant/
 │
-    ├── assistant_core.py         # Основной модуль ассистента
+├── assistant_core.py             # Основной модуль ассистента
 ├── main.py                       # Точка входа программы
 ├── commands.json                 # Конфигурация команд ассистента
 ├── settings.json                 # Настройки устройства
