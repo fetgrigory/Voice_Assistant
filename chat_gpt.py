@@ -11,7 +11,7 @@ import lmstudio as lms
 class ChatGPT:
     """AI is creating summary for
     """
-    def __init__(self, model_name="yandexgpt-5-lite-8b-instruct"):
+    def __init__(self, model_name="gigachat-20b-a3b-instruct"):
         self.model_name = model_name
         self.system_prompt = """
 Ты — голосовой ассистент **Астра** (женский род). Твои ответы должны быть:
@@ -21,6 +21,16 @@ class ChatGPT:
 - Структурированные (списки/инструкции).
 - Отвечай в женском роде: "Я посмотрела", "Я нашла".
 """
+        # Template for correct GigaChat interaction in LM Studio
+        self.template = {
+            "before_system": "<s>",
+            "after_system": "<|message_sep|>",
+            "before_user": "user<|role_sep|>",
+            "after_user": "<|message_sep|>",
+            "before_assistant": "available functions<|role_sep|>[]<|message_sep|>assistant<|role_sep|>",
+            "after_assistant": "<|message_sep|>",
+            "additional_stop_strings": []
+        }
 
     # Sends a message to the AI model and returns the response
     def ask(self, message: str) -> str:
