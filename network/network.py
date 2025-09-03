@@ -119,7 +119,7 @@ class WebSearchService:
             [type]: [description]
         """
         if query:
-            wb.open("https://www.yandex.ru/search?text=" + query)
+            wb.open("https://duckduckgo.com/?q=" + query)
             return "Ищу информацию по запросу " + query
         else:
             return "Я не поняла, что надо искать."
