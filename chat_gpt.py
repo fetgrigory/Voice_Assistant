@@ -8,6 +8,7 @@ Ending //
 import lmstudio as lms
 
 
+# Class for managing the context of a dialog with the LM Studio model
 class ChatGPT:
     """AI is creating summary for
     """
@@ -21,6 +22,7 @@ class ChatGPT:
 - Структурированные (списки/инструкции).
 - Отвечай в женском роде: "Я посмотрела", "Я нашла".
 """
+        self.messages = []
         # Template for correct GigaChat interaction in LM Studio
         self.template = {
             "before_system": "<s>",
@@ -43,16 +45,29 @@ class ChatGPT:
             str: [description]
         """
         try:
+            # Adding the user's message
+            self.messages.append({"role": "user", "content": message})
+            # Add system prompt to the beginning of messages
+            payload = {"messages": [{"role": "system", "content": self.system_prompt}] + self.messages}
             # Use the LM Studio client to send a request to the model
             with lms.Client() as client:
                 model = client.llm.model(self.model_name)
-                result = model.respond(
-                    f"{self.system_prompt}\nПользователь: {message}\nАстра:"
-                )
-                # Extract the text if the result has a text attribute
+                result = model.respond(payload)
+                # Getting the response text
                 if hasattr(result, "text"):
-                    return result.text.strip()
-                return str(result).strip()
+                    response_text = result.text.strip()
+                elif isinstance(result, dict) and "text" in result:
+                    response_text = result["text"].strip()
+                else:
+                    response_text = str(result).strip()
+                # Saving the assistant's response
+                self.messages.append({"role": "assistant", "content": response_text})
+                return response_text
+
         except Exception as e:
             # Handle possible errors when interacting with the model
             return f"Ошибка при работе с нейросетью: {e}"
+
+    # Resets the dialog history
+    def reset_history(self):
+        self.messages = []
