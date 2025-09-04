@@ -22,6 +22,7 @@ class ChatGPT:
 - Структурированные (списки/инструкции).
 - Отвечай в женском роде: "Я посмотрела", "Я нашла".
 """
+        # Dialog storage
         self.messages = []
         # Template for correct GigaChat interaction in LM Studio
         self.template = {
