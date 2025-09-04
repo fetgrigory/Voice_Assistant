@@ -68,7 +68,3 @@ class ChatGPT:
         except Exception as e:
             # Handle possible errors when interacting with the model
             return f"Ошибка при работе с нейросетью: {e}"
-
-    # Resets the dialog history
-    def reset_history(self):
-        self.messages = []
