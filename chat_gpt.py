@@ -46,11 +46,11 @@ class ChatGPT:
             str: [description]
         """
         try:
-            # Adding the user's message
+            # Adding the user's message to the history
             self.messages.append({"role": "user", "content": message})
-            # Add system prompt to the beginning of messages
+            # Creating a payload with a system prompt and message history
             payload = {"messages": [{"role": "system", "content": self.system_prompt}] + self.messages}
-            # Use the LM Studio client to send a request to the model
+            # Sending a request to the model
             with lms.Client() as client:
                 model = client.llm.model(self.model_name)
                 result = model.respond(payload)
@@ -61,7 +61,7 @@ class ChatGPT:
                     response_text = result["text"].strip()
                 else:
                     response_text = str(result).strip()
-                # Saving the assistant's response
+                # Saving the assistant's response in the history
                 self.messages.append({"role": "assistant", "content": response_text})
                 return response_text
 
