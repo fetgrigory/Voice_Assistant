@@ -172,7 +172,8 @@ graph LR
 | `selenium`      | Автоматизация браузера для медиа  |
 | `fake-useragent`| Генерация случайных User-Agent для веб-запросов|
 | `webdriver-manager`| Управление драйверами для Selenium|
-| `feedparser`       | Чтение новостей RSS-лент|
+| `feedparser`   | Чтение новостей RSS-лент|
+| `BeautifulSoup`| Очистка текста новостей от HTML-тегов|
 | `requests`         |HTTP-запросы к API и веб-серверам|
 | `pygame`        | Воспроизведение аудио             |
 | `pywin32`       | Интеграция с Windows API          |
