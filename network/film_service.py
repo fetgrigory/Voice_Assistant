@@ -177,6 +177,7 @@ class FilmManager(WebDriverManager):
             self.video_player_engine.switch_to_iframe()
             self.video_player_engine.play()
             self.video_player_engine.start_playback()
+            self.video_player_engine.enter_fullscreen()
             self.video_player_engine.wait_for_completion()
             return f"Фильм '{film_title}' завершился."
         except Exception as e:
