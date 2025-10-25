@@ -159,7 +159,7 @@ class Assistant:
         else:
             self.tts.speak("Не удалось распознать город.")
 
-    # Yandex search function
+    # Search online function
     def search_online(self):
         """AI is creating summary for search_online
         """
