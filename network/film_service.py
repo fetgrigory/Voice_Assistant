@@ -68,8 +68,13 @@ class FilmSearchEngine:
         film_input.send_keys(Keys.ENTER)
         time.sleep(5)
 
+    # Select first film from search results
     def select_first_film(self):
-        """Select first film from search results"""
+        """AI is creating summary for select_first_film
+
+        Returns:
+            [type]: [description]
+        """
         find_film = self.driver.find_element(By.XPATH, FilmConfig.FIRST_FILM_XPATH)
         name_film = find_film.get_attribute('textContent')
         find_film.click()
