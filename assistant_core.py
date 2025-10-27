@@ -91,11 +91,6 @@ class Assistant:
             logger.warning(error_msg)
             self.tts.speak(error_msg)
 
-    def about(self):
-        """AI is creating summary for about
-        """
-        self.tts.speak('Я голосовой ассистент, созданный чтобы служить людям!')
-
     # Ends the assistant's operation
     def finish(self):
         """AI is creating summary for finish

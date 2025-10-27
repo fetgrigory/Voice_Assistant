@@ -50,14 +50,6 @@
             "triggers": ["пока"]
         },
         {
-            "command": "about",
-            "make": "about",
-            "handler": "self",
-            "parameters": [],
-            "say": "",
-            "triggers": ["кто ты"]
-        },
-        {
             "command": "get_current_time",
             "make": "get_current_time",
             "handler": "system_control",
