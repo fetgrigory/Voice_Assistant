@@ -31,7 +31,7 @@
             "handler": "self",
             "parameters": [],
             "say": "",
-            "triggers": ["включи музыку", "музыку"]
+            "triggers": ["включи музыку", "включи песню ","песню", "музыку"]
         },
         {
             "command": "play_film",
