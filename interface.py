@@ -32,19 +32,12 @@ class VoiceAssistantApp:
         self.statusbar1 = ctk.CTkLabel(self.root, text="Голосовой помощник", anchor="w", font=('Arial', 16, 'italic'))
         self.statusbar1.pack(side="top", fill="x", padx=10, pady=5)
 
-        # Commands List
-        self.commands_frame = ctk.CTkFrame(self.root)
-        self.commands_frame.pack(side="left", padx=20, pady=20)
+        # Logs List
+        self.logs_frame = ctk.CTkFrame(self.root)
+        self.logs_frame.pack(side="left", padx=20, pady=20)
 
-        self.songplaylistcontainer = ctk.CTkTextbox(self.commands_frame, width=250, height=220)
+        self.songplaylistcontainer = ctk.CTkTextbox(self.logs_frame, width=250, height=220)
         self.songplaylistcontainer.pack()
-
-        self.add_button = ctk.CTkButton(self.commands_frame, text="Добавить")
-        self.add_button.pack(side="left", padx=5, pady=5)
-
-        self.remove_button = ctk.CTkButton(self.commands_frame, text="Удалить")
-        self.remove_button.pack(side="left", padx=5, pady=5)
-
         # Combobox for selecting sound input devices
         self.device_options = self.get_input_devices()
         # Get default device
