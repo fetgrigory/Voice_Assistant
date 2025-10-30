@@ -62,10 +62,10 @@ class VoiceAssistantApp:
         self.create_widgets()
 
         # Configure textbox for log output
-        self.songplaylistcontainer.configure(state="disabled")
+        self.log_textbox.configure(state="disabled")
 
         # Connect logging system to textbox
-        self.log_handler = TkinterLogHandler(self.songplaylistcontainer)
+        self.log_handler = TkinterLogHandler(self.log_textbox)
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         self.log_handler.setFormatter(formatter)
         logging.getLogger().addHandler(self.log_handler)
@@ -87,12 +87,12 @@ class VoiceAssistantApp:
         self.logs_frame = ctk.CTkFrame(self.root)
         self.logs_frame.pack(side="left", padx=20, pady=20)
 
-        self.songplaylistcontainer = ctk.CTkTextbox(
+        self.log_textbox = ctk.CTkTextbox(
             self.logs_frame,
             width=250,
             height=220
         )
-        self.songplaylistcontainer.pack()
+        self.log_textbox.pack()
 
         # Frame for microphone selection
         self.mic_frame = ctk.CTkFrame(self.root)
