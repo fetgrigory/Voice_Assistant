@@ -4,10 +4,43 @@ Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
 Starting 14/03/2025
 Ending //
 '''
+# Import required libraries
+import logging
 import customtkinter as ctk
 import sounddevice as sd
 
 
+# Custom logging handler that writes messages into a CTkTextbox
+class TkinterLogHandler(logging.Handler):
+    """AI is creating summary for TkinterLogHandler
+
+    Args:
+        logging ([type]): [description]
+    """
+    def __init__(self, textbox):
+        super().__init__()
+        self.textbox = textbox
+
+# Inserts formatted log records into the textbox safely via Tkinter event loop
+    def emit(self, record):
+        """AI is creating summary for emit
+
+        Args:
+            record ([type]): [description]
+        """
+        msg = self.format(record)
+
+        def append():
+            self.textbox.configure(state="normal")
+            self.textbox.insert("end", msg + "\n")
+            self.textbox.see("end")
+            self.textbox.configure(state="disabled")
+
+        # Schedule GUI update in the main thread
+        self.textbox.after(0, append)
+
+
+# Graphical interface of the voice assistant
 class VoiceAssistantApp:
     """AI is creating summary for
     """
@@ -18,21 +51,34 @@ class VoiceAssistantApp:
         self.root.geometry("800x400")
         self.root.resizable(width=False, height=False)
 
-        # Configuration of the appearance
+        # Configure appearance
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
-        # Selected device
+
+        # Selected audio input device
         self.selected_device = None
+
+        # Create main interface elements
         self.create_widgets()
 
-        # Status string above
+        # Configure textbox for log output
+        self.songplaylistcontainer.configure(state="disabled")
+
+        # Connect logging system to textbox
+        self.log_handler = TkinterLogHandler(self.songplaylistcontainer)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        self.log_handler.setFormatter(formatter)
+        logging.getLogger().addHandler(self.log_handler)
+        logging.getLogger().setLevel(logging.INFO)
+
     def create_widgets(self):
         """AI is creating summary for create_widgets
         """
+        # Title bar
         self.statusbar1 = ctk.CTkLabel(self.root, text="Голосовой помощник", anchor="w", font=('Arial', 16, 'italic'))
         self.statusbar1.pack(side="top", fill="x", padx=10, pady=5)
 
-        # Logs List
+        # Logs List (for displaying assistant logs)
         self.logs_frame = ctk.CTkFrame(self.root)
         self.logs_frame.pack(side="left", padx=20, pady=20)
 
@@ -102,9 +148,9 @@ class VoiceAssistantApp:
         if selected and selected != "Выберите устройство ввода":
             self.selected_device = int(selected.split(":")[0])
             self.assistant.set_input_device(self.selected_device)
-            print(f"Выбрано устройство: {selected}")
+            logging.info("Выбрано устройство: %s", selected)
         else:
-            print("Устройство не выбрано.")
+            logging.info("Устройство не выбрано.")
 
     def update_statusbar2_position(self):
         """AI is creating summary for update_statusbar2_position
