@@ -5,12 +5,13 @@ Starting 31/08/2025
 Ending //
 '''
 # Installing the necessary libraries
-import logging
 import json
-import time
+import logging
 import os
-import sounddevice as sd
+import threading
+import time
 import pygame
+import sounddevice as sd
 from rapidfuzz import fuzz
 from chat_gpt import ChatGPT
 from interface import VoiceAssistantApp
@@ -47,12 +48,13 @@ class Assistant:
 
         # Startup sound
         self.sound_player.play_sound('start')
+        # Duration of active session before timeout
+        self.session_timeout = 15
 
         # Interface
         self.interface_manager = VoiceAssistantApp(self)
+        threading.Thread(target=self.main, daemon=True).start()
         self.interface_manager.start_interface()
-        # Duration of active session before timeout
-        self.session_timeout = 15
 
     def load_settings(self):
         """AI is creating summary for load_settings
