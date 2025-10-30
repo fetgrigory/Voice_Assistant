@@ -75,28 +75,55 @@ class VoiceAssistantApp:
         """AI is creating summary for create_widgets
         """
         # Title bar
-        self.statusbar1 = ctk.CTkLabel(self.root, text="Голосовой помощник", anchor="w", font=('Arial', 16, 'italic'))
+        self.statusbar1 = ctk.CTkLabel(
+            self.root,
+            text="Голосовой помощник",
+            anchor="w",
+            font=('Arial', 16, 'italic')
+        )
         self.statusbar1.pack(side="top", fill="x", padx=10, pady=5)
 
         # Logs List (for displaying assistant logs)
         self.logs_frame = ctk.CTkFrame(self.root)
         self.logs_frame.pack(side="left", padx=20, pady=20)
 
-        self.songplaylistcontainer = ctk.CTkTextbox(self.logs_frame, width=250, height=220)
+        self.songplaylistcontainer = ctk.CTkTextbox(
+            self.logs_frame,
+            width=250,
+            height=220
+        )
         self.songplaylistcontainer.pack()
+
+        # Frame for microphone selection
+        self.mic_frame = ctk.CTkFrame(self.root)
+        self.mic_frame.pack(side="top", padx=20, pady=20, anchor="n")
+
+        # Label for microphone
+        self.statusbar2 = ctk.CTkLabel(
+            self.mic_frame,
+            text="Вход микрофона:",
+            font=('Arial', 16, 'italic')
+        )
+        self.statusbar2.pack(side="left", padx=(0, 10))
         # Combobox for selecting sound input devices
         self.device_options = self.get_input_devices()
         # Get default device
         saved_device = self.get_device_by_index(self.assistant.input_device)
-        self.device_combobox = ctk.CTkComboBox(self.root, values=self.device_options, font=('Arial', 14))
+        self.device_combobox = ctk.CTkComboBox(
+            self.mic_frame,
+            values=self.device_options,
+            font=('Arial', 14)
+        )
         # Default device installation
         self.device_combobox.set(saved_device if saved_device else self.get_default_input_device())
-        self.device_combobox.pack(padx=10, pady=10)
+        self.device_combobox.pack(side="left")
         # "Save" button
-        self.save_button = ctk.CTkButton(self.root, text="Сохранить", command=self.save_device)
+        self.save_button = ctk.CTkButton(
+            self.root,
+            text="Сохранить",
+            command=self.save_device
+        )
         self.save_button.pack(pady=10)
-        self.statusbar2 = ctk.CTkLabel(self.root, text="Вход микрофона:", anchor="w", font=('Arial', 16, 'italic'))
-        self.update_statusbar2_position()
 
     # Get device name by index
     def get_device_by_index(self, index):
