@@ -30,6 +30,7 @@ class Assistant:
     """
     def __init__(self):
         self.settings_file = 'settings.json'
+        self.input_device = None
         self.load_settings()
 
         # Load commands
@@ -56,6 +57,24 @@ class Assistant:
         threading.Thread(target=self.main, daemon=True).start()
         self.interface_manager.start_interface()
 
+# Sets the selected input device and saves the settings
+    def set_input_device(self, device_index):
+        """AI is creating summary for set_input_device
+
+        Args:
+            device_index ([type]): [description]
+        """
+        self.input_device = device_index
+        self.speech_recognizer.input_device = device_index
+        self.save_settings()
+        logging.info("Устройство ввода обновлено на %s", device_index)
+
+    def save_settings(self):
+        """AI is creating summary for save_settings
+        """
+        with open(self.settings_file, 'w', encoding='utf-8') as f:
+            json.dump({'input_device': self.input_device}, f)
+
     def load_settings(self):
         """AI is creating summary for load_settings
         """
@@ -65,12 +84,6 @@ class Assistant:
                 self.input_device = settings.get('input_device', sd.default.device[0])
         except Exception:
             self.input_device = sd.default.device[0]
-
-    def save_settings(self):
-        """AI is creating summary for save_settings
-        """
-        with open(self.settings_file, 'w', encoding='utf-8') as f:
-            json.dump({'input_device': self.input_device}, f)
 
     # Command methods
     def start_file(self, file_path):
