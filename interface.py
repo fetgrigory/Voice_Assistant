@@ -151,13 +151,81 @@ class VoiceAssistantApp:
         )
         self.commands_list_textbox.configure(state="disabled")
         self.commands_list_textbox.pack(pady=(0, 10))
-        # An example of a button for future functionality
+        # Button to open add-command window
         example_button = ctk.CTkButton(
             self.tab_commands,
             text="Добавить команду",
-            command=lambda: logging.info("Добавление новой команды...")
+            command=self.open_add_command_window
         )
         example_button.pack(pady=10)
+
+    # Opens a window for adding new commands
+    def open_add_command_window(self):
+        """AI is creating summary for open_add_command_window
+        """
+        add_window = ctk.CTkToplevel(self.root)
+        add_window.title("Добавить команду")
+        add_window.geometry("500x450")
+        add_window.resizable(False, False)
+        ctk.CTkLabel(add_window, text="Добавление новой команды", font=('Arial', 16, 'bold')).pack(pady=10)
+
+        # Command name
+        ctk.CTkLabel(add_window, text="Название команды:", anchor="w").pack(padx=20, fill="x")
+        entry_name = ctk.CTkEntry(add_window, width=400)
+        entry_name.pack(pady=5)
+
+        # Triggers
+        ctk.CTkLabel(add_window, text="Триггеры (через запятую):", anchor="w").pack(padx=20, fill="x")
+        entry_triggers = ctk.CTkEntry(add_window, width=400)
+        entry_triggers.pack(pady=5)
+
+        # Drop-down list of actions
+        ctk.CTkLabel(add_window, text="Действие:", anchor="w").pack(padx=20, fill="x")
+        actions = ["Открыть приложение", "Выполнить команду", "Сказать текст", "Запустить скрипт"]
+        action_combobox = ctk.CTkComboBox(add_window, values=actions, width=400)
+        action_combobox.set(actions[0])
+        action_combobox.pack(pady=5)
+
+        # Parameters
+        ctk.CTkLabel(add_window, text="Параметры:", anchor="w").pack(padx=20, fill="x")
+        entry_params = ctk.CTkEntry(add_window, width=400)
+        entry_params.pack(pady=5)
+
+        # Response
+        ctk.CTkLabel(add_window, text="Ответ:", anchor="w").pack(padx=20, fill="x")
+        entry_response = ctk.CTkEntry(add_window, width=400)
+        entry_response.pack(pady=5)
+
+        # The "Add" button
+        def add_command():
+            name = entry_name.get().strip()
+            triggers = entry_triggers.get().strip()
+            action = action_combobox.get()
+            params = entry_params.get().strip()
+            response = entry_response.get().strip()
+
+            if not name:
+                logging.warning("Введите название команды!")
+                return
+
+            command_data = {
+                "Название": name,
+                "Триггеры": triggers,
+                "Действие": action,
+                "Параметры": params,
+                "Ответ": response
+            }
+
+            logging.info("Добавлена новая команда: %s", command_data)
+
+            # Add the command to the textbox
+            self.commands_list_textbox.configure(state="normal")
+            self.commands_list_textbox.insert("end", f"{name} → {triggers} | {action}\n")
+            self.commands_list_textbox.configure(state="disabled")
+
+            add_window.destroy()
+
+        ctk.CTkButton(add_window, text="Добавить команду", command=add_command).pack(pady=15)
 
     # Get device name by index
     def get_device_by_index(self, index):
