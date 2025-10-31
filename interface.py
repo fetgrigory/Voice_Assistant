@@ -57,9 +57,14 @@ class VoiceAssistantApp:
 
         # Selected audio input device
         self.selected_device = None
-
-        # Create main interface elements
-        self.create_widgets()
+        self.tabview = ctk.CTkTabview(self.root, width=780, height=360)
+        self.tabview.pack(padx=10, pady=10)
+        # Adding tabs
+        self.tab_core = self.tabview.add("Ядро")
+        self.tab_commands = self.tabview.add("Команды")
+        # Creating the contents of the tabs
+        self.create_core_tab()
+        self.create_commands_tab()
 
         # Configure textbox for log output
         self.log_textbox.configure(state="disabled")
@@ -71,12 +76,13 @@ class VoiceAssistantApp:
         logging.getLogger().addHandler(self.log_handler)
         logging.getLogger().setLevel(logging.INFO)
 
-    def create_widgets(self):
-        """AI is creating summary for create_widgets
+# Creates elements for the 'Ядро' tab
+    def create_core_tab(self):
+        """AI is creating summary for create_core_tab
         """
         # Title bar
         self.statusbar1 = ctk.CTkLabel(
-            self.root,
+            self.tab_core,
             text="Голосовой помощник",
             anchor="w",
             font=('Arial', 16, 'italic')
@@ -84,7 +90,7 @@ class VoiceAssistantApp:
         self.statusbar1.pack(side="top", fill="x", padx=10, pady=5)
 
         # Logs List (for displaying assistant logs)
-        self.logs_frame = ctk.CTkFrame(self.root)
+        self.logs_frame = ctk.CTkFrame(self.tab_core)
         self.logs_frame.pack(side="left", padx=20, pady=20)
 
         self.log_textbox = ctk.CTkTextbox(
@@ -95,7 +101,7 @@ class VoiceAssistantApp:
         self.log_textbox.pack()
 
         # Frame for microphone selection
-        self.mic_frame = ctk.CTkFrame(self.root)
+        self.mic_frame = ctk.CTkFrame(self.tab_core)
         self.mic_frame.pack(side="top", padx=20, pady=20, anchor="n")
 
         # Label for microphone
@@ -119,11 +125,32 @@ class VoiceAssistantApp:
         self.device_combobox.pack(side="left")
         # "Save" button
         self.save_button = ctk.CTkButton(
-            self.root,
+            self.tab_core,
             text="Сохранить",
             command=self.save_device
         )
         self.save_button.pack(pady=10)
+
+    # Creates elements for the 'Команды' tab
+    def create_commands_tab(self):
+        """AI is creating summary for create_commands_tab
+        """
+        info_label = ctk.CTkLabel(
+            self.tab_commands,
+            text="Здесь будут отображаться голосовые команды и их настройки.",
+            wraplength=700,
+            justify="left",
+            font=('Arial', 14)
+        )
+        info_label.pack(padx=20, pady=20)
+
+        # An example of a button for future functionality
+        example_button = ctk.CTkButton(
+            self.tab_commands,
+            text="Добавить команду",
+            command=lambda: logging.info("Добавление новой команды...")
+        )
+        example_button.pack(pady=10)
 
     # Get device name by index
     def get_device_by_index(self, index):
