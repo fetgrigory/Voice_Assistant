@@ -144,6 +144,13 @@ class VoiceAssistantApp:
         )
         info_label.pack(padx=20, pady=20)
 
+        self.commands_list_textbox = ctk.CTkTextbox(
+            self.tab_commands,
+            width=294,
+            height=123
+        )
+        self.commands_list_textbox.configure(state="disabled")
+        self.commands_list_textbox.pack(pady=(0, 10))
         # An example of a button for future functionality
         example_button = ctk.CTkButton(
             self.tab_commands,
