@@ -1,10 +1,3 @@
-'''
-This program make
-Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
-Starting 31/08/2025
-Ending //
-'''
-# Installing the necessary libraries
 import time
 import logging
 from selenium.webdriver.common.by import By
@@ -19,15 +12,14 @@ logger = logging.getLogger(__name__)
 class FilmConfig:
     """AI is creating summary for
     """
-    # Settings for Music Player
-    KINOPOISK_URL = "https://www.kinopoisk.ru/"
-    SSPOISK_URL_REPLACE = ("kinopoisk.ru", "sspoisk.ru")
+    # Settings for Film Player
+    FILM_SERVICE_URL = "https://w1.zona.im/"
     CAPTCHA_XPATH = '//*[@id="checkbox-captcha-form"]/div[3]/div/div[1]/div[1]'
-    SEARCH_INPUT_XPATH = '//*[@id="__next"]/div[1]/div[1]/header/div/div[2]/div[2]/div/form/div/input'
-    FIRST_FILM_XPATH = '//div[@class="element most_wanted"]//p[@class="name"]/a'
+    SEARCH_INPUT_XPATH = "//*[@name='search-input']"
+    FIRST_FILM_XPATH = "(//div[contains(@class, 'grid')]//a[@title])[1]"
     IFRAME_TAG = "iframe"
-    PLAY_BUTTON_CLASS = "allplay__controls__item.allplay__control"
-    PLAY_BUTTON_PRESSED_CLASS = "allplay__control--pressed"
+    PLAY_BUTTON_CLASS = "vjs-big-play-button"
+    PLAY_BUTTON_PRESSED_CLASS = "vjs-playing"
     FULLSCREEN_BUTTON_ACTION = "f"
 
 
@@ -39,11 +31,11 @@ class FilmSearchEngine:
     def __init__(self, driver):
         self.driver = driver
 
-    # Open Kinopoisk website
-    def open_kinopoisk(self):
-        """AI is creating summary for open_kinopoisk
+    # Open film service website
+    def open_film_service(self):
+        """AI is creating summary for open_film_service
         """
-        self.driver.get(FilmConfig.KINOPOISK_URL)
+        self.driver.get(FilmConfig.FILM_SERVICE_URL)
         time.sleep(5)
         # Handle captcha if present
         try:
@@ -76,22 +68,10 @@ class FilmSearchEngine:
             [type]: [description]
         """
         find_film = self.driver.find_element(By.XPATH, FilmConfig.FIRST_FILM_XPATH)
-        name_film = find_film.get_attribute('textContent')
+        name_film = find_film.get_attribute('title')
         find_film.click()
         time.sleep(5)
         return name_film
-
-    # Switch to sspoisk website
-    def switch_to_sspoisk(self):
-        """AI is creating summary for switch_to_sspoisk
-        """
-        film_url = self.driver.current_url
-        new_url = film_url.replace(
-            FilmConfig.SSPOISK_URL_REPLACE[0],
-            FilmConfig.SSPOISK_URL_REPLACE[1]
-        )
-        self.driver.get(new_url)
-        time.sleep(5)
 
 
 # Handles film playback operations
@@ -138,9 +118,12 @@ class FilmPlaybackEngine:
         """AI is creating summary for wait_for_completion
         """
         while True:
-            play_button = self.driver.find_element(By.CLASS_NAME, FilmConfig.PLAY_BUTTON_CLASS)
-            play_button_class = play_button.get_attribute("class")
-            if FilmConfig.PLAY_BUTTON_PRESSED_CLASS not in play_button_class:
+            try:
+                play_button = self.driver.find_element(By.CLASS_NAME, "video-js")
+                play_button_class = play_button.get_attribute("class")
+                if FilmConfig.PLAY_BUTTON_PRESSED_CLASS not in play_button_class:
+                    break
+            except Exception:
                 break
             time.sleep(1)
 
@@ -156,7 +139,6 @@ class FilmManager(WebDriverManager):
         super().__init__()
         self.driver = None
         self.search_engine = None
-        self.music_player_engine = None
         self.video_player_engine = None
 
     # The main method to play film
@@ -175,10 +157,9 @@ class FilmManager(WebDriverManager):
             self.search_engine = FilmSearchEngine(self.driver)
             self.video_player_engine = FilmPlaybackEngine(self.driver)
             # Execute film playback flow
-            self.search_engine.open_kinopoisk()
+            self.search_engine.open_film_service()
             self.search_engine.search_film(film_name)
             film_title = self.search_engine.select_first_film()
-            self.search_engine.switch_to_sspoisk()
             self.video_player_engine.switch_to_iframe()
             self.video_player_engine.play()
             self.video_player_engine.start_playback()
