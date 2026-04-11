@@ -1,9 +1,9 @@
-import time
 import logging
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from network.web_driver_manager import WebDriverManager
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class FilmConfig:
     IFRAME_TAG = "iframe"
     PLAY_BUTTON_CLASS = "vjs-big-play-button"
     PLAY_BUTTON_PRESSED_CLASS = "vjs-playing"
-    FULLSCREEN_BUTTON_ACTION = "f"
+    FULLSCREEN_BUTTON_CLASS = "vjs-fullscreen-control"
 
 
 # Handles film search operations
@@ -103,8 +103,10 @@ class FilmPlaybackEngine:
     def enter_fullscreen(self):
         """AI is creating summary for enter_fullscreen
         """
-        self.driver.find_element(By.TAG_NAME, 'body').send_keys(FilmConfig.FULLSCREEN_BUTTON_ACTION)
-        time.sleep(2)
+        fullscreen_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, FilmConfig.FULLSCREEN_BUTTON_CLASS))
+        )
+        fullscreen_button.click()
 
     # Start playback
     def start_playback(self):
