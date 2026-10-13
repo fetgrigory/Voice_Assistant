@@ -1,0 +1,28 @@
+[project]
+name = "voice-assistant"
+version = "0.1.0"
+description = "Voice Assistant"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4==4.12.2",
+    "customtkinter==5.2.2",
+    "fake-useragent==2.2.0",
+    "feedparser==6.0.12",
+    "keyboard==0.13.5",
+    "lmstudio==1.5.0",
+    "numpy==2.2.4",
+    "pygame==2.6.1",
+    "pyperclip==1.9.0",
+    "pyttsx3==2.98",
+    "pywin32==310",
+    "rapidfuzz==3.13.0",
+    "requests==2.32.3",
+    "selenium==4.31.0",
+    "sounddevice==0.5.1",
+    "vosk==0.3.45",
+    "webdriver-manager==4.0.2",
+]
+
+[tool.uv]
+package = false
