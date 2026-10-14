@@ -1,17 +1,8 @@
-'''
-This program make
-Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
-Starting 30/01/2025
-Ending //
-'''
-# Installing the necessary libraries
 import lmstudio as lms
 
 
 # Class for managing the context of a dialog with the LM Studio model
 class ChatGPT:
-    """AI is creating summary for
-    """
     def __init__(self, model_name="gigachat-20b-a3b-instruct"):
         self.model_name = model_name
         self.system_prompt = """
@@ -44,14 +35,6 @@ class ChatGPT:
 
     # Sends a message to the AI model and returns the response
     def ask(self, message: str) -> str:
-        """AI is creating summary for ask
-
-        Args:
-            message (str): [description]
-
-        Returns:
-            str: [description]
-        """
         try:
             # Adding the user's message to the history
             self.messages.append({"role": "user", "content": message})

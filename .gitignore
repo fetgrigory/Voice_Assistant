@@ -17,3 +17,4 @@ __pycache__/assistant_core.cpython-313.pyc
 __pycache__/speech_module.cpython-313.pyc
 __pycache__/tts_module.cpython-313.pyc
 __pycache__/sound_module.cpython-313.pyc
+src/integrations/__pycache__/chat_gpt.cpython-313.pyc

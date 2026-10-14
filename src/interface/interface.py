@@ -1,10 +1,3 @@
-'''
-This program make
-Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
-Starting 14/03/2025
-Ending //
-'''
-# Import required libraries
 import logging
 import customtkinter as ctk
 import sounddevice as sd
@@ -12,22 +5,12 @@ import sounddevice as sd
 
 # Custom logging handler that writes messages into a CTkTextbox
 class TkinterLogHandler(logging.Handler):
-    """AI is creating summary for TkinterLogHandler
-
-    Args:
-        logging ([type]): [description]
-    """
     def __init__(self, textbox):
         super().__init__()
         self.textbox = textbox
 
 # Inserts formatted log records into the textbox safely via Tkinter event loop
     def emit(self, record):
-        """AI is creating summary for emit
-
-        Args:
-            record ([type]): [description]
-        """
         msg = self.format(record)
 
         def append():
@@ -42,8 +25,6 @@ class TkinterLogHandler(logging.Handler):
 
 # Graphical interface of the voice assistant
 class VoiceAssistantApp:
-    """AI is creating summary for
-    """
     def __init__(self, assistant):
         self.assistant = assistant
         self.root = ctk.CTk()
@@ -72,8 +53,6 @@ class VoiceAssistantApp:
         logging.getLogger().setLevel(logging.INFO)
 
     def create_widgets(self):
-        """AI is creating summary for create_widgets
-        """
         # Title bar
         self.statusbar1 = ctk.CTkLabel(
             self.root,
@@ -127,14 +106,6 @@ class VoiceAssistantApp:
 
     # Get device name by index
     def get_device_by_index(self, index):
-        """AI is creating summary for get_device_by_index
-
-        Args:
-            index ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
         devices = sd.query_devices()
         if 0 <= index < len(devices):
             return f"{index}: {devices[index]['name']}"
@@ -142,11 +113,6 @@ class VoiceAssistantApp:
 
     # Gets a list of available audio input devices
     def get_input_devices(self):
-        """AI is creating summary for get_input_devices
-
-        Returns:
-            [type]: [description]
-        """
         devices = sd.query_devices()
         input_devices = []
         for i, device in enumerate(devices):
@@ -156,11 +122,6 @@ class VoiceAssistantApp:
 
     # Get default device index
     def get_default_input_device(self):
-        """AI is creating summary for get_default_input_device
-
-        Returns:
-            [type]: [description]
-        """
         default_input_device = sd.default.device[0]
         devices = sd.query_devices()
         if 0 <= default_input_device < len(devices):
@@ -169,8 +130,6 @@ class VoiceAssistantApp:
 
     # Saves the selected device and updates it in Assistant
     def save_device(self):
-        """AI is creating summary for save_device
-        """
         selected = self.device_combobox.get()
         if selected and selected != "Выберите устройство ввода":
             self.selected_device = int(selected.split(":")[0])
@@ -180,12 +139,8 @@ class VoiceAssistantApp:
             logging.info("Устройство не выбрано.")
 
     def update_statusbar2_position(self):
-        """AI is creating summary for update_statusbar2_position
-        """
         self.root.update_idletasks()
         self.statusbar2.place(x=350, y=self.device_combobox.winfo_y())
 
     def start_interface(self):
-        """AI is creating summary for start_interface
-        """
         self.root.mainloop()

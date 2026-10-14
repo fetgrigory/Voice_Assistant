@@ -1,45 +1,36 @@
-'''
-This program make
-Author: Fetkulin Grigory, Fetkulin.G.R@yandex.ru
-Starting 31/08/2025
-Ending //
-'''
-# Installing the necessary libraries
 import json
 import logging
 import os
 import threading
 import time
+from pathlib import Path
+
 import pygame
 import sounddevice as sd
 from rapidfuzz import fuzz
-from chat_gpt import ChatGPT
-from interface import VoiceAssistantApp
-from network import NetworkActions
-from sound_module import SoundPlayer
-from speech_module import SpeechRecognizer
-from system_control import SystemControl
-from tts_module import TTS
+
+from src.integrations.chat_gpt import ChatGPT
+from src.interface.interface import VoiceAssistantApp
+from src.network import NetworkActions
+from src.audio.sound_module import SoundPlayer
+from src.speech.speech_module import SpeechRecognizer
+from src.system.system_control import SystemControl
+from src.speech.tts_module import TTS
 
 logger = logging.getLogger(__name__)
 
 
-# Main assistant class
 class Assistant:
-    """AI is creating summary for
-    """
     def __init__(self):
-        self.settings_file = 'settings.json'
+        self.settings_file = 'src/config/settings.json'
         self.input_device = None
         self.load_settings()
 
-        # Load commands
-        with open('commands.json', 'r', encoding='utf-8') as f:
+        with open('src/config/commands.json', 'r', encoding='utf-8') as f:
             commands_data = json.load(f)
             self.commands = commands_data['commands']
             self.activation_words = commands_data['activation']
 
-        # Initialize modules
         self.tts = TTS()
         self.speech_recognizer = SpeechRecognizer(input_device=self.input_device)
         self.sound_player = SoundPlayer()
@@ -47,37 +38,25 @@ class Assistant:
         self.system_control = SystemControl(self.tts.speak, self.speech_recognizer.listen_command)
         self.chat_gpt = ChatGPT()
 
-        # Startup sound
         self.sound_player.play_sound('start')
-        # Duration of active session before timeout
         self.session_timeout = 15
 
-        # Interface
         self.interface_manager = VoiceAssistantApp(self)
         threading.Thread(target=self.main, daemon=True).start()
         self.interface_manager.start_interface()
 
-# Sets the selected input device and saves the settings
+    # Set the input device and save the settings
     def set_input_device(self, device_index):
-        """AI is creating summary for set_input_device
-
-        Args:
-            device_index ([type]): [description]
-        """
         self.input_device = device_index
         self.speech_recognizer.input_device = device_index
         self.save_settings()
         logging.info("Устройство ввода обновлено на %s", device_index)
 
     def save_settings(self):
-        """AI is creating summary for save_settings
-        """
         with open(self.settings_file, 'w', encoding='utf-8') as f:
             json.dump({'input_device': self.input_device}, f)
 
     def load_settings(self):
-        """AI is creating summary for load_settings
-        """
         try:
             with open(self.settings_file, 'r', encoding='utf-8') as f:
                 settings = json.load(f)
@@ -85,39 +64,36 @@ class Assistant:
         except Exception:
             self.input_device = sd.default.device[0]
 
-    # Command methods
+    # Open the specified file
     def start_file(self, file_path):
-        """AI is creating summary for start_file
+        project_root = Path(__file__).resolve().parents[1]
 
-        Args:
-            file_path ([type]): [description]
-        """
-        if os.path.isfile(file_path):
+        path = Path(file_path)
+        if not path.is_absolute():
+            path = project_root / path
+
+        if path.is_file():
             try:
-                logger.info("Попытка открыть файл: %s", file_path)
-                os.startfile(file_path)
-                logger.info("Файл успешно открыт: %s", file_path)
+                logger.info("Попытка открыть файл: %s", path)
+                os.startfile(str(path))
+                logger.info("Файл успешно открыт: %s", path)
             except Exception as e:
                 error_msg = f"Ошибка при открытии файла: {e}"
                 logger.error(error_msg, exc_info=True)
                 self.tts.speak(error_msg)
         else:
-            error_msg = f"Файл '{file_path}' не найден."
+            error_msg = f"Файл не найден: {path}"
             logger.warning(error_msg)
             self.tts.speak(error_msg)
 
-    # Ends the assistant's operation
+    # Stop the assistant
     def finish(self):
-        """AI is creating summary for finish
-        """
         self.sound_player.play_sound('shutdown')
         pygame.time.wait(3000)
         logger.info("Assistant finished")
         exit()
 
     def music_player(self):
-        """AI is creating summary for music_player
-        """
         self.tts.speak("Что будем слушать?")
         query = self.speech_recognizer.listen_command()
         if query:
@@ -127,8 +103,6 @@ class Assistant:
             self.tts.speak("Не удалось распознать запрос.")
 
     def play_film(self):
-        """AI is creating summary for play_film
-        """
         self.tts.speak("Что будем смотреть?")
         query = self.speech_recognizer.listen_command()
         if query:
@@ -137,10 +111,8 @@ class Assistant:
         else:
             self.tts.speak("Не удалось распознать запрос.")
 
-    # Handle news request and announcement
+    # Get and announce the latest news
     def read_news(self):
-        """AI is creating summary for read_news
-        """
         try:
             news_items = self.network_actions.get_latest_news()
             if not news_items:
@@ -157,10 +129,8 @@ class Assistant:
         except Exception as e:
             logger.error("Error in news handling: %s", e)
 
-    # Gets the weather for the specified city
+    # Get the weather for the specified city
     def get_city_weather(self):
-        """AI is creating summary for get_city_weather
-        """
         self.tts.speak("Укажите город:")
         city = self.speech_recognizer.listen_command()
         if city:
@@ -169,37 +139,26 @@ class Assistant:
         else:
             self.tts.speak("Не удалось распознать город.")
 
-    # Search online function
+    # Search the web
     def search_online(self):
-        """AI is creating summary for search_online
-        """
         self.network_actions.web_search_service.search_online(self.tts, self.speech_recognizer)
 
-    # Command processor
+    # Process the user's command
     def process_command(self, query):
-        """AI is creating summary for process_command
-
-        Args:
-            query ([type]): [description]
-        """
         best_match, best_score = None, 0
         for cmd in self.commands:
             for trigger in cmd['triggers']:
                 score = fuzz.ratio(query, trigger)
                 if score > best_score:
                     best_match, best_score = cmd, score
-        # If a match is found with a high percentage (e.g., above 75)
         if best_match and best_score > 75:
             try:
-                # Create a dictionary to map commands to their respective methods
                 handler_map = {
                     "self": self,
                     "system_control": self.system_control,
                     "network_actions": self.network_actions
                 }
-                # Get the handler object based on the command source
                 handler = handler_map.get(best_match.get('handler', 'self'))
-                # Get the method from the handler object
                 method = getattr(handler, best_match['make'], None)
                 if method:
                     if best_match['say']:
@@ -216,27 +175,20 @@ class Assistant:
                 self.tts.speak(f"Команда '{query}' пока не реализована.")
                 logger.error("Command execution error: %s", e)
             return
-        # If no match found, ask ChatGPT for a response
         response = self.chat_gpt.ask(query)
         self.tts.speak(response)
 
-    # Starts the main loop of the assistant
+    # Run the assistant's main loop
     def main(self):
-        """AI is creating summary for main
-        """
         while True:
-            # Waiting for the activation word to start the session
             self.speech_recognizer.listen_for_activation(
                 self.activation_words,
                 lambda: self.tts.speak("Слушаю")
             )
-            # Setting the session start time
             last_active_time = time.time()
-            # Active session: listening to commands before timeout
             while time.time() - last_active_time < self.session_timeout:
                 query = self.speech_recognizer.listen_command()
                 if query:
                     self.process_command(query)
                     last_active_time = time.time()
-            # Session timeout — play shutdown sound
             self.sound_player.play_sound('shutdown')

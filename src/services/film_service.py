@@ -4,15 +4,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from network.web_driver_manager import WebDriverManager
+from src.services.web_driver_manager import WebDriverManager
 
 logger = logging.getLogger(__name__)
 
 
 class FilmConfig:
-    """AI is creating summary for
-    """
-    # Settings for Film Player
     FILM_SERVICE_URL = "https://w1.zona.im/"
     CAPTCHA_XPATH = '//*[@id="checkbox-captcha-form"]/div[3]/div/div[1]/div[1]'
     SEARCH_INPUT_XPATH = "//*[@name='search-input']"
@@ -23,21 +20,14 @@ class FilmConfig:
     FULLSCREEN_BUTTON_CLASS = "vjs-fullscreen-control"
 
 
-# Handles film search operations
 class FilmSearchEngine:
-    """AI is creating summary for
-    """
-
     def __init__(self, driver):
         self.driver = driver
 
     # Open film service website
     def open_film_service(self):
-        """AI is creating summary for open_film_service
-        """
         self.driver.get(FilmConfig.FILM_SERVICE_URL)
         time.sleep(5)
-        # Handle captcha if present
         try:
             captcha_checkbox = WebDriverWait(self.driver, 5).until(
                 EC.element_to_be_clickable((By.XPATH, FilmConfig.CAPTCHA_XPATH)))
@@ -47,26 +37,16 @@ class FilmSearchEngine:
         except Exception:
             logger.info("Капча не обнаружена, продолжаем работу")
 
-    # Search for film by name
+    # Search for a film by name
     def search_film(self, film_name):
-        """AI is creating summary for search_film
-
-        Args:
-            film_name ([type]): [description]
-        """
         film_input = self.driver.find_element(By.XPATH, FilmConfig.SEARCH_INPUT_XPATH)
         film_input.clear()
         film_input.send_keys(film_name)
         film_input.send_keys(Keys.ENTER)
         time.sleep(5)
 
-    # Select first film from search results
+    # Select the first film from search results
     def select_first_film(self):
-        """AI is creating summary for select_first_film
-
-        Returns:
-            [type]: [description]
-        """
         find_film = self.driver.find_element(By.XPATH, FilmConfig.FIRST_FILM_XPATH)
         name_film = find_film.get_attribute('title')
         find_film.click()
@@ -74,25 +54,18 @@ class FilmSearchEngine:
         return name_film
 
 
-# Handles film playback operations
 class FilmPlaybackEngine:
-    """AI is creating summary for
-    """
     def __init__(self, driver):
         self.driver = driver
 
-    # Switch to iframe for video playback
+    # Switch to the video iframe
     def switch_to_iframe(self):
-        """AI is creating summary for switch_to_iframe
-        """
         iframes = self.driver.find_elements(By.TAG_NAME, FilmConfig.IFRAME_TAG)
         if iframes:
             self.driver.switch_to.frame(iframes[0])
 
     # Start film playback
     def play(self):
-        """AI is creating summary for play
-        """
         play_button = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.CLASS_NAME, FilmConfig.PLAY_BUTTON_CLASS))
         )
@@ -101,24 +74,18 @@ class FilmPlaybackEngine:
 
     # Enter fullscreen mode
     def enter_fullscreen(self):
-        """AI is creating summary for enter_fullscreen
-        """
         fullscreen_button = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.CLASS_NAME, FilmConfig.FULLSCREEN_BUTTON_CLASS))
         )
         fullscreen_button.click()
 
-    # Start playback
+    # Start playback using the space bar
     def start_playback(self):
-        """AI is creating summary for start_playback
-        """
         self.driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.SPACE)
         time.sleep(2)
 
-    # Wait until film finishes playing
+    # Wait for film playback to finish
     def wait_for_completion(self):
-        """AI is creating summary for wait_for_completion
-        """
         while True:
             try:
                 play_button = self.driver.find_element(By.CLASS_NAME, "video-js")
@@ -130,35 +97,19 @@ class FilmPlaybackEngine:
             time.sleep(1)
 
 
-# Orchestrates film-related operations
 class FilmManager(WebDriverManager):
-    """AI is creating summary for FilmManager
-
-    Args:
-        WebDriverManager ([type]): [description]
-    """
     def __init__(self):
         super().__init__()
         self.driver = None
         self.search_engine = None
         self.video_player_engine = None
 
-    # The main method to play film
+    # Play a film
     def play_film(self, film_name):
-        """AI is creating summary for play_film
-
-        Args:
-            film_name ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
         try:
             self.driver = self.setup_driver()
-            # Initialize components
             self.search_engine = FilmSearchEngine(self.driver)
             self.video_player_engine = FilmPlaybackEngine(self.driver)
-            # Execute film playback flow
             self.search_engine.open_film_service()
             self.search_engine.search_film(film_name)
             film_title = self.search_engine.select_first_film()
@@ -174,14 +125,6 @@ class FilmManager(WebDriverManager):
             if self.driver:
                 self.driver.quit()
 
-    # Request to play a film
+    # Handle a film playback request
     def play_film_request(self, query):
-        """AI is creating summary for play_film_request
-
-        Args:
-            query ([type]): [description]
-
-        Returns:
-            [type]: [description]
-        """
         return self.play_film(query)

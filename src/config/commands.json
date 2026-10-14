@@ -5,7 +5,7 @@
             "command": "telegram",
             "make": "start_file",
             "handler": "self",
-            "parameters": ["main_applications\\Telegram.lnk"],
+            "parameters": ["assets/main_applications/Telegram.lnk"],
             "say": "Открываю Telegram",
             "triggers": ["открой телеграмм"]
         },
@@ -13,7 +13,7 @@
             "command": "WhatsApp",
             "make": "start_file",
             "handler": "self",
-            "parameters": ["main_applications\\WhatsApp.lnk"],
+            "parameters": ["assets/main_applications/WhatsApp.lnk"],
             "say": "Открываю ватсап",
             "triggers": ["открой ватсап"]
         },
@@ -21,7 +21,7 @@
             "command": "browser",
             "make": "start_file",
             "handler": "self",
-            "parameters": ["main_applications\\Google Chrome.lnk"],
+            "parameters": ["assets/main_applications/Google Chrome.lnk"],
             "say": "Открываю браузер",
             "triggers": ["открой браузер", "запусти браузер", "открой гугл хром", "гугл хром"]
         },
