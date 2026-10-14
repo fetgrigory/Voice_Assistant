@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class SpeechRecognizer:
-    def __init__(self, model_path="vosk-model-small-ru-0.22", input_device=None):
+    def __init__(self, model_path="src/assets/vosk-model-small-ru-0.22", input_device=None):
         self.model = vosk.Model(model_path)
         self.input_device = input_device or sd.default.device[0]
         self.audio_queue = queue.Queue()
