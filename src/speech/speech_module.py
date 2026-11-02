@@ -12,10 +12,11 @@ class SpeechRecognizer:
         self.model = vosk.Model(model_path)
         self.input_device = input_device or sd.default.device[0]
         self.audio_queue = queue.Queue()
+        self.target_samplerate = 16000
 
     # Listen for the activation word
     def listen_for_activation(self, activation_words, callback=None):
-        samplerate = int(sd.query_devices(self.input_device, 'input')['default_samplerate'])
+        samplerate = self.target_samplerate
         rec = vosk.KaldiRecognizer(self.model, samplerate)
 
         def stream_callback(indata, frames, time_info, status):
@@ -37,7 +38,9 @@ class SpeechRecognizer:
                 if rec.AcceptWaveform(data):
                     result = json.loads(rec.Result())
                     recognized_text = result.get('text', '').lower()
-                    if any(word in recognized_text for word in activation_words):
+
+                    logger.info("Recognized: %s", recognized_text)
+                    if any(word.lower().strip() in recognized_text for word in activation_words):
                         logger.info("Активационное слово распознано.")
                         if callback:
                             callback()
@@ -45,7 +48,7 @@ class SpeechRecognizer:
 
     # Recognize a voice command
     def listen_command(self, duration=5):
-        samplerate = int(sd.query_devices(self.input_device, 'input')['default_samplerate'])
+        samplerate = self.target_samplerate
         try:
             audio = sd.rec(
                 int(duration * samplerate),
