@@ -1,48 +1,100 @@
 import json
 import logging
 import os
-from tkinter import messagebox
-
+import inspect
+import tkinter as tk
 import customtkinter as ctk
 import sounddevice as sd
-
-
+from tkinter import messagebox
+# Theme configuration and styling helpers
+COLORS = {
+    "bg": ("#F7F8FA", "#17181C"),
+    "surface": ("#FFFFFF", "#202126"),
+    "surface_alt": ("#F0F1F4", "#292A30"),
+    "border": ("#E5E6EA", "#35363D"),
+    "text": ("#202127", "#F1F1F3"),
+    "muted": ("#858791", "#92939D"),
+    "accent": ("#DCE7FF", "#343F5B"),
+    "accent_hover": ("#CAD9FA", "#414F70"),
+    "accent_text": ("#315BA8", "#C5D5FF"),
+    "danger": ("#FCE8E8", "#452B30"),
+    "danger_hover": ("#F7D7D7", "#59363C"),
+    "danger_text": ("#C64C4C", "#FF9999"),
+    "success": ("#E3F5EA", "#263D31"),
+}
+FONT = "Arial"
+# Apply Astra-inspired button styling
+def style_button(button, kind="secondary"):
+    styles = {
+        "primary": {
+            "fg_color": COLORS["accent"],
+            "hover_color": COLORS["accent_hover"],
+            "text_color": COLORS["accent_text"],
+        },
+        "secondary": {
+            "fg_color": COLORS["surface_alt"],
+            "hover_color": COLORS["border"],
+            "text_color": COLORS["text"],
+        },
+        "danger": {
+            "fg_color": COLORS["danger"],
+            "hover_color": COLORS["danger_hover"],
+            "text_color": COLORS["danger_text"],
+        },
+    }
+    button.configure(
+        **styles[kind],
+        corner_radius=12,
+        border_width=0,
+        font=(FONT, 13),
+        height=38,
+    )
 # Custom logging handler that writes messages into a CTkTextbox
 class TkinterLogHandler(logging.Handler):
     def __init__(self, textbox):
         super().__init__()
         self.textbox = textbox
-
     # Inserts formatted log records into the textbox safely via Tkinter event loop
     def emit(self, record):
         msg = self.format(record)
-
         def append():
-            self.textbox.configure(state="normal")
-            self.textbox.insert("end", msg + "\n")
-            self.textbox.see("end")
-            self.textbox.configure(state="disabled")
-
+            try:
+                self.textbox.configure(state="normal")
+                self.textbox.insert("end", msg + "\n")
+                self.textbox.see("end")
+                self.textbox.configure(state="disabled")
+            except tk.TclError:
+                pass
         # Schedule GUI update in the main thread
-        self.textbox.after(0, append)
-
-
+        try:
+            self.textbox.after(0, append)
+        except tk.TclError:
+            pass
 # Graphical interface of the voice assistant
 class VoiceAssistantApp:
+    COMMANDS_FILE = "src/config/commands.json"
+    VALID_HANDLERS = [
+        "self",
+        "system_control",
+        "network_actions",
+    ]
     def __init__(self, assistant):
         self.assistant = assistant
+        # Initialize main window
         self.root = ctk.CTk()
         self.root.title("Голосовой помощник")
-        self.root.geometry("800x400")
-        self.root.resizable(width=False, height=False)
-
+        self.root.geometry("1000x760")
+        self.root.minsize(900, 680)
+        self.root.resizable(True, True)
         # Configure appearance
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
-
+        self.root.configure(fg_color=COLORS["bg"])
         # Selected audio input device
         self.selected_device = None
-
+        # Initialize command tracking variables
+        self.selected_command_name = None
+        self.commands_data = []
         # Initialize UI components
         self.notebook = None
         self.mic_tab = None
@@ -54,140 +106,410 @@ class VoiceAssistantApp:
         self.edit_command_button = None
         self.delete_command_button = None
         self.mic_frame = None
-        self.statusbar2 = None
-        self.device_options = None
-        self.device_combobox = None
-        self.save_button = None
         self.logs_frame = None
         self.log_textbox = None
+        self.device_combobox = None
+        self.save_button = None
         self.log_handler = None
-
         # Create main interface elements
         self.create_widgets()
-
         # Load and display commands
         self.load_commands()
-
         # Configure textbox for log output
         self.log_textbox.configure(state="disabled")
+    # Helper to create section titles
+    # When grid_kw is provided, the title is placed via grid() instead of pack()
+    # so the caller can control row weights and minsizes for tight layouts.
+    def create_section_title(self, parent, title, description=None, grid_kw=None):
+        frame = ctk.CTkFrame(parent, fg_color="transparent")
+        if grid_kw is not None:
+            frame.grid(**grid_kw)
+        else:
+            frame.pack(fill="x", padx=20, pady=(10, 6))
+        ctk.CTkLabel(
+            frame,
+            text=title,
+            font=(FONT, 21, "bold"),
+            text_color=COLORS["text"],
+            anchor="w"
+        ).pack(anchor="w")
+        if description:
+            ctk.CTkLabel(
+                frame,
+                text=description,
+                font=(FONT, 12),
+                text_color=COLORS["muted"],
+                anchor="w"
+            ).pack(anchor="w", pady=(4, 0))
+        return frame
+    # Helper to create styled cards
+    def create_card(self, parent, **kwargs):
+        return ctk.CTkFrame(
+            parent,
+            fg_color=COLORS["surface"],
+            corner_radius=16,
+            border_width=1,
+            border_color=COLORS["border"],
+            **kwargs
+        )
+    # Helper to create labels
+    def create_label(self, parent, text):
+        return ctk.CTkLabel(
+            parent,
+            text=text,
+            font=(FONT, 12),
+            text_color=COLORS["muted"],
+            anchor="w"
+        )
+    # Helper to create entry fields
+    def create_entry(self, parent, placeholder="", width=300):
+        return ctk.CTkEntry(
+            parent,
+            width=width,
+            height=40,
+            placeholder_text=placeholder,
+            corner_radius=10,
+            border_width=1,
+            border_color=COLORS["border"],
+            fg_color=COLORS["surface_alt"],
+            text_color=COLORS["text"],
+            placeholder_text_color=COLORS["muted"],
+            font=(FONT, 13)
+        )
+    # Helper to create dialog buttons
+    def create_dialog_button(self, parent, text, command, kind="secondary"):
+        button = ctk.CTkButton(parent, text=text, command=command, width=130)
+        style_button(button, kind)
+        return button
+    # Build the main user interface
+    def create_widgets(self):
+        # Create header
+        header = ctk.CTkFrame(self.root, fg_color="transparent")
+        header.pack(fill="x", padx=24, pady=(20, 5))
+        ctk.CTkLabel(
+            header,
+            text="Голосовой помощник",
+            font=(FONT, 25, "bold"),
+            text_color=COLORS["text"]
+        ).pack(side="left")
+        ctk.CTkLabel(
+            header,
+            text="ASTRA",
+            font=(FONT, 11, "bold"),
+            text_color=COLORS["muted"]
+        ).pack(side="right", padx=5)
+        # Create notebook for tabs
+        self.notebook = ctk.CTkTabview(
+            self.root,
+            fg_color=COLORS["bg"],
+            segmented_button_fg_color=COLORS["surface_alt"],
+            segmented_button_selected_color=COLORS["accent"],
+            segmented_button_selected_hover_color=COLORS["accent_hover"],
+            segmented_button_unselected_color=COLORS["surface_alt"],
+            segmented_button_unselected_hover_color=COLORS["border"],
+            text_color=COLORS["text"],
+            corner_radius=14,
+            border_width=1,
+            border_color=COLORS["border"]
+        )
+        self.notebook.pack(fill="both", expand=True, padx=20, pady=(10, 20))
+        self.mic_tab = self.notebook.add("Микрофон")
+        self.commands_tab = self.notebook.add("Команды")
+        self.create_microphone_tab()
+        self.create_commands_tab()
+        # Connect logging system to textbox
+        self.log_handler = TkinterLogHandler(self.log_textbox)
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        self.log_handler.setFormatter(formatter)
+        
+        root_logger = logging.getLogger()
+        root_logger.addHandler(self.log_handler)
+        root_logger.setLevel(logging.INFO)
+    # Add microphone controls to the mic tab
+    def create_microphone_tab(self):
+        # Use grid for the mic tab so the logs panel is guaranteed a stable
+        # slice of vertical space. With the old pack()+expand=True setup, the
+        # logs card was squeezed to ~42px (textbox only ~18px) because the mic
+        # settings card already consumed the available height, which made log
+        # messages technically inserted but invisible to the user.
+        self.mic_tab.grid_columnconfigure(0, weight=1)
+        self.mic_tab.grid_rowconfigure(0, weight=0)  # section title
+        self.mic_tab.grid_rowconfigure(1, weight=0)  # mic settings card
+        self.mic_tab.grid_rowconfigure(2, weight=0)  # section title
+        self.mic_tab.grid_rowconfigure(3, weight=1, minsize=240)  # logs card
 
+        self.create_section_title(
+            self.mic_tab,
+            "Настройки микрофона",
+            "Управление устройством голосового ввода",
+            grid_kw={"row": 0, "column": 0, "sticky": "ew", "padx": 20, "pady": (10, 6)}
+        )
+        # Frame for microphone selection
+        self.mic_frame = self.create_card(self.mic_tab)
+        self.mic_frame.grid(row=1, column=0, sticky="ew", padx=20, pady=6)
+        content = ctk.CTkFrame(self.mic_frame, fg_color="transparent")
+        content.pack(fill="x", padx=20, pady=12)
+        ctk.CTkLabel(
+            content,
+            text="Входное устройство",
+            font=(FONT, 15, "bold"),
+            text_color=COLORS["text"]
+        ).pack(anchor="w")
+        ctk.CTkLabel(
+            content,
+            text="Выберите микрофон, который будет использовать ассистент.",
+            font=(FONT, 12),
+            text_color=COLORS["muted"]
+        ).pack(anchor="w", pady=(5, 14))
+        self.device_options = self.get_input_devices()
+        saved_device = self.get_device_by_index(self.assistant.input_device)
+        self.device_combobox = ctk.CTkComboBox(
+            content,
+            values=self.device_options,
+            width=400,
+            height=42,
+            corner_radius=10,
+            border_width=1,
+            border_color=COLORS["border"],
+            fg_color=COLORS["surface_alt"],
+            button_color=COLORS["surface_alt"],
+            button_hover_color=COLORS["border"],
+            text_color=COLORS["text"],
+            dropdown_fg_color=COLORS["surface"],
+            dropdown_text_color=COLORS["text"],
+            dropdown_hover_color=COLORS["accent"],
+            font=(FONT, 13)
+        )
+        self.device_combobox.set(saved_device if saved_device else self.get_default_input_device())
+        self.device_combobox.pack(anchor="w")
+        self.save_button = ctk.CTkButton(content, text="Сохранить изменения", command=self.save_device, width=190)
+        style_button(self.save_button, "primary")
+        self.save_button.pack(anchor="w", pady=(18, 0))
+        # Logs List (for displaying assistant logs)
+        self.create_section_title(
+            self.mic_tab,
+            "Журнал событий",
+            "Последние действия и сообщения голосового помощника",
+            grid_kw={"row": 2, "column": 0, "sticky": "ew", "padx": 20, "pady": (10, 6)}
+        )
+        self.logs_frame = self.create_card(self.mic_tab)
+        self.logs_frame.grid(row=3, column=0, sticky="nsew", padx=20, pady=(6, 14))
+        # Prevent the card from collapsing below the textbox's natural size,
+        # so the log area is never squeezed to nothing again.
+        self.logs_frame.pack_propagate(False)
+        self.logs_frame.grid_propagate(False)
+        # Logs textbox
+        self.log_textbox = ctk.CTkTextbox(
+            self.logs_frame,
+            wrap="word",
+            height=200,
+            corner_radius=12,
+            border_width=0,
+            fg_color="transparent",
+            text_color=COLORS["text"],
+            font=("Consolas", 11),
+            scrollbar_button_color=COLORS["border"],
+            scrollbar_button_hover_color=COLORS["muted"]
+        )
+        self.log_textbox.pack(fill="both", expand=True, padx=12, pady=12)
     # Create commands management tab
     def create_commands_tab(self):
+        self.create_section_title(
+            self.commands_tab,
+            "Управление командами",
+            "Создавайте, редактируйте и удаляйте голосовые команды"
+        )
         # Frame for commands list
-        self.commands_frame = ctk.CTkFrame(self.commands_tab)
-        self.commands_frame.pack(fill="both", expand=True, padx=10, pady=10)
-
-        # Commands list textbox
+        self.commands_frame = self.create_card(self.commands_tab)
+        self.commands_frame.pack(fill="both", expand=True, padx=20, pady=(5, 10))
         self.commands_list_textbox = ctk.CTkTextbox(
             self.commands_frame,
             wrap="word",
-            state="disabled"
+            corner_radius=12,
+            border_width=0,
+            fg_color="transparent",
+            text_color=COLORS["text"],
+            font=(FONT, 13),
+            scrollbar_button_color=COLORS["border"],
+            scrollbar_button_hover_color=COLORS["muted"]
         )
-        self.commands_list_textbox.pack(fill="both", expand=True, padx=5, pady=5)
-
+        self.commands_list_textbox.pack(fill="both", expand=True, padx=12, pady=12)
+        # Bind command selection event
+        self.commands_list_textbox._textbox.bind("<Button-1>", self._on_command_click, add="+")
+        self.commands_list_textbox._textbox.tag_configure("selected", background=COLORS["accent"][0])
         # Frame for buttons
-        self.commands_buttons_frame = ctk.CTkFrame(self.commands_tab)
-        self.commands_buttons_frame.pack(fill="x", padx=10, pady=5)
-
+        self.commands_buttons_frame = ctk.CTkFrame(self.commands_tab, fg_color="transparent")
+        self.commands_buttons_frame.pack(fill="x", padx=20, pady=(5, 15))
         # Add command button
         self.add_command_button = ctk.CTkButton(
             self.commands_buttons_frame,
-            text="Добавить команду",
-            command=self.open_add_command_window
+            text="+  Добавить команду",
+            command=self.open_add_command_window,
+            width=175
         )
-        self.add_command_button.pack(side="left", padx=5)
-
+        style_button(self.add_command_button, "primary")
+        self.add_command_button.pack(side="left", padx=(0, 8))
         # Edit command button
         self.edit_command_button = ctk.CTkButton(
             self.commands_buttons_frame,
             text="Редактировать",
-            command=self.edit_command
+            command=self.edit_command,
+            width=145
         )
-        self.edit_command_button.pack(side="left", padx=5)
-
+        style_button(self.edit_command_button, "secondary")
+        self.edit_command_button.pack(side="left", padx=8)
         # Delete command button
         self.delete_command_button = ctk.CTkButton(
             self.commands_buttons_frame,
             text="Удалить",
-            command=self.delete_command
+            command=self.delete_command,
+            width=110
         )
-        self.delete_command_button.pack(side="left", padx=5)
-
+        style_button(self.delete_command_button, "danger")
+        self.delete_command_button.pack(side="left", padx=8)
+    # Handle command selection click
+    def _on_command_click(self, event):
+        widget = event.widget
+        try:
+            index = widget.index(f"@{event.x},{event.y}")
+            line_number = int(index.split(".")[0])
+            line_start = widget.index(f"{line_number}.0")
+            line_end = widget.index(f"{line_number}.end")
+            clicked_line = widget.get(line_start, line_end)
+            # Parse command name from selection
+            command_name = None
+            for line in range(line_number, 0, -1):
+                content = widget.get(f"{line}.0", f"{line}.end")
+                if content.startswith("Команда: "):
+                    command_name = content.replace("Команда: ", "", 1).strip()
+                    break
+            if command_name and any(cmd.get("command") == command_name for cmd in self.commands_data):
+                self.selected_command_name = command_name
+                # Highlight selected command block
+                widget.tag_remove("selected", "1.0", "end")
+                start_line = line_number
+                while start_line > 1:
+                    previous = widget.get(f"{start_line - 1}.0", f"{start_line - 1}.end")
+                    if previous.startswith("Команда: "):
+                        break
+                    start_line -= 1
+                end_line = start_line + 1
+                while end_line <= int(widget.index("end-1c").split(".")[0]):
+                    current = widget.get(f"{end_line}.0", f"{end_line}.end")
+                    if current.startswith("Команда: ") and end_line != start_line:
+                        break
+                    end_line += 1
+                widget.tag_add("selected", f"{start_line}.0", f"{end_line}.0")
+        except (tk.TclError, ValueError):
+            pass
     # Load commands from JSON and display them
     def load_commands(self):
         try:
-            commands_file = 'src/config/commands.json'
-            if os.path.exists(commands_file):
-                with open(commands_file, 'r', encoding='utf-8') as f:
-                    commands_data = json.load(f)
-                    self.display_commands(commands_data.get('commands', []))
+            if os.path.exists(self.COMMANDS_FILE):
+                with open(self.COMMANDS_FILE, "r", encoding="utf-8") as file:
+                    data = json.load(file)
+                self.commands_data = data.get("commands", [])
             else:
-                self.display_commands([])
+                self.commands_data = []
+            self.display_commands(self.commands_data)
         except Exception as e:
             logging.error("Ошибка загрузки команд: %s", e)
+            self.commands_data = []
             self.display_commands([])
-
     # Display commands in the textbox
     def display_commands(self, commands):
-        self.commands_list_textbox.configure(state="normal")
-        self.commands_list_textbox.delete("1.0", "end")
-
-        for cmd in commands:
-            triggers = ", ".join(cmd.get('triggers', []))
-            say = cmd.get('say', '')
-            parameters = ", ".join(cmd.get('parameters', []))
-
-            command_text = f"Команда: {cmd.get('command', '')}\n"
-            command_text += f"Триггеры: {triggers}\n"
-            command_text += f"Действие: {cmd.get('make', '')}\n"
-            command_text += f"Обработчик: {cmd.get('handler', '')}\n"
-            command_text += f"Параметры: {parameters}\n"
-            command_text += f"Ответ: {say}\n"
-            command_text += "-" * 50 + "\n"
-
-            self.commands_list_textbox.insert("end", command_text)
-
-        self.commands_list_textbox.configure(state="disabled")
-
+        textbox = self.commands_list_textbox
+        textbox.configure(state="normal")
+        textbox.delete("1.0", "end")
+        self.selected_command_name = None
+        if not commands:
+            textbox.insert("end", "\n\n          Команды пока не добавлены.\n          Нажмите «Добавить команду», чтобы создать первую.")
+        for index, cmd in enumerate(commands):
+            triggers = ", ".join(cmd.get("triggers", []))
+            parameters = ", ".join(cmd.get("parameters", []))
+            say = cmd.get("say", "")
+            command_text = (
+                f"Команда: {cmd.get('command', '')}\n"
+                f"Триггеры: {triggers}\n"
+                f"Действие: {cmd.get('make', '')}\n"
+                f"Обработчик: {cmd.get('handler', '')}\n"
+                f"Параметры: {parameters}\n"
+                f"Ответ: {say}\n"
+                f"{'─' * 55}\n\n"
+            )
+            textbox.insert("end", command_text)
+        textbox.configure(state="disabled")
+    # Create base dialog window for commands
+    def create_command_dialog(self, title):
+        dialog = ctk.CTkToplevel(self.root)
+        dialog.title(title)
+        dialog.geometry("480x650")
+        dialog.resizable(False, False)
+        dialog.configure(fg_color=COLORS["bg"])
+        dialog.transient(self.root)
+        dialog.grab_set()
+        header = ctk.CTkFrame(dialog, fg_color="transparent")
+        header.pack(fill="x", padx=25, pady=(22, 10))
+        ctk.CTkLabel(header, text=title, font=(FONT, 21, "bold"), text_color=COLORS["text"]).pack(anchor="w")
+        ctk.CTkLabel(header, text="Настройте параметры голосовой команды", font=(FONT, 12), text_color=COLORS["muted"]).pack(anchor="w", pady=(5, 0))
+        card = self.create_card(dialog)
+        card.pack(fill="both", expand=True, padx=20, pady=10)
+        content = ctk.CTkFrame(card, fg_color="transparent")
+        content.pack(fill="both", expand=True, padx=20, pady=15)
+        return dialog, content
+    # Helper to create dialog input fields
+    def create_dialog_field(self, parent, label, placeholder="", value=None):
+        field_frame = ctk.CTkFrame(parent, fg_color="transparent")
+        field_frame.pack(fill="x", pady=6)
+        self.create_label(field_frame, label).pack(anchor="w", pady=(0, 5))
+        entry = self.create_entry(field_frame, placeholder=placeholder, width=400)
+        if value is not None:
+            entry.insert(0, str(value))
+        entry.pack(fill="x")
+        return entry
+    # Helper to create handler combobox
+    def create_handler_field(self, parent, value="self"):
+        field_frame = ctk.CTkFrame(parent, fg_color="transparent")
+        field_frame.pack(fill="x", pady=6)
+        self.create_label(field_frame, "Обработчик:").pack(anchor="w", pady=(0, 5))
+        handler_var = ctk.StringVar(value=value)
+        combobox = ctk.CTkComboBox(
+            field_frame,
+            values=self.VALID_HANDLERS,
+            variable=handler_var,
+            width=400,
+            height=40,
+            corner_radius=10,
+            border_width=1,
+            border_color=COLORS["border"],
+            fg_color=COLORS["surface_alt"],
+            button_color=COLORS["surface_alt"],
+            button_hover_color=COLORS["border"],
+            text_color=COLORS["text"],
+            dropdown_fg_color=COLORS["surface"],
+            dropdown_text_color=COLORS["text"],
+            dropdown_hover_color=COLORS["accent"],
+            font=(FONT, 13)
+        )
+        combobox.pack(fill="x")
+        return handler_var
+    # Helper to create dialog buttons
+    def create_dialog_buttons(self, parent, save_command, dialog):
+        buttons = ctk.CTkFrame(parent, fg_color="transparent")
+        buttons.pack(fill="x", pady=(15, 5))
+        cancel_button = self.create_dialog_button(buttons, "Отмена", dialog.destroy, "secondary")
+        cancel_button.pack(side="right", padx=(8, 0))
+        save_button = self.create_dialog_button(buttons, "Сохранить", save_command, "primary")
+        save_button.pack(side="right")
     # Open window for adding new command
     def open_add_command_window(self):
-        # Create dialog window
-        dialog = ctk.CTkToplevel(self.root)
-        dialog.title("Добавление команды")
-        dialog.geometry("400x500")
-        dialog.resizable(False, False)
-
-        # Command fields
-        ctk.CTkLabel(dialog, text="Название команды:").pack(pady=5)
-        command_entry = ctk.CTkEntry(dialog, width=300)
-        command_entry.pack(pady=5)
-
-        ctk.CTkLabel(dialog, text="Триггеры (через запятую):").pack(pady=5)
-        triggers_entry = ctk.CTkEntry(dialog, width=300)
-        triggers_entry.pack(pady=5)
-
-        ctk.CTkLabel(dialog, text="Действие:").pack(pady=5)
-        make_entry = ctk.CTkEntry(dialog, width=300)
-        make_entry.pack(pady=5)
-
-        ctk.CTkLabel(dialog, text="Обработчик:").pack(pady=5)
-        handler_var = ctk.StringVar(value="self")
-        handler_combobox = ctk.CTkComboBox(
-            dialog,
-            values=["self", "system_control", "network_actions"],
-            variable=handler_var,
-            width=300
-        )
-        handler_combobox.pack(pady=5)
-
-        ctk.CTkLabel(dialog, text="Параметры (через запятую):").pack(pady=5)
-        parameters_entry = ctk.CTkEntry(dialog, width=300)
-        parameters_entry.pack(pady=5)
-
-        ctk.CTkLabel(dialog, text="Голосовой ответ:").pack(pady=5)
-        say_entry = ctk.CTkEntry(dialog, width=300)
-        say_entry.pack(pady=5)
-
+        dialog, content = self.create_command_dialog("Добавление команды")
+        command_entry = self.create_dialog_field(content, "Название команды:", "Например: открыть браузер")
+        triggers_entry = self.create_dialog_field(content, "Триггеры (через запятую):", "Например: браузер, открой браузер")
+        make_entry = self.create_dialog_field(content, "Действие:", "Название метода")
+        handler_var = self.create_handler_field(content)
+        parameters_entry = self.create_dialog_field(content, "Параметры (через запятую):", "Параметры метода")
+        say_entry = self.create_dialog_field(content, "Голосовой ответ:", "Ответ ассистента")
         def save_command():
             try:
                 command_name = command_entry.get().strip()
@@ -196,16 +518,12 @@ class VoiceAssistantApp:
                 handler = handler_var.get()
                 parameters = [p.strip() for p in parameters_entry.get().split(",") if p.strip()]
                 say = say_entry.get().strip()
-
                 if not command_name or not triggers or not make_action:
-                    messagebox.showerror("Ошибка", "Заполните обязательные поля: название, триггеры, действие")
+                    messagebox.showerror("Ошибка", "Заполните обязательные поля: название, триггеры, действие", parent=dialog)
                     return
-
                 # Validate command
                 if not self.validate_command(command_name, make_action, handler, parameters):
-                    messagebox.showerror("Ошибка", "Некорректные параметры команды")
                     return
-
                 # Add command to JSON
                 self.add_command_to_json({
                     "command": command_name,
@@ -215,45 +533,29 @@ class VoiceAssistantApp:
                     "say": say,
                     "triggers": triggers
                 })
-
                 # Update display
                 self.load_commands()
                 dialog.destroy()
-
             except Exception as e:
-                messagebox.showerror("Ошибка", f"Ошибка сохранения команды: {e}")
-
-        # Buttons
-        button_frame = ctk.CTkFrame(dialog)
-        button_frame.pack(pady=20)
-
-        save_button = ctk.CTkButton(button_frame, text="Сохранить", command=save_command)
-        save_button.pack(side="left", padx=10)
-
-        cancel_button = ctk.CTkButton(button_frame, text="Отмена", command=dialog.destroy)
-        cancel_button.pack(side="left", padx=10)
-
+                messagebox.showerror("Ошибка", f"Ошибка сохранения команды: {e}", parent=dialog)
+        self.create_dialog_buttons(content, save_command, dialog)
     # Validate command parameters
-    def validate_command(self, command_name, make_action, handler, parameters):
+    def validate_command(self, command_name, make_action, handler, parameters, exclude_command=None):
         # Check if command name is unique
-        commands_file = 'src/config/commands.json'
-        if os.path.exists(commands_file):
+        if os.path.exists(self.COMMANDS_FILE):
             try:
-                with open(commands_file, 'r', encoding='utf-8') as f:
-                    commands_data = json.load(f)
-                    for cmd in commands_data.get('commands', []):
-                        if cmd.get('command') == command_name:
-                            messagebox.showerror("Ошибка", f"Команда с именем '{command_name}' уже существует")
-                            return False
+                with open(self.COMMANDS_FILE, "r", encoding="utf-8") as file:
+                    data = json.load(file)
+                for cmd in data.get("commands", []):
+                    if cmd.get("command") == command_name and cmd.get("command") != exclude_command:
+                        messagebox.showerror("Ошибка", f"Команда с именем '{command_name}' уже существует")
+                        return False
             except Exception:
                 pass
-
         # Validate handler
-        valid_handlers = ["self", "system_control", "network_actions"]
-        if handler not in valid_handlers:
-            messagebox.showerror("Ошибка", f"Некорректный обработчик. Допустимые: {', '.join(valid_handlers)}")
+        if handler not in self.VALID_HANDLERS:
+            messagebox.showerror("Ошибка", f"Некорректный обработчик. Допустимые: {', '.join(self.VALID_HANDLERS)}")
             return False
-
         # Validate method exists
         try:
             target = None
@@ -263,144 +565,79 @@ class VoiceAssistantApp:
                 target = self.assistant.system_control
             elif handler == "network_actions":
                 target = self.assistant.network_actions
-            else:
-                messagebox.showerror("Ошибка", f"Неизвестный обработчик: '{handler}'")
-                return False
-
             if target is None or not hasattr(target, make_action):
                 messagebox.showerror("Ошибка", f"Метод '{make_action}' не существует в обработчике '{handler}'")
                 return False
-
-            # Validate parameters count (basic check)
             method = getattr(target, make_action)
-            import inspect
-            sig = inspect.signature(method)
-            required_params = len([p for p in sig.parameters.values() if p.default == inspect.Parameter.empty and p.name != 'self'])
-
-            if len(parameters) != required_params:
-                messagebox.showerror("Ошибка", f"Метод '{make_action}' ожидает {required_params} параметров, передано {len(parameters)}")
+            signature = inspect.signature(method)
+            # Validate parameters count
+            required_params = [
+                p for p in signature.parameters.values()
+                if p.default == inspect.Parameter.empty
+                and p.kind in (inspect.Parameter.POSITIONAL_ONLY, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+            ]
+            if len(parameters) != len(required_params):
+                messagebox.showerror("Ошибка", f"Метод '{make_action}' ожидает {len(required_params)} обязательных параметров, передано {len(parameters)}")
                 return False
-
         except Exception as e:
             messagebox.showerror("Ошибка", f"Ошибка валидации: {e}")
             return False
-
         return True
-
+    # Save commands data to JSON file with backup
+    def _save_commands_data(self, commands_data):
+        directory = os.path.dirname(self.COMMANDS_FILE)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+        # Save with backup
+        temp_file = self.COMMANDS_FILE + ".tmp"
+        with open(temp_file, "w", encoding="utf-8") as file:
+            json.dump(commands_data, file, ensure_ascii=False, indent=4)
+        # Replace original file
+        os.replace(temp_file, self.COMMANDS_FILE)
+        # Update assistant commands
+        self.assistant.commands = commands_data.get("commands", [])
+        self.assistant.activation_words = commands_data.get("activation", [])
     # Add command to JSON file
     def add_command_to_json(self, new_command):
         try:
-            commands_file = 'src/config/commands.json'
-
             # Load existing data
-            if os.path.exists(commands_file):
-                with open(commands_file, 'r', encoding='utf-8') as f:
-                    commands_data = json.load(f)
+            if os.path.exists(self.COMMANDS_FILE):
+                with open(self.COMMANDS_FILE, "r", encoding="utf-8") as file:
+                    commands_data = json.load(file)
             else:
                 commands_data = {"activation": [], "commands": []}
-
+            commands_data.setdefault("activation", [])
+            commands_data.setdefault("commands", [])
             # Add new command
             commands_data["commands"].append(new_command)
-
-            # Save with backup
-            temp_file = commands_file + '.tmp'
-            with open(temp_file, 'w', encoding='utf-8') as f:
-                json.dump(commands_data, f, ensure_ascii=False, indent=4)
-
-            # Replace original file
-            if os.path.exists(commands_file):
-                os.remove(commands_file)
-            os.rename(temp_file, commands_file)
-
-            # Update assistant commands
-            self.assistant.commands = commands_data["commands"]
-            self.assistant.activation_words = commands_data["activation"]
-
-            logging.info("Команда '%s' успешно добавлена", new_command['command'])
-
+            self._save_commands_data(commands_data)
+            logging.info("Команда '%s' успешно добавлена", new_command["command"])
         except Exception as e:
             logging.error("Ошибка добавления команды: %s", e)
             raise
-
     # Edit existing command
     def edit_command(self):
+        command_name = self.selected_command_name
+        if not command_name:
+            messagebox.showwarning("Предупреждение", "Сначала выберите команду для редактирования")
+            return
         try:
-            # Get selected command text
-            selected_text = self.commands_list_textbox.get("1.0", "end-1c").strip()
-            if not selected_text:
-                messagebox.showwarning("Предупреждение", "Выберите команду для редактирования")
-                return
-
-            # Parse command name from selection
-            lines = selected_text.split('\n')
-            command_name = None
-            for line in lines:
-                if line.startswith("Команда: "):
-                    command_name = line.replace("Команда: ", "").strip()
-                    break
-
-            if not command_name:
-                messagebox.showwarning("Предупреждение", "Не удалось определить имя команды")
-                return
-
-            # Load existing commands
-            commands_file = 'src/config/commands.json'
-            with open(commands_file, 'r', encoding='utf-8') as f:
-                commands_data = json.load(f)
-
+            with open(self.COMMANDS_FILE, "r", encoding="utf-8") as file:
+                commands_data = json.load(file)
             # Find command to edit
-            command_to_edit = None
-            for cmd in commands_data["commands"]:
-                if cmd.get('command') == command_name:
-                    command_to_edit = cmd
-                    break
-
+            command_to_edit = next((cmd for cmd in commands_data["commands"] if cmd.get("command") == command_name), None)
             if not command_to_edit:
                 messagebox.showerror("Ошибка", f"Команда '{command_name}' не найдена")
                 return
-
             # Create edit dialog
-            dialog = ctk.CTkToplevel(self.root)
-            dialog.title(f"Редактирование команды: {command_name}")
-            dialog.geometry("400x500")
-            dialog.resizable(False, False)
-
+            dialog, content = self.create_command_dialog(f"Редактирование: {command_name}")
             # Fill fields with existing data
-            ctk.CTkLabel(dialog, text="Название команды:").pack(pady=5)
-            command_entry = ctk.CTkEntry(dialog, width=300)
-            command_entry.insert(0, command_to_edit.get('command', ''))
-            command_entry.pack(pady=5)
-
-            ctk.CTkLabel(dialog, text="Триггеры (через запятую):").pack(pady=5)
-            triggers_entry = ctk.CTkEntry(dialog, width=300)
-            triggers_entry.insert(0, ", ".join(command_to_edit.get('triggers', [])))
-            triggers_entry.pack(pady=5)
-
-            ctk.CTkLabel(dialog, text="Действие:").pack(pady=5)
-            make_entry = ctk.CTkEntry(dialog, width=300)
-            make_entry.insert(0, command_to_edit.get('make', ''))
-            make_entry.pack(pady=5)
-
-            ctk.CTkLabel(dialog, text="Обработчик:").pack(pady=5)
-            handler_var = ctk.StringVar(value=command_to_edit.get('handler', 'self'))
-            handler_combobox = ctk.CTkComboBox(
-                dialog,
-                values=["self", "system_control", "network_actions"],
-                variable=handler_var,
-                width=300
-            )
-            handler_combobox.pack(pady=5)
-
-            ctk.CTkLabel(dialog, text="Параметры (через запятую):").pack(pady=5)
-            parameters_entry = ctk.CTkEntry(dialog, width=300)
-            parameters_entry.insert(0, ", ".join(command_to_edit.get('parameters', [])))
-            parameters_entry.pack(pady=5)
-
-            ctk.CTkLabel(dialog, text="Голосовой ответ:").pack(pady=5)
-            say_entry = ctk.CTkEntry(dialog, width=300)
-            say_entry.insert(0, command_to_edit.get('say', ''))
-            say_entry.pack(pady=5)
-
+            command_entry = self.create_dialog_field(content, "Название команды:", value=command_to_edit.get("command", ""))
+            triggers_entry = self.create_dialog_field(content, "Триггеры (через запятую):", value=", ".join(command_to_edit.get("triggers", [])))
+            make_entry = self.create_dialog_field(content, "Действие:", value=command_to_edit.get("make", ""))
+            handler_var = self.create_handler_field(content, command_to_edit.get("handler", "self"))
+            parameters_entry = self.create_dialog_field(content, "Параметры (через запятую):", value=", ".join(command_to_edit.get("parameters", [])))
+            say_entry = self.create_dialog_field(content, "Голосовой ответ:", value=command_to_edit.get("say", ""))
             def save_edited_command():
                 try:
                     # Get updated values
@@ -412,204 +649,68 @@ class VoiceAssistantApp:
                         "parameters": [p.strip() for p in parameters_entry.get().split(",") if p.strip()],
                         "say": say_entry.get().strip()
                     }
-
                     # Validate
                     if not updated_command["command"] or not updated_command["triggers"] or not updated_command["make"]:
-                        messagebox.showerror("Ошибка", "Заполните обязательные поля: название, триггеры, действие")
+                        messagebox.showerror("Ошибка", "Заполните обязательные поля: название, триггеры, действие", parent=dialog)
                         return
-
-                    # Check for name conflicts (excluding current command)
-                    for cmd in commands_data["commands"]:
-                        if cmd.get('command') == updated_command["command"] and cmd != command_to_edit:
-                            messagebox.showerror("Ошибка", f"Команда с именем '{updated_command['command']}' уже существует")
-                            return
-
+                    # Check for name conflicts
+                    if not self.validate_command(
+                        updated_command["command"],
+                        updated_command["make"],
+                        updated_command["handler"],
+                        updated_command["parameters"],
+                        exclude_command=command_name
+                    ):
+                        return
                     # Update command
                     command_to_edit.update(updated_command)
-
                     # Save
-                    temp_file = commands_file + '.tmp'
-                    with open(temp_file, 'w', encoding='utf-8') as f:
-                        json.dump(commands_data, f, ensure_ascii=False, indent=4)
-
-                    if os.path.exists(commands_file):
-                        os.remove(commands_file)
-                    os.rename(temp_file, commands_file)
-
-                    # Update assistant
-                    self.assistant.commands = commands_data["commands"]
-
+                    self._save_commands_data(commands_data)
                     # Refresh display
                     self.load_commands()
                     dialog.destroy()
-
+                    logging.info("Команда '%s' успешно обновлена", updated_command["command"])
                 except Exception as e:
-                    messagebox.showerror("Ошибка", f"Ошибка сохранения: {e}")
-
-            # Buttons
-            button_frame = ctk.CTkFrame(dialog)
-            button_frame.pack(pady=20)
-
-            save_button = ctk.CTkButton(button_frame, text="Сохранить", command=save_edited_command)
-            save_button.pack(side="left", padx=10)
-
-            cancel_button = ctk.CTkButton(button_frame, text="Отмена", command=dialog.destroy)
-            cancel_button.pack(side="left", padx=10)
-
+                    messagebox.showerror("Ошибка", f"Ошибка сохранения: {e}", parent=dialog)
+            self.create_dialog_buttons(content, save_edited_command, dialog)
         except Exception as e:
             messagebox.showerror("Ошибка", f"Ошибка редактирования: {e}")
-
     # Delete selected command
     def delete_command(self):
+        command_name = self.selected_command_name
+        if not command_name:
+            messagebox.showwarning("Предупреждение", "Сначала выберите команду для удаления")
+            return
+        # Confirm deletion
+        if not messagebox.askyesno("Подтверждение", f"Удалить команду '{command_name}'?"):
+            return
         try:
-            # Get selected command text
-            selected_text = self.commands_list_textbox.get("1.0", "end-1c").strip()
-            if not selected_text:
-                messagebox.showwarning("Предупреждение", "Выберите команду для удаления")
-                return
-
-            # Parse command name
-            lines = selected_text.split('\n')
-            command_name = None
-            for line in lines:
-                if line.startswith("Команда: "):
-                    command_name = line.replace("Команда: ", "").strip()
-                    break
-
-            if not command_name:
-                messagebox.showwarning("Предупреждение", "Не удалось определить имя команды")
-                return
-
-            # Confirm deletion
-            if not messagebox.askyesno("Подтверждение", f"Удалить команду '{command_name}'?"):
-                return
-
             # Load and update commands
-            commands_file = 'src/config/commands.json'
-            with open(commands_file, 'r', encoding='utf-8') as f:
-                commands_data = json.load(f)
-
+            with open(self.COMMANDS_FILE, "r", encoding="utf-8") as file:
+                commands_data = json.load(file)
             # Remove command
-            commands_data["commands"] = [cmd for cmd in commands_data["commands"] if cmd.get('command') != command_name]
-
+            commands_data["commands"] = [cmd for cmd in commands_data["commands"] if cmd.get("command") != command_name]
             # Save
-            temp_file = commands_file + '.tmp'
-            with open(temp_file, 'w', encoding='utf-8') as f:
-                json.dump(commands_data, f, ensure_ascii=False, indent=4)
-
-            if os.path.exists(commands_file):
-                os.remove(commands_file)
-            os.rename(temp_file, commands_file)
-
-            # Update assistant
-            self.assistant.commands = commands_data["commands"]
-
+            self._save_commands_data(commands_data)
             # Refresh display
             self.load_commands()
-
             logging.info("Команда '%s' удалена", command_name)
-
         except Exception as e:
             messagebox.showerror("Ошибка", f"Ошибка удаления: {e}")
-
-    # Add microphone controls to the mic tab
-    def create_widgets(self):
-        # Title bar
-        self.statusbar1 = ctk.CTkLabel(
-            self.root,
-            text="Голосовой помощник",
-            anchor="w",
-            font=('Arial', 16, 'italic')
-        )
-        self.statusbar1.pack(side="top", fill="x", padx=10, pady=5)
-
-        # Create notebook for tabs
-        self.notebook = ctk.CTkTabview(self.root)
-        self.notebook.pack(fill="both", expand=True, padx=20, pady=20)
-
-        # Microphone tab
-        self.mic_tab = self.notebook.add("Микрофон")
-
-        # Commands tab
-        self.commands_tab = self.notebook.add("Команды")
-        self.create_commands_tab()
-
-        # Logs List (for displaying assistant logs)
-        self.logs_frame = ctk.CTkFrame(self.mic_tab)
-        self.logs_frame.pack(side="left", padx=20, pady=20)
-
-        # Logs textbox
-        self.log_textbox = ctk.CTkTextbox(
-            self.logs_frame,
-            width=250,
-            height=220,
-            wrap="word"
-        )
-        self.log_textbox.pack()
-
-        # Frame for microphone selection
-        self.mic_frame = ctk.CTkFrame(self.mic_tab)
-        self.mic_frame.pack(side="top", padx=20, pady=20, anchor="n")
-
-        # Label for microphone
-        self.statusbar2 = ctk.CTkLabel(
-            self.mic_frame,
-            text="Вход микрофона:",
-            font=('Arial', 16, 'italic')
-        )
-        self.statusbar2.pack(side="left", padx=(0, 10))
-
-        # Combobox for selecting sound input devices
-        self.device_options = self.get_input_devices()
-
-        # Get default device
-        saved_device = self.get_device_by_index(self.assistant.input_device)
-
-        self.device_combobox = ctk.CTkComboBox(
-            self.mic_frame,
-            values=self.device_options,
-            font=('Arial', 14)
-        )
-
-        # Default device installation
-        self.device_combobox.set(
-            saved_device if saved_device else self.get_default_input_device()
-        )
-        self.device_combobox.pack(side="left")
-
-        # "Save" button
-        self.save_button = ctk.CTkButton(
-            self.mic_tab,
-            text="Сохранить",
-            command=self.save_device
-        )
-        self.save_button.pack(pady=10)
-
-        # Connect logging system to textbox
-        self.log_handler = TkinterLogHandler(self.log_textbox)
-        formatter = logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(message)s'
-        )
-        self.log_handler.setFormatter(formatter)
-        logging.getLogger().addHandler(self.log_handler)
-        logging.getLogger().setLevel(logging.INFO)
-
     # Get device name by index
     def get_device_by_index(self, index):
         devices = sd.query_devices()
         if 0 <= index < len(devices):
             return f"{index}: {devices[index]['name']}"
         return None
-
     # Gets a list of available audio input devices
     def get_input_devices(self):
         devices = sd.query_devices()
         input_devices = []
         for i, device in enumerate(devices):
-            if device['max_input_channels'] > 0:
+            if device["max_input_channels"] > 0:
                 input_devices.append(f"{i}: {device['name']}")
         return input_devices if input_devices else ["Нет доступных устройств ввода"]
-
     # Get default device index
     def get_default_input_device(self):
         default_input_device = sd.default.device[0]
@@ -617,16 +718,18 @@ class VoiceAssistantApp:
         if 0 <= default_input_device < len(devices):
             return f"{default_input_device}: {devices[default_input_device]['name']}"
         return "Выберите устройство ввода"
-
     # Saves the selected device and updates it in Assistant
     def save_device(self):
         selected = self.device_combobox.get()
-        if selected and selected != "Выберите устройство ввода":
-            self.selected_device = int(selected.split(":")[0])
-            self.assistant.set_input_device(self.selected_device)
-            logging.info("Выбрано устройство: %s", selected)
+        if selected and selected != "Выберите устройство ввода" and selected != "Нет доступных устройств ввода":
+            try:
+                self.selected_device = int(selected.split(":")[0])
+                self.assistant.set_input_device(self.selected_device)
+                logging.info("Выбрано устройство: %s", selected)
+            except Exception as e:
+                messagebox.showerror("Ошибка", f"Не удалось сохранить устройство: {e}")
         else:
             logging.info("Устройство не выбрано.")
-
+    # Start the main interface loop
     def start_interface(self):
         self.root.mainloop()
