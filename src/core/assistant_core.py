@@ -10,7 +10,7 @@ import sounddevice as sd
 from rapidfuzz import fuzz
 
 from src.integrations.chat_gpt import ChatGPT
-from src.interface.interface import VoiceAssistantApp
+from src.gui.main_window import VoiceAssistantApp
 from src.network import NetworkActions
 from src.audio.sound_module import SoundPlayer
 from src.speech.speech_module import SpeechRecognizer
