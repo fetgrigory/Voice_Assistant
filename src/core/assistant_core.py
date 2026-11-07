@@ -9,7 +9,7 @@ import pygame
 import sounddevice as sd
 from rapidfuzz import fuzz
 
-from src.integrations.chat_gpt import ChatGPT
+from src.integrations.llm_client import LLMClient
 from src.gui.main_window import VoiceAssistantApp
 from src.network import NetworkActions
 from src.audio.sound_module import SoundPlayer
@@ -36,7 +36,7 @@ class Assistant:
         self.sound_player = SoundPlayer()
         self.network_actions = NetworkActions()
         self.system_control = SystemControl(self.tts.speak, self.speech_recognizer.listen_command)
-        self.chat_gpt = ChatGPT()
+        self.chat_gpt = LLMClient()
 
         self.sound_player.play_sound('start')
         self.session_timeout = 15
