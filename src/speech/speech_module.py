@@ -32,7 +32,7 @@ class SpeechRecognizer:
             channels=1,
             callback=stream_callback
         ):
-            logger.info("Ожидание активационного слова 'Астра'...")
+            logger.info("Ожидание активационного слова...")
             while True:
                 data = self.audio_queue.get()
                 if rec.AcceptWaveform(data):

@@ -19,17 +19,20 @@ from src.speech.tts_module import TTS
 
 logger = logging.getLogger(__name__)
 
+SETTINGS_PATH = 'src/config/settings.json'
+DEFAULT_ASSISTANT_NAME = 'астра'
+
 
 class Assistant:
     def __init__(self):
-        self.settings_file = 'src/config/settings.json'
         self.input_device = None
-        self.load_settings()
+        self.assistant_name = None
+        self.activation_words = []
 
         with open('src/config/commands.json', 'r', encoding='utf-8') as f:
-            commands_data = json.load(f)
-            self.commands = commands_data['commands']
-            self.activation_words = commands_data['activation']
+            self.commands = json.load(f)['commands']
+
+        self.load_settings()
 
         self.tts = TTS()
         self.speech_recognizer = SpeechRecognizer(input_device=self.input_device)
@@ -52,17 +55,38 @@ class Assistant:
         self.save_settings()
         logging.info("Устройство ввода обновлено на %s", device_index)
 
+    # The assistant name is also the activation word, so both are updated together
+    def set_assistant_name(self, name):
+        name = name.strip()
+        if not name:
+            return
+        self.apply_assistant_name(name)
+        self.save_settings()
+        logging.info("Имя ассистента изменено на: %s", name)
+
+    def apply_assistant_name(self, name):
+        self.assistant_name = name
+        self.activation_words = [name.lower()]
+
     def save_settings(self):
-        with open(self.settings_file, 'w', encoding='utf-8') as f:
-            json.dump({'input_device': self.input_device}, f)
+        settings = {
+            'input_device': self.input_device,
+            'assistant_name': self.assistant_name
+        }
+        os.makedirs(os.path.dirname(SETTINGS_PATH), exist_ok=True)
+        with open(SETTINGS_PATH, 'w', encoding='utf-8') as f:
+            json.dump(settings, f, ensure_ascii=False, indent=4)
 
     def load_settings(self):
+        settings = {}
         try:
-            with open(self.settings_file, 'r', encoding='utf-8') as f:
+            with open(SETTINGS_PATH, 'r', encoding='utf-8') as f:
                 settings = json.load(f)
-                self.input_device = settings.get('input_device', sd.default.device[0])
         except Exception:
-            self.input_device = sd.default.device[0]
+            pass
+
+        self.input_device = settings.get('input_device', sd.default.device[0])
+        self.apply_assistant_name(settings.get('assistant_name') or DEFAULT_ASSISTANT_NAME)
 
     # Open the specified file
     def start_file(self, file_path):

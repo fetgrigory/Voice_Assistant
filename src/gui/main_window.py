@@ -33,13 +33,6 @@ class VoiceAssistantApp:
             text_color=COLORS["text"]
         ).pack(side="left")
 
-        ctk.CTkLabel(
-            header,
-            text="ASTRA",
-            font=(FONT, 11, "bold"),
-            text_color=COLORS["muted"]
-        ).pack(side="right", padx=5)
-
         self.notebook = ctk.CTkTabview(
             self.root,
             fg_color=COLORS["bg"],

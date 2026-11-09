@@ -31,20 +31,20 @@ class TkinterLogHandler(logging.Handler):
             self.textbox.after(0, append)
 
 
-# "Микрофон" tab: input device selection and event log
+# "Микрофон" tab: input device, assistant name (also the activation word) and event log
 class MicrophoneTab:
     def __init__(self, parent, assistant):
         self.tab = parent
         self.assistant = assistant
         self.device_combobox = None
+        self.assistant_name_var = None
+        self.assistant_name_entry = None
         self.log_textbox = None
 
         self.create_widgets()
         self.setup_logging()
 
-    # Grid keeps a stable slice of vertical space for the logs card; with pack()
-    # the mic settings card consumed all the height and the log area collapsed.
-    # Propagation is disabled on the logs card so it never shrinks below the textbox size.
+    # Grid reserves stable height for the logs card; propagation is off so it never collapses
     def create_widgets(self):
         self.tab.grid_columnconfigure(0, weight=1)
         self.tab.grid_rowconfigure(0, weight=0)
@@ -59,32 +59,16 @@ class MicrophoneTab:
             grid_kw={"row": 0, "column": 0, "sticky": "ew", "padx": 20, "pady": (10, 6)}
         )
 
-        mic_frame = create_card(self.tab)
-        mic_frame.grid(row=1, column=0, sticky="ew", padx=20, pady=6)
+        settings_frame = create_card(self.tab)
+        settings_frame.grid(row=1, column=0, sticky="ew", padx=20, pady=6)
 
-        content = ctk.CTkFrame(mic_frame, fg_color="transparent")
+        content = ctk.CTkFrame(settings_frame, fg_color="transparent")
         content.pack(fill="x", padx=20, pady=12)
 
-        ctk.CTkLabel(
-            content,
-            text="Входное устройство",
-            font=(FONT, 15, "bold"),
-            text_color=COLORS["text"]
-        ).pack(anchor="w")
+        self.create_device_section(content)
+        self.create_name_section(content)
 
-        ctk.CTkLabel(
-            content,
-            text="Выберите микрофон, который будет использовать ассистент.",
-            font=(FONT, 12),
-            text_color=COLORS["muted"]
-        ).pack(anchor="w", pady=(5, 14))
-
-        saved_device = self.get_device_by_index(self.assistant.input_device)
-        self.device_combobox = create_combobox(content, self.get_input_devices(), width=400, height=42)
-        self.device_combobox.set(saved_device if saved_device else self.get_default_input_device())
-        self.device_combobox.pack(anchor="w")
-
-        save_button = create_button(content, "Сохранить изменения", self.save_device, 190, "primary")
+        save_button = create_button(content, "Сохранить изменения", self.save_changes, 190, "primary")
         save_button.pack(anchor="w", pady=(18, 0))
 
         create_section_title(
@@ -113,6 +97,55 @@ class MicrophoneTab:
         )
         self.log_textbox.pack(fill="both", expand=True, padx=12, pady=12)
         self.log_textbox.configure(state="disabled")
+
+    def create_device_section(self, content):
+        ctk.CTkLabel(
+            content,
+            text="Входное устройство",
+            font=(FONT, 15, "bold"),
+            text_color=COLORS["text"]
+        ).pack(anchor="w")
+
+        ctk.CTkLabel(
+            content,
+            text="Выберите микрофон, который будет использовать ассистент.",
+            font=(FONT, 12),
+            text_color=COLORS["muted"]
+        ).pack(anchor="w", pady=(5, 14))
+
+        saved_device = self.get_device_by_index(self.assistant.input_device)
+        self.device_combobox = create_combobox(content, self.get_input_devices(), width=400, height=42)
+        self.device_combobox.set(saved_device if saved_device else self.get_default_input_device())
+        self.device_combobox.pack(anchor="w")
+
+    def create_name_section(self, content):
+        ctk.CTkLabel(
+            content,
+            text="Имя ассистента",
+            font=(FONT, 15, "bold"),
+            text_color=COLORS["text"]
+        ).pack(anchor="w", pady=(22, 0))
+
+        ctk.CTkLabel(
+            content,
+            text="Это имя также служит активационным словом. Вводите его так, как оно распознаётся речью.",
+            font=(FONT, 12),
+            text_color=COLORS["muted"]
+        ).pack(anchor="w", pady=(5, 14))
+
+        self.assistant_name_var = ctk.StringVar(value=self.assistant.assistant_name)
+
+        self.assistant_name_entry = ctk.CTkEntry(
+            content,
+            textvariable=self.assistant_name_var,
+            font=(FONT, 14, "bold"),
+            text_color=COLORS["text"],
+            fg_color=COLORS["surface_alt"],
+            border_color=COLORS["border"],
+            width=200,
+            height=35
+        )
+        self.assistant_name_entry.pack(anchor="w")
 
     def setup_logging(self):
         log_handler = TkinterLogHandler(self.log_textbox)
@@ -143,15 +176,30 @@ class MicrophoneTab:
             return f"{default_input_device}: {devices[default_input_device]['name']}"
         return "Выберите устройство ввода"
 
+    # Single handler for the shared save button: applies both the device and the name
+    def save_changes(self):
+        self.save_device()
+        self.save_assistant_name()
+
     # Saves the selected device and updates it in Assistant
     def save_device(self):
         selected = self.device_combobox.get()
-        if selected and selected != "Выберите устройство ввода" and selected != "Нет доступных устройств ввода":
-            try:
-                device_index = int(selected.split(":")[0])
-                self.assistant.set_input_device(device_index)
-                logging.info("Выбрано устройство: %s", selected)
-            except Exception as e:
-                messagebox.showerror("Ошибка", f"Не удалось сохранить устройство: {e}")
-        else:
+        # Real devices look like "3: Name"; placeholder texts have no index
+        try:
+            device_index = int(selected.split(":")[0])
+        except ValueError:
             logging.info("Устройство не выбрано.")
+            return
+
+        try:
+            self.assistant.set_input_device(device_index)
+            logging.info("Выбрано устройство: %s", selected)
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Не удалось сохранить устройство: {e}")
+
+    # Updates the name and the activation word in Assistant
+    def save_assistant_name(self):
+        try:
+            self.assistant.set_assistant_name(self.assistant_name_var.get())
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Не удалось сохранить имя: {e}")
