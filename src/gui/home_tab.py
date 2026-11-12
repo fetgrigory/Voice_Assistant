@@ -91,39 +91,13 @@ class HomeTab:
 
         self.entry.delete(0, "end")
 
-        # Simple keyword-based response logic
-        self.process_response(message)
+        # Use the assistant to process the message through the neural network
+        if self.assistant:
+            response = self.assistant.process_command(message)
+            self.add_message("Bot", response)
+        else:
+            # Fallback if assistant is not available
+            self.process_response()
 
-    def process_response(self, user_message):
-        user_msg = user_message.lower()
-
-        responses = {
-            "hello": "Hi there, how can I help?",
-            "hi": "Hi there, what can I do for you?",
-            "hii": "Hi there, what can I do for you?",
-            "hiiii": "Hi there, what can I do for you?",
-            "how are you": "fine! and you?",
-            "fine": "Great! how can I help you.",
-            "i am good": "Great! how can I help you.",
-            "i am doing good": "Great! how can I help you.",
-            "thanks": "My pleasure!",
-            "thank you": "My pleasure!",
-            "now its my time": "My pleasure!",
-            "what do you sell": "We have coffee and tea",
-            "what kinds of items are there": "We have coffee and tea",
-            "have you something": "We have coffee and tea",
-            "tell me a joke": "What did the buffalo say when his son left for college? Bison!",
-            "tell me something funny": "What did the buffalo say when his son left for college? Bison!",
-            "crack a funny line": "What did the buffalo say when his son left for college? Bison!",
-            "goodbye": "Have a nice day!",
-            "see you later": "Have a nice day!",
-            "see yaa": "Have a nice day!",
-        }
-
-        for key, response in responses.items():
-            if key in user_msg:
-                self.add_message("Bot", response)
-                return
-
-        # Fallback when no keyword matches
-        self.add_message("Bot", "Sorry! I didn't understand that")
+    def process_response(self):
+        self.add_message("Bot", "Извините, произошла ошибка при обработке сообщения.")
