@@ -3,6 +3,7 @@ import customtkinter as ctk
 from src.gui.sidebar import Sidebar
 from src.gui.mic_tab import MicrophoneTab
 from src.gui.commands_tab import CommandsTab
+from src.gui.home_tab import HomeTab
 from src.gui.styles import COLORS, apply_theme
 
 
@@ -44,6 +45,7 @@ class VoiceAssistantApp:
         # Initialize tabs without displaying them yet
         self.mic_tab = MicrophoneTab(ctk.CTkFrame(self.content_frame), self.assistant)
         self.commands_tab = CommandsTab(ctk.CTkFrame(self.content_frame), self.root, self.assistant)
+        self.home_tab = HomeTab(ctk.CTkFrame(self.content_frame), self.assistant)
 
         # Show microphone tab by default
         self.current_tab = "mic"
@@ -53,11 +55,14 @@ class VoiceAssistantApp:
     def show_tab(self, tab_name):
         self.mic_tab.tab.pack_forget()
         self.commands_tab.tab.pack_forget()
+        self.home_tab.tab.pack_forget()
 
         if tab_name == "mic":
             self.mic_tab.tab.pack(fill="both", expand=True, padx=20, pady=20)
         elif tab_name == "commands":
             self.commands_tab.tab.pack(fill="both", expand=True, padx=20, pady=20)
+        elif tab_name == "home":
+            self.home_tab.tab.pack(fill="both", expand=True, padx=20, pady=20)
 
         self.current_tab = tab_name
 
@@ -69,6 +74,9 @@ class VoiceAssistantApp:
         elif page == "commands":
             self.show_tab("commands")
             self.sidebar.set_active("commands")
+        elif page == "home_tab":
+            self.show_tab("home")
+            self.sidebar.set_active("home_tab")
         else:
             print(f"Opened section: {page}")
 

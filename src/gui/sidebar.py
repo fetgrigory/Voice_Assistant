@@ -10,7 +10,7 @@ class Sidebar(tk.Frame):
     # Menu structure: only essential sections
     GROUPS = [
         ("Главное", [
-            ("Главная", "home"),
+            ("Главная", "home_tab"),
         ]),
         ("Основное", [
             ("Микрофон", "mic"),
@@ -23,7 +23,7 @@ class Sidebar(tk.Frame):
         master,
         on_navigate: Optional[Callable[[str], None]] = None,
         width=250,
-        active="home",
+        active="home_tab",
         hidden_items=None,
         **kwargs
     ):

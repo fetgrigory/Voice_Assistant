@@ -15,6 +15,7 @@ COLORS = {
     "danger_hover": ("#4a2530", "#4a2530"),
     "danger_text": ("#ff657a", "#ff657a"),
     "success": ("#4bd2a0", "#4bd2a0"),
+    "panel": ("#1c2230", "#1c2230"),
 }
 
 FONT = "Arial"
