@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import threading
 
 from src.gui.styles import COLORS, FONT
 
@@ -8,7 +9,7 @@ class HomeTab:
     def __init__(self, parent, assistant=None):
         self.tab = parent
         self.assistant = assistant
-
+        self.root = parent.winfo_toplevel()
         self.create_widgets()
 
     def create_widgets(self):
@@ -77,10 +78,7 @@ class HomeTab:
         # Scroll to the latest message
         self.chat_text.see("end")
 
-        # Restore read-only state
         self.chat_text.configure(state="disabled")
-
-        self.chat_text.see("end")
 
     def send_message(self):
         message = self.entry.get().strip()
@@ -91,13 +89,25 @@ class HomeTab:
 
         self.entry.delete(0, "end")
 
-        # Use the assistant to process the message through the neural network
         if self.assistant:
-            response = self.assistant.process_command(message)
-            self.add_message("Bot", response)
+            # Run processing in a separate thread to avoid UI freezing
+            threading.Thread(
+                target=self._process_message_with_assistant,
+                args=(message,),
+                daemon=True
+            ).start()
         else:
             # Fallback if assistant is not available
             self.process_response()
+
+    def _process_message_with_assistant(self, message):
+        try:
+            response = self.assistant.process_command(message)
+            # Update UI in the main thread
+            self.root.after(0, lambda: self.add_message("Bot", response))
+        except Exception as e:
+            error_msg = f"Ошибка: {e}"
+            self.root.after(0, lambda: self.add_message("Bot", error_msg))
 
     def process_response(self):
         self.add_message("Bot", "Извините, произошла ошибка при обработке сообщения.")
