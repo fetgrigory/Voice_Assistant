@@ -76,11 +76,11 @@ Voice_Assistant/
 │   │   └── interface.py
 │   ├── integrations/                 # Внешние интеграции
 │   │   ├── __init__.py
-│   │   └── chat_gpt.py
-│   ├── network/                      # Сетевые операции
+│   │   └── llm_client.py             # Клиент для работы с LLM
+│   ├── network/                      # Сетевые функции
 │   │   ├── __init__.py
 │   │   └── network.py
-│   ├── services/                     # Сервисы контента
+│   ├── services/                     # Сервисы для контента
 │   │   ├── __init__.py
 │   │   ├── film_service.py
 │   │   ├── music_service.py
@@ -114,16 +114,16 @@ graph LR
 |-----------------|-----------------------------------|
 | `vosk`          | Оффлайн распознавание речи        |
 | `sounddevice`   |Запись аудио с микрофона           |
-| `pyttsx3`       | Синтез речи                       |
+| `piper-tts`     | Синтез речи                       |
 | `numpy`         | Работа с аудиоданными             |
 | `RapidFuzz`     | Нечеткий поиск команд             |
-| `lmstudio`      | Локальные LLM-модели для ответов  |
+| `openai`|Библиотека для работы с LLM через OpenAI-совместимый API|
 | `selenium`      | Автоматизация браузера для медиа  |
 | `fake-useragent`| Генерация случайных User-Agent для веб-запросов|
 | `webdriver-manager`| Управление драйверами для Selenium|
 | `feedparser`   | Чтение новостей RSS-лент|
 | `BeautifulSoup`| Очистка текста новостей от HTML-тегов|
-| `requests`         |HTTP-запросы к API и веб-серверам|
+| `requests`     |HTTP-запросы к API и веб-серверам|
 | `pygame`        | Воспроизведение аудио             |
 | `pywin32`       | Интеграция с Windows API          |
 | `keyboard`      | Эмуляция нажатия клавиш           |
