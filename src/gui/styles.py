@@ -1,19 +1,20 @@
 import customtkinter as ctk
 
 COLORS = {
-    "bg": ("#F7F8FA", "#17181C"),
-    "surface": ("#FFFFFF", "#202126"),
-    "surface_alt": ("#F0F1F4", "#292A30"),
-    "border": ("#E5E6EA", "#35363D"),
-    "text": ("#202127", "#F1F1F3"),
-    "muted": ("#858791", "#92939D"),
-    "accent": ("#DCE7FF", "#343F5B"),
-    "accent_hover": ("#CAD9FA", "#414F70"),
-    "accent_text": ("#315BA8", "#C5D5FF"),
-    "danger": ("#FCE8E8", "#452B30"),
-    "danger_hover": ("#F7D7D7", "#59363C"),
-    "danger_text": ("#C64C4C", "#FF9999"),
-    "success": ("#E3F5EA", "#263D31"),
+    "bg": ("#DBEAFE", "#1E293B"),
+    "surface": ("#FFFFFF", "#273449"),
+    "surface_alt": ("#EFF6FF", "#334155"),
+    "border": ("#BFDBFE", "#475569"),
+    "text": ("#1E3A5F", "#E2E8F0"),
+    "muted": ("#64748B", "#94A3B8"),
+    "accent": ("#3B8ED0", "#3B8ED0"),
+    "accent_hover": ("#367DB5", "#2563EB"),
+    "accent_text": ("#FFFFFF", "#FFFFFF"),
+    "danger": ("#FEE2E2", "#3A1F25"),
+    "danger_hover": ("#FECACA", "#4A2530"),
+    "danger_text": ("#DC2626", "#FF657A"),
+    "success": ("#16A34A", "#4BD2A0"),
+    "panel": ("#FFFFFF", "#273449"),
 }
 
 FONT = "Arial"
@@ -38,12 +39,12 @@ BUTTON_STYLES = {
 }
 
 
+# Apply appearance settings
 def apply_theme():
     ctk.set_appearance_mode("System")
     ctk.set_default_color_theme("blue")
 
 
-# Apply Astra-inspired button styling
 def style_button(button, kind="secondary"):
     button.configure(
         **BUTTON_STYLES[kind],
@@ -55,15 +56,19 @@ def style_button(button, kind="secondary"):
 
 
 def create_button(parent, text, command, width, kind="secondary"):
-    button = ctk.CTkButton(parent, text=text, command=command, width=width)
+    button = ctk.CTkButton(
+        parent,
+        text=text,
+        command=command,
+        width=width
+    )
     style_button(button, kind)
     return button
 
 
-# When grid_kw is provided, the title is placed via grid() instead of pack()
-# so the caller can control row weights and minsizes for tight layouts.
 def create_section_title(parent, title, description=None, grid_kw=None):
     frame = ctk.CTkFrame(parent, fg_color="transparent")
+
     if grid_kw is not None:
         frame.grid(**grid_kw)
     else:
@@ -136,8 +141,8 @@ def create_combobox(parent, values, width, height, **kwargs):
         border_width=1,
         border_color=COLORS["border"],
         fg_color=COLORS["surface_alt"],
-        button_color=COLORS["surface_alt"],
-        button_hover_color=COLORS["border"],
+        button_color=COLORS["accent"],
+        button_hover_color=COLORS["accent_hover"],
         text_color=COLORS["text"],
         dropdown_fg_color=COLORS["surface"],
         dropdown_text_color=COLORS["text"],

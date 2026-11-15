@@ -194,13 +194,15 @@ class Assistant:
                             method(*best_match['parameters'])
                     else:
                         method()
-                    return
+                    return "Команда выполнена"
             except Exception as e:
                 self.tts.speak(f"Команда '{query}' пока не реализована.")
                 logger.error("Command execution error: %s", e)
+                return f"Ошибка выполнения команды: {e}"
             return
         response = self.chat_gpt.ask(query)
         self.tts.speak(response)
+        return response
 
     # Run the assistant's main loop
     def main(self):
