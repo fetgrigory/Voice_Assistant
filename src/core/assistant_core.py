@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import threading
+import datetime
 import time
 from pathlib import Path
 
@@ -162,6 +163,17 @@ class Assistant:
             self.tts.speak(result)
         else:
             self.tts.speak("Не удалось распознать город.")
+
+    # Creates a new note and saves it to a file
+    def create_note(self):
+        logger.info('Что добавим в список дел?')
+        query = self.speech_recognizer.listen_command()
+        if query:
+            with open('todo-list.txt', 'a', encoding='utf-8') as file:
+                file.write(f' {query}\n')
+                now = datetime.datetime.now()
+            formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
+            self.tts.speak(f'Заметка "{query}" создана от {formatted_datetime}.')
 
     # Search the web
     def search_online(self):
