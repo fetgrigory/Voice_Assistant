@@ -171,6 +171,13 @@
             "triggers": ["новости", "последние новости", "что нового"]
         },
         {
+            "command": "create_note",
+            "make": "create_note",
+            "parameters": [],
+            "say": "Что добавим в список дел?",
+            "triggers": ["добавить задачу", "создать задачу", "заметка"]
+        },
+        {
             "command": "keyboard_write",
             "make": "keyboard_write",
             "handler": "system_control",

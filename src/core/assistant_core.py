@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import threading
+import datetime
 import time
 from pathlib import Path
 
@@ -11,6 +12,8 @@ from rapidfuzz import fuzz
 
 from src.integrations.llm_client import LLMClient
 from src.gui.main_window import VoiceAssistantApp
+from src.db.crud import add_event
+from src.db.database import init_db
 from src.network import NetworkActions
 from src.audio.sound_module import SoundPlayer
 from src.speech.speech_module import SpeechRecognizer
@@ -33,6 +36,9 @@ class Assistant:
             self.commands = json.load(f)['commands']
 
         self.load_settings()
+
+        # Initialize database
+        init_db()
 
         self.tts = TTS()
         self.speech_recognizer = SpeechRecognizer(input_device=self.input_device)
@@ -162,6 +168,21 @@ class Assistant:
             self.tts.speak(result)
         else:
             self.tts.speak("Не удалось распознать город.")
+
+# Creates a new note and saves it to the database
+    def create_note(self):
+        logger.info('Что добавим в список дел?')
+        query = self.speech_recognizer.listen_command()
+        if query:
+            now = datetime.datetime.now()
+            add_event(
+                description=query,
+                event_date=now.strftime("%Y-%m-%d"),
+                event_time=now.strftime("%H:%M:%S")
+            )
+
+            formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
+            self.tts.speak(f'Заметка "{query}" создана от {formatted_datetime}.')
 
     # Search the web
     def search_online(self):
