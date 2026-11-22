@@ -59,23 +59,29 @@
 
 ```text
 Voice_Assistant/
-├── src/                              # Основной код приложения
+├── src/                             # Основной код приложения
 │   ├── __init__.py
-│   ├── main.py                       # Точка входа
-│   ├── core/                         # Ядро ассистента
+│   ├── main.py                      # Точка входа
+│   ├── core/                        # Ядро ассистента
 │   │   ├── __init__.py
 │   │   └── assistant_core.py
-│   ├── speech/                       # Работа с речью
+│   ├── db/                          # Работа с базой данных
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── crud.py
+│   │   ├── database.py
+│   │   └── models.py
+│   ├── speech/                      # Работа с речью
 │   │   ├── __init__.py
 │   │   ├── speech_module.py
 │   │   └── tts_module.py
-│   ├── audio/                        # Воспроизведение звуков
+│   ├── audio/                       # Воспроизведение звуков
 │   │   ├── __init__.py
 │   │   └── sound_module.py
-│   ├── system/                       # Управление ОС
+│   ├── system/                      # Управление ОС
 │   │   ├── __init__.py
 │   │   └── system_control.py
-│   ├── gui/                          # Пользовательский интерфейс
+│   ├── gui/                         # Пользовательский интерфейс
 │   │   ├── __init__.py
 │   │   ├── commands_tab.py
 │   │   ├── home_tab.py
@@ -83,26 +89,26 @@ Voice_Assistant/
 │   │   ├── mic_tab.py
 │   │   ├── sidebar.py
 │   │   └── styles.py
-│   ├── integrations/                 # Внешние интеграции
+│   ├── integrations/                # Внешние интеграции
 │   │   ├── __init__.py
-│   │   └── llm_client.py             # Клиент для работы с LLM
-│   ├── network/                      # Сетевые функции
+│   │   └── llm_client.py            # Клиент для работы с LLM
+│   ├── network/                     # Сетевые функции
 │   │   ├── __init__.py
 │   │   └── network.py
-│   ├── services/                     # Сервисы для контента
+│   ├── services/                    # Сервисы для контента
 │   │   ├── __init__.py
 │   │   ├── film_service.py
 │   │   ├── music_service.py
 │   │   └── web_driver_manager.py
-│   └── config/                       # Конфигурация приложения
+│   └── config/                      # Конфигурация приложения
 │       ├── commands.json
 │       └── settings.json
-├── assets/                           # Ресурсы приложения
+├── assets/                          # Ресурсы приложения
 │   ├── sounds/
 │   ├── vosk-model-small-ru-0.22/
 │   ├── img/
 │   └── main_applications/
-├── logs/                             # Логи работы ассистента
+├── logs/                            # Логи работы ассистента
 │   └── assistant.log
 ├── run.py
 ├── pyproject.toml
@@ -136,6 +142,7 @@ graph LR
 | `feedparser` | Чтение новостей RSS-лент |
 | `BeautifulSoup` | Очистка текста новостей от HTML-тегов |
 | `requests` | HTTP-запросы к API и веб-серверам |
+| `SQLAlchemy` | Работа с базами данных через ORM и выполнение SQL-запросов |
 | `pygame` | Воспроизведение аудио |
 | `pywin32` | Интеграция с Windows API |
 | `keyboard` | Эмуляция нажатия клавиш |
