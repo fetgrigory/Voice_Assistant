@@ -2,7 +2,6 @@ import json
 import logging
 import os
 import threading
-import datetime
 import time
 from pathlib import Path
 
@@ -12,9 +11,9 @@ from rapidfuzz import fuzz
 
 from src.integrations.llm_client import LLMClient
 from src.gui.main_window import VoiceAssistantApp
-from src.db.crud import add_event
 from src.db.database import init_db
 from src.network import NetworkActions
+from src.planner.reminder import ReminderManager
 from src.audio.sound_module import SoundPlayer
 from src.speech.speech_module import SpeechRecognizer
 from src.system.system_control import SystemControl
@@ -46,6 +45,7 @@ class Assistant:
         self.network_actions = NetworkActions()
         self.system_control = SystemControl(self.tts.speak, self.speech_recognizer.listen_command)
         self.chat_gpt = LLMClient()
+        self.reminder_service = ReminderManager()
 
         self.sound_player.play_sound('start')
         self.session_timeout = 15
@@ -170,19 +170,12 @@ class Assistant:
             self.tts.speak("Не удалось распознать город.")
 
 # Creates a new note and saves it to the database
-    def create_note(self):
-        logger.info('Что добавим в список дел?')
+    def create_reminder(self):
         query = self.speech_recognizer.listen_command()
-        if query:
-            now = datetime.datetime.now()
-            add_event(
-                description=query,
-                event_date=now.strftime("%Y-%m-%d"),
-                event_time=now.strftime("%H:%M:%S")
-            )
-
-            formatted_datetime = now.strftime("%d.%m.%Y %H:%M:%S")
-            self.tts.speak(f'Заметка "{query}" создана от {formatted_datetime}.')
+        if not query:
+            return
+        result = self.reminder_service.create_reminder(query)
+        self.tts.speak(result["message"])
 
     # Search the web
     def search_online(self):

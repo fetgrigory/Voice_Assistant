@@ -171,11 +171,11 @@
             "triggers": ["новости", "последние новости", "что нового"]
         },
         {
-            "command": "create_note",
-            "make": "create_note",
+            "command": "create_reminder",
+            "make": "create_reminder",
             "parameters": [],
-            "say": "Что добавим в список дел?",
-            "triggers": ["добавить задачу", "создать задачу", "заметка"]
+            "say": "О чём напомнить?",
+            "triggers": ["создать напоминание", "добавить напоминание", "напомни мне"]
         },
         {
             "command": "keyboard_write",
