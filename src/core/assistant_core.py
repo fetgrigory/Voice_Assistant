@@ -169,12 +169,17 @@ class Assistant:
         else:
             self.tts.speak("Не удалось распознать город.")
 
-# Creates a new note and saves it to the database
+    # Creates a new note and saves it to the database
     def create_reminder(self):
         query = self.speech_recognizer.listen_command()
         if not query:
             return
         result = self.reminder_service.create_reminder(query)
+        self.tts.speak(result["message"])
+
+    # Displays all saved reminders
+    def show_all_reminders(self):
+        result = self.reminder_service.get_all_reminders()
         self.tts.speak(result["message"])
 
     # Search the web

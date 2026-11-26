@@ -178,6 +178,13 @@
             "triggers": ["создать напоминание", "добавить напоминание", "напомни мне"]
         },
         {
+            "command": "get_all_reminders",
+            "make": "show_all_reminders",
+            "parameters": [],
+            "say": "",
+            "triggers": ["напоминание", "дела"]
+        },
+        {
             "command": "keyboard_write",
             "make": "keyboard_write",
             "handler": "system_control",
